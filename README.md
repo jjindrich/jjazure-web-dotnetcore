@@ -18,4 +18,16 @@ Simply select Publish from context menu. Two options:
 2. Select Azure Container Registry
 
 ### Visual Studio Code
+#### Docker for non-root user
+Add user into docker group - [link](https://docs.docker.com/engine/installation/linux/linux-postinstall/#manage-docker-as-a-non-root-user)
+```bash
+sudo usermod -aG docker $USER
+```
 Run from command line - TODO
+
+#### Build project
+[Compile docker project](https://docs.microsoft.com/en-us/dotnet/core/docker/building-net-docker-images)
+```bash
+cd jjwebcore
+docker build -t jjwebcore .
+```
