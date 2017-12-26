@@ -25,7 +25,7 @@ sudo usermod -aG docker $USER
 ```
 Run from command line - TODO
 
-#### Build project
+#### Build docker project
 [Compile docker project](https://docs.microsoft.com/en-us/dotnet/core/docker/building-net-docker-images)
 ```bash
 cd jjwebcore
