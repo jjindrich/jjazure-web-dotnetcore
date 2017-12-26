@@ -10,7 +10,8 @@ dotnet new razor -o jjwebcore
 ```
 
 ## Build and deploy web site
-You can open project in Visual Studio Code or Visual Studio 2017. Project has Docker support files - Dockerbuild and Compose.
+You can open project in Visual Studio Code or Visual Studio 2017. 
+Visual Studio 2017 - project has Docker support files - Dockerbuild and Compose.
 
 ### Visual Studio 2017
 Simply select Publish from context menu. Two options:
@@ -23,11 +24,27 @@ Add user into docker group - [link](https://docs.docker.com/engine/installation/
 ```bash
 sudo usermod -aG docker $USER
 ```
-Run from command line - TODO
+
+#### Publish DotNet project
+```bash
+dotnet publish jjwebcore.csproj -c Release -o ./obj/Docker/publish
+```
 
 #### Build Docker project
 [Compile docker project](https://docs.microsoft.com/en-us/dotnet/core/docker/building-net-docker-images)
 ```bash
 cd jjwebcore
 docker build -t jjwebcore .
+```
+or build with Docker Compose
+```bash
+docker-compose build
+```
+
+#### Run project
+Visual Studio Code - select Debug menu and Start with/without debugging
+
+or start manually
+```bash
+docker run -d -p 80:80 jjwebcore
 ```
