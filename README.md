@@ -48,3 +48,14 @@ or start manually
 ```bash
 docker run -d -p 80:80 jjwebcore
 ```
+
+### Store image to Azure Container Repository
+[Documentation](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli)
+
+```bash
+docker login jjcontainers.azurecr.io -u jjcontainers -p <PASSWORD>
+docker tag jjwebcore jjcontainers.azurecr.io/jjwebcore
+docker push jjcontainers.azurecr.io/jjwebcore
+```
+
+Now you can try to run Azure Web App for Containers
