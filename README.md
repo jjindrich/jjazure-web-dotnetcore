@@ -31,7 +31,7 @@ dotnet publish jjwebcore.csproj -c Release -o ./obj/Docker/publish
 ```
 
 #### Build Docker project
-[Compile docker project](https://docs.microsoft.com/en-us/dotnet/core/docker/building-net-docker-images)
+[Documentation how to compile docker project](https://docs.microsoft.com/en-us/dotnet/core/docker/building-net-docker-images)
 ```bash
 cd jjwebcore
 docker build -t jjwebcore .
@@ -49,13 +49,19 @@ or start manually
 docker run -d -p 80:80 jjwebcore
 ```
 
-### Store image to Azure Container Repository
-[Documentation](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli)
+### Store Docker image to Azure Container Repository
+[Documentation how use Azure Container Repository](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli)
 
 ```bash
 docker login jjcontainers.azurecr.io -u jjcontainers -p <PASSWORD>
 docker tag jjwebcore jjcontainers.azurecr.io/jjwebcore
 docker push jjcontainers.azurecr.io/jjwebcore
 ```
+### Run Docker image in Azure Container Service
+```bash
+az container create -g TEST --name jjwebcore --image jjcontainers.azurecr.io/jjwebcore --registry-password <PASSWORD> --ip-address public --ports 80
+az container show -g TEST -n jjwebcore
+```
 
-Now you can try to run Azure Web App for Containers
+Open browser with IP listed above, e.g. http://52.233.194.71
+
