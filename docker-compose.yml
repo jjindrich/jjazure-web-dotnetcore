@@ -5,4 +5,4 @@ services:
     image: jjwebcore
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: jjwebcore/Dockerfile
