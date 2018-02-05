@@ -6,7 +6,7 @@ Use this article create new project -
 https://docs.microsoft.com/en-us/aspnet/core/tutorials/razor-pages-vsc/razor-pages-start
 
 ```
-dotnet new razor -o jjwebcore
+dotnet new mvc -o jjwebcore
 ```
 
 ## Build and deploy web site
