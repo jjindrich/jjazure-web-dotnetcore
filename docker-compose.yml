@@ -4,5 +4,5 @@ services:
   jjwebcore:
     image: ${DOCKER_REGISTRY}jjwebcore
     build:
-      context: ./jjwebcore
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: jjwebcore/Dockerfile

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using jjwebcore.Models;
+using System.Net;
 
 namespace jjwebcore.Controllers
 {
@@ -34,6 +35,11 @@ namespace jjwebcore.Controllers
             ViewData["Message"] = "Test page.";
 
             System.IO.File.WriteAllText("/home/test.txt", "Test");
+
+            var host = Dns.GetHostName();            
+            ViewData["Host"] = host;
+
+            System.IO.File.WriteAllText(string.Format("/home/host_{0}.txt", host), host);
 
             return View();
         }
