@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jjwebcore", "jjwebcore\jjwebcore.csproj", "{F958E018-21E1-48AB-9A41-C0B5DE475D47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "jjwebcore", "jjwebcore\jjwebcore.csproj", "{F958E018-21E1-48AB-9A41-C0B5DE475D47}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{F78849A1-74EC-48C4-9E9B-274C31D8888D}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C292B4E5-F4F1-436B-8EE1-D91AFEEB90BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{F958E018-21E1-48AB-9A41-C0B5DE475D47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F958E018-21E1-48AB-9A41-C0B5DE475D47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F958E018-21E1-48AB-9A41-C0B5DE475D47}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F78849A1-74EC-48C4-9E9B-274C31D8888D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F78849A1-74EC-48C4-9E9B-274C31D8888D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F78849A1-74EC-48C4-9E9B-274C31D8888D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F78849A1-74EC-48C4-9E9B-274C31D8888D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C292B4E5-F4F1-436B-8EE1-D91AFEEB90BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C292B4E5-F4F1-436B-8EE1-D91AFEEB90BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C292B4E5-F4F1-436B-8EE1-D91AFEEB90BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C292B4E5-F4F1-436B-8EE1-D91AFEEB90BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

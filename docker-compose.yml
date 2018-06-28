@@ -1,8 +1,8 @@
-version: '3'
+version: '3.4'
 
 services:
   jjwebcore:
-    image: jjwebcore
+    image: ${DOCKER_REGISTRY}jjwebcore
     build:
-      context: .
-      dockerfile: jjwebcore/Dockerfile
+      context: ./jjwebcore
+      dockerfile: Dockerfile

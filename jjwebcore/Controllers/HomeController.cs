@@ -29,6 +29,15 @@ namespace jjwebcore.Controllers
             return View();
         }
 
+        public IActionResult Test()
+        {
+            ViewData["Message"] = "Test page.";
+
+            System.IO.File.WriteAllText("/home/test.txt", "Test");
+
+            return View();
+        }
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
