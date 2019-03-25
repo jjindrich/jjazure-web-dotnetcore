@@ -25,6 +25,8 @@ ingress:
   enabled: true
   annotations:
     # kubernetes.io/tls-acme: "true"
+  hosts:
+    - jjmoje
   path: /
   # hosts:
   #   - chart-example.local

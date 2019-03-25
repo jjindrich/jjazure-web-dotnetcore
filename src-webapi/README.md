@@ -14,6 +14,10 @@ Using Visual Studio tools:
 
 ***TODO*** Change YAML to publish API to internet
 
+Problems with Tiller for Helm
+- run helm init tiller --upgrade
+- reinstal https://helm.sh/docs/using_helm/#deleting-or-reinstalling-tiller
+
 
 ## Deploy to Kubernetes
 
