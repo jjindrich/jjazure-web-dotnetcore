@@ -26,10 +26,8 @@ ingress:
   annotations:
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - jjmoje
+    - 51.136.52.198.xip.io
   path: /
-  # hosts:
-  #   - chart-example.local
   tls: []
     # - secretName: chart-example-tls
     #   hosts:
