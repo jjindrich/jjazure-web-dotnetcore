@@ -38,14 +38,23 @@ Click on Solution folder and select Publish to Azure AKS. There is created .aksp
 or use commandline
 
 ```
-helm install --name jjwebapicore "C:\Users\jajindri\source\repos\jjazure-web-dotnetcore\src-webapi\\jjwebapicore\charts\jjwebapicore" --set-string image.repository=jjcontainers.azurecr.io/jjwebapicore --set-string image.tag=2019032503 --kube-context jjaks
+helm install --name jjwebapicore "C:\Users\jajindri\source\repos\jjazure-web-dotnetcore\src-webapi\\jjwebapicore\charts\jjwebapicore" --set-string image.repository=jjcontainers.azurecr.io/jjwebapicore --set-string image.tag=<TAG-ID> --kube-context jjaks
 ```
 
 Now check public IP address fou our service
 http://51.136.52.198.xip.io/api/values
 
 ## Add Application Insights telemetry
-**TODO** add Application Insights and see telemetry
+
+Follow this instructions to add Application insights - https://github.com/Microsoft/ApplicationInsights-aspnetcore/wiki/Getting-Started-with-Application-Insights-for-ASP.NET-Core#option-2-environment-variable
+
+- change application code to use Application Insights (using environment variable APPINSIGHTS_INSTRUMENTATIONKEY)
+
+- added secret to values.yaml key and value of APPINSIGHTS_INSTRUMENTATIONKEY.
+
+After new deployment you will get this report - e.g. Performance
+
+![Application Insights](media/appinsights.png)
 
 ## Add reference to another API service running on cluster
-**TODO** two different API services calling each other - reference in manifest
+**TODO** two different API services calling each other - reference in manifest and check Application insights application map
