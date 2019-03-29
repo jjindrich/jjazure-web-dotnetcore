@@ -1,10 +1,10 @@
-# Default values for jjwebapicore.
+# Default values for jjwebcore.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-fullnameOverride: jjwebapicore
+fullnameOverride: jjwebcore
 replicaCount: 1
 image:
-  repository: jjwebapicore
+  repository: jjwebcore
   tag: stable
   pullPolicy: IfNotPresent
 imagePullSecrets: []
@@ -24,11 +24,10 @@ probes:
 ingress:
   enabled: true
   annotations:
-    # kubernetes.io/tls-acme: "true"
-    # nginx.ingress.kubernetes.io/rewrite-target: "/api"
+    # kubernetes.io/tls-acme: "true"    
+  path: /
   hosts:
     - 51.136.52.198.xip.io
-  path: /api
   tls: []
     # - secretName: chart-example-tls
     #   hosts:
@@ -45,8 +44,8 @@ secrets:
   # as the environment variable mysecret_mypassword=password.
   # mysecret:
   #   mypassword: password
-  APPINSIGHTS:
-    INSTRUMENTATIONKEY: 0dd10e50-1e94-4c9f-bfee-4cefcfa9daa1
+  SERVICEAPI:
+    URL: http://jjwebapicore/api/values
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

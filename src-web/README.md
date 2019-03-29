@@ -65,3 +65,14 @@ az container show -g TEST -n jjwebcore
 
 Open browser with IP listed above, e.g. http://52.233.194.71
 
+## Run web on AKS and call service running on AKS
+
+Added Helm Chart with Visual Studio into this web project - followed instructions from [jjwebapicore project](../src-webapi/readme.md) .
+
+Added reference to service: http://jjwebapicore/api/values (referencing AKS service)
+
+Test page is calling REST API jjwebapicore service and printing result.
+![Web - TEST](media/webpagetest.png)
+
+Local debugging is using reference to service from environment variables defined in Visual Studio project
+![Visual Studio debug](media/vsdebug.png)

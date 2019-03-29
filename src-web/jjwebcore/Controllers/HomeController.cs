@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using jjwebcore.Models;
 using System.Net;
+using System.Net.Http;
+using System.Runtime.Serialization.Json;
 
 namespace jjwebcore.Controllers
 {
@@ -30,16 +32,25 @@ namespace jjwebcore.Controllers
             return View();
         }
 
-        public IActionResult Test()
+        public async Task<IActionResult> Test()
         {
             ViewData["Message"] = "Test page.";
-
-            System.IO.File.WriteAllText("/home/test.txt", "Test");
 
             var host = Dns.GetHostName();            
             ViewData["Host"] = host;
 
-            System.IO.File.WriteAllText(string.Format("/home/host_{0}.txt", host), host);
+            Uri serviceUri = new Uri(Environment.GetEnvironmentVariable("SERVICEAPI_URL"));
+
+            ViewData["ServiceUrl"] = serviceUri;
+
+            // call service
+            HttpClient client = new HttpClient();
+            var serializer = new DataContractJsonSerializer(typeof(List<string>));
+            var streamTask = client.GetStreamAsync(serviceUri);
+            var res = serializer.ReadObject(await streamTask) as List<string>;
+            string resString = string.Join(";", res);
+
+            ViewData["ApiResult"] = resString;
 
             return View();
         }

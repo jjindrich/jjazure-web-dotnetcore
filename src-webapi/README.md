@@ -55,6 +55,3 @@ Follow this instructions to add Application insights - https://github.com/Micros
 After new deployment you will get this report - e.g. Performance
 
 ![Application Insights](media/appinsights.png)
-
-## Add reference to another API service running on cluster
-**TODO** two different API services calling each other - reference in manifest and check Application insights application map
