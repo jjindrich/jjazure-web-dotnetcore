@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jjwebcorewindows", "jjwebcorewindows\jjwebcorewindows.csproj", "{7FAFF63A-4672-4143-BAD9-C8D1475067EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "jjwebcorewindows", "jjwebcorewindows\jjwebcorewindows.csproj", "{7FAFF63A-4672-4143-BAD9-C8D1475067EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E81F6844-C03B-4F75-8F85-3B600C4E8423}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

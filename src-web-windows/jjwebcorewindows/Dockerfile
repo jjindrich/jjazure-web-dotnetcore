@@ -8,7 +8,7 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS base
 #FROM microsoft/dotnet:2.2-aspnetcore-runtime-nanoserver-1803 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
+#EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2 as build
 #FROM microsoft/dotnet:2.2-sdk-nanoserver-1803 AS build
