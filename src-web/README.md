@@ -49,7 +49,7 @@ or start manually
 docker run -d -p 80:80 jjwebcore
 ```
 
-### Store Docker image to Azure Container Repository
+### Push Docker image to Azure Container Repository
 [Documentation how use Azure Container Repository](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli)
 
 ```bash
@@ -57,7 +57,7 @@ docker login jjcontainers.azurecr.io -u jjcontainers -p <PASSWORD>
 docker tag jjwebcore jjcontainers.azurecr.io/jjwebcore
 docker push jjcontainers.azurecr.io/jjwebcore
 ```
-### Run Docker image in Azure Container Service
+### Run Docker image in Azure Container Instance
 ```bash
 az container create -g TEST --name jjwebcore --image jjcontainers.azurecr.io/jjwebcore --registry-password <PASSWORD> --ip-address public --ports 80
 az container show -g TEST -n jjwebcore
