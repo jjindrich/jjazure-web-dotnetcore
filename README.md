@@ -54,7 +54,7 @@ I have existing virtual network (created by Azure Blueprint)
 - jjvnet-central with address space 10.10.0.0/16
 - dmz-aks subnet with 10.10.10.0/24
 
-1. Create AKS cluster 
+#### 1. Create AKS cluster 
 
 ```bash
 az extension add --name aks-preview
@@ -91,7 +91,7 @@ az aks get-credentials --resource-group jjmicroservices-rg --name $aksname --adm
 az aks browse --resource-group jjmicroservices-rg --name $aksname
 ```
 
-2. Assign admin to AKS cluster
+#### 2. Assign admin to AKS cluster
 
 I have AAD group with admins - AKS Admins. Update rbac-aad-admin.yaml with your AAD Group object Id.
 Next login as admin (--admin) and run script.
@@ -101,7 +101,7 @@ az aks get-credentials --resource-group jjmicroservices-rg --name $aksname --adm
 kubectl apply -f aks/rbac-aad-admin.yaml
 ```
 
-3. Try to access AKS cluster as AAD user
+#### 3. Try to access AKS cluster as AAD user
 
 Try to login as AAD user to AKS cluster and get nodes.
 
@@ -110,7 +110,7 @@ az aks get-credentials --resource-group jjmicroservices-rg --name $aksname
 kubectl get nodes
 ```
 
-4. Enable portal with RBAR
+#### 4. Enable Dashboard for AKS with RBAC
 
 By default Dashboard is created with minimal permissions, let's run this command to enable Dashboard for admins
 
@@ -132,10 +132,10 @@ TODO: add AppGw ingress
 ### Connect to PaaS services like SQL server
 TODO: use service endpoint to access sql server
 
-## Development
+### Development
 TODO: Use DevSpaces and Remote Development
 
-## Setup security
+### Setup security
 Best practices
 https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-network#control-traffic-flow-with-network-policies
 
@@ -157,8 +157,9 @@ https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic
 Install Istio for advanced routing and networking features
 https://docs.microsoft.com/en-us/azure/aks/istio-install
 
-## Setup monitoring
+### Setup monitoring
 Infra view - use Log Analytics
+https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-overview
 
 Zero configuration for Azure Monitor for application monitoring (requires Istio)
 https://docs.microsoft.com/en-us/azure/azure-monitor/app/kubernetes
