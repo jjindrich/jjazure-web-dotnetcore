@@ -34,6 +34,8 @@ Run this scripts https://docs.microsoft.com/en-us/azure/aks/azure-ad-integration
 
 Use new Active Directory blade App Registrations
 
+Create new AAD group for admins.
+
 ##### Aks Server application
 ![Active Directory blade App Registrations - Server](media/aad-app-aksserver.png)
 ```bash
@@ -44,6 +46,9 @@ echo serverApplicationId=$serverApplicationId, serverApplicationSecret=$serverAp
 ```bash
 echo clientApplicationId=$clientApplicationId
 ```
+
+##### Create AAD group for admins
+![Active Directory blade Group - Client](media/aad-group.png)
 
 ### Deploy cluster in existing Virtual Network and with RBAC
 
