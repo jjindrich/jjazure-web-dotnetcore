@@ -162,6 +162,9 @@ https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic
 Install Istio for advanced routing and networking features
 https://docs.microsoft.com/en-us/azure/aks/istio-install
 
+Manage node security updates
+https://docs.microsoft.com/en-us/azure/aks/node-updates-kured
+
 ### Setup monitoring
 Infra view - use Log Analytics
 https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-overview
