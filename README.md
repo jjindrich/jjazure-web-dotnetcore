@@ -130,15 +130,48 @@ Links:
 - upgrade AKS pool https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools#upgrade-a-node-pool
 - enable Dashboard https://docs.microsoft.com/en-us/azure/aks/kubernetes-dashboard#for-rbac-enabled-clusters
 
-### Add Http routing to allow public endpoints
-TODO: http routing extension
-TODO: add AppGw ingress
+### Publish services to internet
+I'm using NGINX ingress controller for my demos.
+
+#### NGINX ingress controller
+How to configure https://docs.microsoft.com/en-us/azure/aks/ingress-basic
+
+Install NGINX ingress with 2 replicas
+```bash
+kubectl create namespace ingress-basic
+helm install stable/nginx-ingress --namespace ingress-basic --set controller.replicaCount=2
+```
+
+How to use https://docs.microsoft.com/en-us/azure/aks/ingress-basic#create-an-ingress-route
+
+If you want to use **NGINX for **Internal network** publishing, use this https://docs.microsoft.com/en-us/azure/aks/ingress-internal-ip
+
+#### HTTP application routing (not for production)
+How to configure https://docs.microsoft.com/en-us/azure/aks/http-application-routing
+
+Enable on AKS cluster addon
+```bash
+az aks enable-addons --resource-group myResourceGroup --name myAKSCluster --addons http_application_routing
+```
+
+How to use https://docs.microsoft.com/en-us/azure/aks/http-application-routing#use-http-routing
+
+#### Application Gateway Ingress controller
+How to configure https://github.com/Azure/application-gateway-kubernetes-ingress
+
+Create new Azure Identity to access AppGw https://github.com/Azure/application-gateway-kubernetes-ingress/blob/master/docs/install-existing.md#create-azure-identity-on-arm
+
+Install AppGw ingress https://github.com/Azure/application-gateway-kubernetes-ingress/blob/master/docs/install-existing.md#install-ingress-controller-as-a-helm-chart
+
+How to use https://github.com/Azure/application-gateway-kubernetes-ingress/blob/master/docs/tutorial.md#expose-services-over-http
 
 ### Connect to PaaS services like SQL server
 TODO: use service endpoint to access sql server
+https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview
 
-### Development
-TODO: Use DevSpaces and Remote Development
+### Development productivity
+TODO: Use DevSpaces and Remote Development with VS Code
+https://docs.microsoft.com/en-us/azure/dev-spaces/
 
 ### Setup security
 Best practices
@@ -166,8 +199,11 @@ Manage node security updates
 https://docs.microsoft.com/en-us/azure/aks/node-updates-kured
 
 ### Setup monitoring
-Infra view - use Log Analytics
+Enable monitoring from Portal
+https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-enable-existing-clusters#enable-from-azure-monitor-in-the-portal
+
+Azure Monitor for containers
 https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-overview
 
-Zero configuration for Azure Monitor for application monitoring (requires Istio)
+Service Mesh application monitoring (requires Istio) for application map
 https://docs.microsoft.com/en-us/azure/azure-monitor/app/kubernetes
