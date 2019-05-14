@@ -59,7 +59,7 @@ I have existing virtual network (created by Azure Blueprint)
 - jjvnet-central with address space 10.10.0.0/16
 - dmz-aks subnet with 10.10.10.0/24
 
-#### 1. Create AKS cluster 
+#### 1. Create AKS cluster with RBAC in virtual network
 
 ```bash
 az extension add --name aks-preview
@@ -121,7 +121,25 @@ By default Dashboard is created with minimal permissions, let's run this command
 
 ```bash
 kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
+
+az aks browse --resource-group jjmicroservices-rg --name $aksname
 ```
+
+#### 5. Install Helm with RBAC enabled AKS
+
+Create account for Helm and setup permissions
+```bash
+kubectl apply -f aks/helm-account.yaml
+```
+
+Install Helm Tiller with RBAC
+```bash
+helm init --service-account tiller
+```
+
+Problems with Tiller for Helm
+- run helm init tiller --upgrade
+- reinstal https://helm.sh/docs/using_helm/#deleting-or-reinstalling-tiller
 
 Links:
 - custom resource group https://docs.microsoft.com/en-us/azure/aks/faq#can-i-provide-my-own-name-for-the-aks-infrastructure-resource-group
@@ -129,6 +147,7 @@ Links:
 - connect to AAD and assign AAD admin https://docs.microsoft.com/en-us/azure/aks/azure-ad-integration-cli
 - upgrade AKS pool https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools#upgrade-a-node-pool
 - enable Dashboard https://docs.microsoft.com/en-us/azure/aks/kubernetes-dashboard#for-rbac-enabled-clusters
+- install Helm https://docs.microsoft.com/cs-cz/azure/aks/kubernetes-helm
 
 ### Publish services to internet
 I'm using NGINX ingress controller for my demos.
@@ -139,12 +158,14 @@ How to configure https://docs.microsoft.com/en-us/azure/aks/ingress-basic
 Install NGINX ingress with 2 replicas
 ```bash
 kubectl create namespace ingress-basic
-helm install stable/nginx-ingress --namespace ingress-basic --set controller.replicaCount=2
+helm install --name nginx-ingress stable/nginx-ingress --namespace ingress-basic --set controller.replicaCount=2
 ```
 
 How to use https://docs.microsoft.com/en-us/azure/aks/ingress-basic#create-an-ingress-route
 
 If you want to use **NGINX for **Internal network** publishing, use this https://docs.microsoft.com/en-us/azure/aks/ingress-internal-ip
+
+Troubleshooting lab https://github.com/azurecz/java-k8s-workshop/blob/master/module02/README.md#install-helm-and-ingress
 
 #### HTTP application routing (not for production)
 How to configure https://docs.microsoft.com/en-us/azure/aks/http-application-routing
