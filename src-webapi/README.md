@@ -1,8 +1,8 @@
 # jjazure-webapi-dotnetcore
-.Net Core API web app running on Azure AKS using Visual Studio
+.Net Core API web app running on Azure AKS using Visual Studio 2017
 
 - Using Linux image because of Kubernetes
-- Using Visual Studio Tools to avouid Kubernetes hell
+- Using Visual Studio Tools to avoid Kubernetes hell
 
 ## Add Kubernetes manifests
 
@@ -14,17 +14,26 @@ Using Visual Studio tools:
 
 ## Deploy to Kubernetes
 
-Click on Solution folder and select Publish to Azure AKS. There is created .akspub publishing profile.
+Visual Studio 2017 -> Click on Solution folder and select **Publish to Azure AKS**. There is created .akspub publishing profile.
 
 ![Publish to AKS](media/publish-to-aks.png)
 
-or use commandline
+or use command line
 
 ```
-helm install --name jjwebapicore "C:\Users\jajindri\source\repos\jjazure-web-dotnetcore\src-webapi\\jjwebapicore\charts\jjwebapicore" --set-string image.repository=jjcontainers.azurecr.io/jjwebapicore --set-string image.tag=<TAG-ID> --kube-context jjaks
+helm install --name jjwebapicore jjwebapicore/charts/jjwebapicore --set-string image.repository=jjcontainers.azurecr.io/jjwebapicore --set-string image.tag=<TAG-ID like 2019051408>
+```
+
+How to validate final template ?
+```
+helm template
 ```
 
 Now check public IP address fou our service http://your_ip/api/values
+
+```
+kubectl get svc --all-namespaces
+```
 
 ## Add Application Insights telemetry
 

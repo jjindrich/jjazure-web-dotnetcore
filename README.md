@@ -141,6 +141,17 @@ Problems with Tiller for Helm
 - run helm init tiller --upgrade
 - reinstal https://helm.sh/docs/using_helm/#deleting-or-reinstalling-tiller
 
+#### 6. Setup permissions to Azure Container Registry
+
+You have to setup permissions for AKS (jjaksserver) to access Azure Container Registry (jjcontainers).
+
+```bash
+ACR_NAME=jjcontainers
+ACR_RESOURCE_GROUP=TEST
+ACR_ID=$(az acr show --name $ACR_NAME --resource-group $ACR_RESOURCE_GROUP --query "id" --output tsv)
+az role assignment create --assignee $serverApplicationId --role acrpull --scope $ACR_ID
+```
+
 Links:
 - custom resource group https://docs.microsoft.com/en-us/azure/aks/faq#can-i-provide-my-own-name-for-the-aks-infrastructure-resource-group
 - custom vnet https://docs.microsoft.com/en-us/azure/aks/configure-azure-cni
@@ -148,6 +159,7 @@ Links:
 - upgrade AKS pool https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools#upgrade-a-node-pool
 - enable Dashboard https://docs.microsoft.com/en-us/azure/aks/kubernetes-dashboard#for-rbac-enabled-clusters
 - install Helm https://docs.microsoft.com/cs-cz/azure/aks/kubernetes-helm
+- Grant access to ACR https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auth-aks
 
 ### Publish services to internet
 I'm using NGINX ingress controller for my demos.
@@ -220,7 +232,7 @@ Manage node security updates
 https://docs.microsoft.com/en-us/azure/aks/node-updates-kured
 
 ### Setup monitoring
-Enable monitoring from Portal
+TODO: Enable monitoring
 https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-enable-existing-clusters#enable-from-azure-monitor-in-the-portal
 
 Azure Monitor for containers
