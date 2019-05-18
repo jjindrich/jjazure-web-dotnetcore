@@ -71,6 +71,13 @@ Added Helm Chart with Visual Studio into this web project - followed instruction
 
 Added reference to service: http://jjwebapicore/api/values (referencing AKS service)
 
+Deploy from command line
+```bash
+helm install --name jjwebcore jjwebcore/charts/jjwebcore --set-string image.repository=jjcontainers.azurecr.io/jjwebcore --set-string image.tag=<TAG-ID like 2019051408>
+```
+
+Now check public IP address for our web http://your_ip
+
 Test page is calling REST API jjwebapicore service and printing result.
 ![Web - TEST](media/webpagetest.png)
 

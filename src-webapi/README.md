@@ -29,7 +29,7 @@ How to validate final template ?
 helm template
 ```
 
-Now check public IP address fou our service http://your_ip/api/values
+Now check public IP address for our service http://your_ip/api/values
 
 ```
 kubectl get svc --all-namespaces

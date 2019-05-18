@@ -24,10 +24,13 @@ probes:
 ingress:
   enabled: true
   annotations:
-    # kubernetes.io/tls-acme: "true"    
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # kubernetes.io/tls-acme: "true"
+    # nginx.ingress.kubernetes.io/rewrite-target: "/"
   path: /
-  hosts:
-    - 51.136.52.198.xip.io
+  # hosts:
+  #   - chart-example.local
   tls: []
     # - secretName: chart-example-tls
     #   hosts:
