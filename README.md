@@ -47,6 +47,10 @@ echo serverApplicationId=$serverApplicationId, serverApplicationSecret=$serverAp
 echo clientApplicationId=$clientApplicationId
 ```
 
+For Live monitoring add additional Redirect URI https://ininprodeusuxbase.microsoft.com/* You have to use on App registration (legacy) configuration blade.
+![Active Directory blade App Registrations (legacy) - Client](media/aad-app-aksclient-url.png)
+
+
 ##### Create AAD group for admins
 ![Active Directory blade Group - Client](media/aad-group.png)
 
@@ -58,6 +62,14 @@ I have existing virtual network (created by Azure Blueprint)
 - resource group vnet-central-rg
 - jjvnet-central with address space 10.10.0.0/16
 - dmz-aks subnet with 10.10.10.0/24
+
+I have existing Azure Monitor Log workspace
+- resource group jjdevmanagement 
+- workspace name jjdev-analytics
+
+I have existing Azure Container Registry
+- resource group TEST
+- name jjcontainers
 
 #### 1. Create AKS cluster with RBAC in virtual network
 
@@ -72,6 +84,8 @@ az group create --name jjmicroservices-rg --location WestEurope
 tenantId=$(az account show --query tenantId -o tsv)
 vnetid=$(az network vnet subnet list --resource-group vnet-central-rg --vnet-name jjvnet-central --query [].id --output tsv | grep dmz-aks)
 
+workspaceId=$(az resource show -n jjdev-analytics -g jjdevmanagement --resource-type microsoft.operationalinsights/workspaces --query id --output tsv)
+
 az aks create \
     --resource-group jjmicroservices-rg \
     --name $aksname \
@@ -81,6 +95,8 @@ az aks create \
     --max-count 3 \
     --enable-vmss \
     --enable-cluster-autoscaler \
+    --enable-addons monitoring \
+    --workspace-resource-id $workspaceId \
     --generate-ssh-keys \
     --service-principal $serverApplicationId \
     --client-secret $serverApplicationSecret \
@@ -232,8 +248,11 @@ Manage node security updates
 https://docs.microsoft.com/en-us/azure/aks/node-updates-kured
 
 ### Setup monitoring
-TODO: Enable monitoring
+Enable monitoring
 https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-enable-existing-clusters#enable-from-azure-monitor-in-the-portal
+
+View live logs
+https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-live-logs#configure-aks-with-azure-active-directory
 
 Azure Monitor for containers
 https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-overview
