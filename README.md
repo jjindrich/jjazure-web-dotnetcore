@@ -81,6 +81,7 @@ az extension update --name aks-preview
 ```bash
 az group create --name jjmicroservices-rg --location WestEurope
 
+winpassword=P@ssw0rd1234
 tenantId=$(az account show --query tenantId -o tsv)
 vnetid=$(az network vnet subnet list --resource-group vnet-central-rg --vnet-name jjvnet-central --query [].id --output tsv | grep dmz-aks)
 
@@ -98,6 +99,8 @@ az aks create \
     --enable-addons monitoring \
     --workspace-resource-id $workspaceId \
     --generate-ssh-keys \
+    --windows-admin-username aksadmin \
+    --windows-admin-password $winpassword \
     --service-principal $serverApplicationId \
     --client-secret $serverApplicationSecret \
     --aad-server-app-id $serverApplicationId \
@@ -106,6 +109,7 @@ az aks create \
     --aad-tenant-id $tenantId \
     --network-plugin azure \
     --vnet-subnet-id $vnetid \
+    --kubernetes-version 1.14.0 \
     --node-resource-group jjmicroservices-aks-rg
 
 az aks get-credentials --resource-group jjmicroservices-rg --name $aksname --admin
@@ -221,6 +225,16 @@ https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-service-e
 ### Development productivity
 TODO: Use DevSpaces and Remote Development with VS Code
 https://docs.microsoft.com/en-us/azure/dev-spaces/
+
+### Add Windows nodes in AKS cluster
+You can combine Linux and Windows node pools
+https://docs.microsoft.com/en-us/azure/aks/windows-container-cli
+
+Required minimal cluster version is 1.13.5. Cluster must be created with windows-admin-username and windows-admin-password properties.
+
+```bash
+az aks nodepool add --resource-group jjmicroservices-rg --cluster-name jjaks --os-type Windows --name npwin --node-count 1 --kubernetes-version 1.14.0
+```
 
 ### Setup security
 Best practices
