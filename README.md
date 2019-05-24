@@ -109,7 +109,7 @@ az aks create \
     --aad-tenant-id $tenantId \
     --network-plugin azure \
     --vnet-subnet-id $vnetid \
-    --kubernetes-version 1.14.0 \
+    --kubernetes-version 1.13.5 \
     --node-resource-group jjmicroservices-aks-rg
 
 az aks get-credentials --resource-group jjmicroservices-rg --name $aksname --admin
@@ -182,20 +182,31 @@ Links:
 - Grant access to ACR https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auth-aks
 
 ### Publish services to internet
-I'm using NGINX ingress controller for my demos.
+
+I'm using NGINX ingress controller for my demos
+- external load balancer for jjwebcore
+- internal load balancer for jjwebapicore
 
 #### NGINX ingress controller
 How to configure https://docs.microsoft.com/en-us/azure/aks/ingress-basic
 
-Install NGINX ingress with 2 replicas
+**NGINX ingress (public load balancer)**
+
+How to use https://docs.microsoft.com/en-us/azure/aks/ingress-basic#create-an-ingress-route
+
 ```bash
 kubectl create namespace ingress-basic
 helm install --name nginx-ingress stable/nginx-ingress --namespace ingress-basic --set controller.replicaCount=2
 ```
 
-How to use https://docs.microsoft.com/en-us/azure/aks/ingress-basic#create-an-ingress-route
+**NGINX for Internal network (internal load balancer)** 
 
-If you want to use **NGINX for **Internal network** publishing, use this https://docs.microsoft.com/en-us/azure/aks/ingress-internal-ip
+How to use https://docs.microsoft.com/en-us/azure/aks/ingress-internal-ip
+
+```bash
+kubectl create namespace ingress-basic-internal
+helm install --name nginx-ingress-internal stable/nginx-ingress --namespace ingress-basic-internal --set controller.replicaCount=2 -f aks/internal-ingress.yaml --set nodeSelector."beta.kubernetes.io/os"=linux --set controller.ingressClass=nginx-internal
+```
 
 Troubleshooting lab https://github.com/azurecz/java-k8s-workshop/blob/master/module02/README.md#install-helm-and-ingress
 

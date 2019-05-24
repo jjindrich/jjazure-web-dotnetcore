@@ -21,7 +21,7 @@ Visual Studio 2017 -> Click on Solution folder and select **Publish to Azure AKS
 or use command line
 
 ```
-helm install --name jjwebapicore jjwebapicore/charts/jjwebapicore --set-string image.repository=jjcontainers.azurecr.io/jjwebapicore --set-string image.tag=<TAG-ID like 2019051408>
+helm install --name jjwebapicore jjwebapicore/charts/jjwebapicore --set-string image.repository=jjcontainers.azurecr.io/jjwebapicore --set-string image.tag=2019051809
 ```
 
 How to validate final template ?
