@@ -22,3 +22,19 @@ Click Publish in Visual Studio.
 Create Azure Web App for Containers service. Select Container from Azure Container Registry.
 
 Test it on https://jjwebcore.azurewebsites.net/api/values
+
+## Deploy to Azure Kubernetes Service (AKS)
+
+How to deploy to AKS https://docs.microsoft.com/en-us//azure/aks/windows-container-cli
+
+### Add Kubernetes manifests
+
+Added Kubernetes support from Visual Studio 2017, docker file and helm chart is generated automatically.
+
+Using Visual Studio tools:
+- Visual Studio Kubernetes Tools - https://docs.microsoft.com/en-us/visualstudio/containers/tutorial-kubernetes-tools?view=vs-2017
+- AKS Publishing Tools - https://aka.ms/get-vsk8spublish
+
+### Deploy to Kubernetes
+
+
