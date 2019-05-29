@@ -7,7 +7,7 @@ Azure dotNet Core samples
 Web project running on Docker (Linux based) in Azure Container Instances(ACI) and Azure Kubernetes Service(AKS) with Visual Studio and Visual Studio Core.
 
 ### Project WebApp dotNet Core [jjazure-web-dotnetcore-windows](src-web-windows/README.md)
-Web project running on Docker (Windows based) in Azure WebApp for Containers (Wnisual Studio and Visual Studio Core.
+Web project running on Docker (Windows based) in Azure WebApp for Containers (Visual Studio and Visual Studio Core).
 
 ### Project ApiApp dotNet Core [jjazure-webapi-dotnetcore](src-webapi/README.md)
 WebApi project running on Docker (Linux based) in Azure Kubernetes Service(AKS) with Visual Studio.
@@ -112,9 +112,12 @@ az aks create \
     --kubernetes-version 1.13.5 \
     --node-resource-group jjmicroservices-aks-rg
 
+az aks install-cli
 az aks get-credentials --resource-group jjmicroservices-rg --name $aksname --admin
 az aks browse --resource-group jjmicroservices-rg --name $aksname
 ```
+
+Note: To disable RBAC use --disable-rbac
 
 #### 2. Assign admin to AKS cluster
 
@@ -154,6 +157,7 @@ kubectl apply -f aks/helm-account.yaml
 
 Install Helm Tiller with RBAC
 ```bash
+curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
 helm init --service-account tiller
 ```
 
@@ -196,7 +200,7 @@ How to use https://docs.microsoft.com/en-us/azure/aks/ingress-basic#create-an-in
 
 ```bash
 kubectl create namespace ingress-basic
-helm install --name nginx-ingress stable/nginx-ingress --namespace ingress-basic --set controller.replicaCount=2
+helm install stable/nginx-ingress --name nginx-ingress --namespace ingress-basic --set controller.replicaCount=2 --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux
 ```
 
 **NGINX for Internal network (internal load balancer)** 
@@ -205,7 +209,7 @@ How to use https://docs.microsoft.com/en-us/azure/aks/ingress-internal-ip
 
 ```bash
 kubectl create namespace ingress-basic-internal
-helm install --name nginx-ingress-internal stable/nginx-ingress --namespace ingress-basic-internal --set controller.replicaCount=2 -f aks/internal-ingress.yaml --set nodeSelector."beta.kubernetes.io/os"=linux --set controller.ingressClass=nginx-internal
+helm install stable/nginx-ingress --name nginx-ingress-internal --namespace ingress-basic-internal --set controller.replicaCount=2 -f aks/internal-ingress.yaml --set controller.ingressClass=nginx-internal
 ```
 
 Troubleshooting lab https://github.com/azurecz/java-k8s-workshop/blob/master/module02/README.md#install-helm-and-ingress
@@ -229,6 +233,23 @@ Install AppGw ingress https://github.com/Azure/application-gateway-kubernetes-in
 
 How to use https://github.com/Azure/application-gateway-kubernetes-ingress/blob/master/docs/tutorial.md#expose-services-over-http
 
+### Deployment troubleshooting
+
+Use Dashboard
+```
+az aks browse --resource-group jjmicroservices-rg --name $aksname
+```
+
+Use commandline
+```
+kubectl get deployments,services --all-namespaces
+kubectl describe pod jjwebcore
+kubectl describe pod jjwebapicore
+
+kubectl describe pod nginx-ingress-controller --namespace ingress-basic
+kubectl describe pod nginx-ingress-internal-controller --namespace ingress-basic-internal
+```
+
 ### Connect to PaaS services like SQL server
 TODO: use service endpoint to access sql server
 https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview
@@ -241,11 +262,15 @@ https://docs.microsoft.com/en-us/azure/dev-spaces/
 You can combine Linux and Windows node pools
 https://docs.microsoft.com/en-us/azure/aks/windows-container-cli
 
-Required minimal cluster version is 1.13.5. Cluster must be created with windows-admin-username and windows-admin-password properties.
+Required minimal cluster version is 1.14.0. Cluster must be created with windows-admin-username and windows-admin-password properties.
 
 ```bash
 az aks nodepool add --resource-group jjmicroservices-rg --cluster-name jjaks --os-type Windows --name npwin --node-count 1 --kubernetes-version 1.14.0
 ```
+
+Add to your manifest nodeSelector which node to use (or use taint):
+      nodeSelector:
+        "beta.kubernetes.io/os": windows
 
 ### Setup security
 Best practices

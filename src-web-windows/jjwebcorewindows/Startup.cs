@@ -42,6 +42,8 @@ namespace jjwebcorewindows
             //}
 
             //app.UseHttpsRedirection();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             app.UseMvc();
         }
     }

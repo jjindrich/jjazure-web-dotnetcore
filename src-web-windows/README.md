@@ -25,7 +25,7 @@ Test it on https://jjwebcore.azurewebsites.net/api/values
 
 ## Deploy to Azure Kubernetes Service (AKS)
 
-How to deploy to AKS https://docs.microsoft.com/en-us//azure/aks/windows-container-cli
+How to deploy to AKS https://docs.microsoft.com/en-us/azure/aks/windows-container-cli
 
 ### Add Kubernetes manifests
 
@@ -36,5 +36,20 @@ Using Visual Studio tools:
 - AKS Publishing Tools - https://aka.ms/get-vsk8spublish
 
 ### Deploy to Kubernetes
+
+```
+helm install --name jjwebcorewindows jjwebcorewindows/charts/jjwebcorewindows --set-string image.repository=jjcontainers.azurecr.io/jjwebcorewindows --set-string image.tag=20190529085235
+```
+
+How to validate final template ?
+```
+helm template
+```
+
+Now check public IP address for our service http://your_ip/api/values
+
+```
+kubectl get svc --all-namespaces
+```
 
 
