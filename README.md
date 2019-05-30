@@ -1,5 +1,5 @@
 # JJ Azure .Net Core samples
-Azure dotNet Core samples
+Azure dotNet Core samples running on Azure Managed Kubernetes (AKS)
 
 ## Projects
 
