@@ -14,14 +14,14 @@ namespace jjwebcorewindows.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "valuewindows1", "valuewindows2" };
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            return "value";
+            return string.Format("valuewindows {0}", id);
         }
 
         // POST api/values

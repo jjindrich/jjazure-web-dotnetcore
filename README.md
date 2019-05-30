@@ -250,6 +250,10 @@ kubectl describe pod nginx-ingress-controller --namespace ingress-basic
 kubectl describe pod nginx-ingress-internal-controller --namespace ingress-basic-internal
 ```
 
+**Kubectl troubleshooting on Windows**
+
+You have to update kubectl to latest version with command *az aks install-cli*. But sometimes is update is not applied because you have multiple copies of kubectl on computer. Docker for Windows is installing own copy and setting up PATH. Please check your installations *for %i in (kubectl.exe) do @echo. %~$PATH:i*
+
 ### Connect to PaaS services like SQL server
 TODO: use service endpoint to access sql server
 https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview
@@ -265,7 +269,7 @@ https://docs.microsoft.com/en-us/azure/aks/windows-container-cli
 Required minimal cluster version is 1.14.0. Cluster must be created with windows-admin-username and windows-admin-password properties.
 
 ```bash
-az aks nodepool add --resource-group jjmicroservices-rg --cluster-name jjaks --os-type Windows --name npwin --node-count 1 --kubernetes-version 1.14.0
+az aks nodepool add --resource-group jjmicroservices-rg --cluster-name $aksname --os-type Windows --name npwin --node-count 1 --kubernetes-version 1.14.0
 ```
 
 Add to your manifest nodeSelector which node to use (or use taint):

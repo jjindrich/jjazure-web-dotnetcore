@@ -73,7 +73,7 @@ Added reference to service: http://jjwebapicore/api/values (referencing AKS serv
 
 Deploy from command line
 ```bash
-helm install --name jjwebcore jjwebcore/charts/jjwebcore --set-string image.repository=jjcontainers.azurecr.io/jjwebcore --set-string image.tag=2019032935
+helm install --name jjwebcore jjwebcore/charts/jjwebcore --set-string image.repository=jjcontainers.azurecr.io/jjwebcore --set-string image.tag=2019053048
 ```
 
 Now check public IP address for our web http://your_ip

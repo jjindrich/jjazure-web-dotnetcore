@@ -38,7 +38,7 @@ Using Visual Studio tools:
 ### Deploy to Kubernetes
 
 ```
-helm install --name jjwebcorewindows jjwebcorewindows/charts/jjwebcorewindows --set-string image.repository=jjcontainers.azurecr.io/jjwebcorewindows --set-string image.tag=20190529085235
+helm install --name jjwebcorewindows jjwebcorewindows/charts/jjwebcorewindows --set-string image.repository=jjcontainers.azurecr.io/jjwebcorewindows --set-string image.tag=20190530010817
 ```
 
 How to validate final template ?
