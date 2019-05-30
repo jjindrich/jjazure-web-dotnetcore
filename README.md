@@ -16,6 +16,16 @@ WebApi project running on Docker (Linux based) in Azure Kubernetes Service(AKS) 
 
 Link to best practices https://docs.microsoft.com/en-us/azure/aks/best-practices
 
+### What is Kubernetes (K8s)
+
+[Kubernetes documentation](https://kubernetes.io/docs/concepts/overview/components)
+
+![K8s architecture](media/kubernetes-architecture.jpg)
+
+![K8s overview](media/kubernetes-overview.png)
+
+Sample Mongo Pod [architecture](media/kunernetes-mongo-pod.png)
+
 ### Setup RBAC for AKS
 
 Follow this instructions https://docs.microsoft.com/en-us/azure/aks/azure-ad-integration
