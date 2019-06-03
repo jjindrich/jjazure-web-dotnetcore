@@ -30,7 +30,7 @@ ingress:
     # nginx.ingress.kubernetes.io/rewrite-target: "/"
   path: /
   # hosts:
-  #   - chart-example.local
+  #   - 13.69.76.199.xip.io
   tls: []
     # - secretName: chart-example-tls
     #   hosts:
@@ -48,9 +48,9 @@ secrets:
   # mysecret:
   #   mypassword: password
   SERVICEAPI:
-    URL: http://jjwebapicore/api/values
+    URL: http://jjwebapicore.default.svc.cluster.local/api/values
   SERVICEWINAPI:
-    URL: http://jjwebcorewindows/api/values
+    URL: http://jjwebcorewindows.default.svc.cluster.local/api/values
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little

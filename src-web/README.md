@@ -73,10 +73,12 @@ Added reference to service: http://jjwebapicore/api/values (referencing AKS serv
 
 Deploy from command line
 ```bash
-helm install --name jjwebcore jjwebcore/charts/jjwebcore --set-string image.repository=jjcontainers.azurecr.io/jjwebcore --set-string image.tag=2019053048
+helm install --name jjwebcore jjwebcore/charts/jjwebcore --set-string image.repository=jjcontainers.azurecr.io/jjwebcore --set-string image.tag=2019060323
 ```
 
 Now check public IP address for our web http://your_ip
+
+Note: If you want to run on specific dns name, just fill host like your_ip.xip.io and than access http://your_ip.xip.io
 
 Test page is calling REST API jjwebapicore service and printing result.
 ![Web - TEST](media/webpagetest.png)

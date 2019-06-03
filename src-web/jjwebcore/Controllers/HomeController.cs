@@ -71,11 +71,18 @@ namespace jjwebcore.Controllers
 
         private async Task<string> CallApi(Uri serviceUri)
         {
-            HttpClient client = new HttpClient();
-            var serializer = new DataContractJsonSerializer(typeof(List<string>));
-            var streamTask = client.GetStreamAsync(serviceUri);
-            var res = serializer.ReadObject(await streamTask) as List<string>;
-            return string.Join(";", res);
+            try
+            {
+                HttpClient client = new HttpClient();
+                var serializer = new DataContractJsonSerializer(typeof(List<string>));
+                var streamTask = client.GetStreamAsync(serviceUri);
+                var res = serializer.ReadObject(await streamTask) as List<string>;
+                return string.Join(";", res);
+            }
+            catch (Exception ex)
+            {
+                return "SERVICE NOT AVAILABLE: " + ex.Message;
+            }
         }
 
         public IActionResult Error()

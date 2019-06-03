@@ -1,13 +1,13 @@
 # JJ Azure .Net Core samples
-Azure dotNet Core samples running on Azure Managed Kubernetes (AKS)
+Azure dotNet Core web and api running on Azure Managed Kubernetes (AKS).
 
 ## Projects
 
 ### Project WebApp dotNet Core [jjazure-web-dotnetcore](src-web/README.md)
-Web project running on Docker (Linux based) in Azure Container Instances(ACI) and Azure Kubernetes Service(AKS) with Visual Studio and Visual Studio Core.
+Web project running on Docker (Linux based) in Azure Container Instances(ACI) and Azure Kubernetes Service (AKS) with Visual Studio and Visual Studio Core.
 
 ### Project WebApp dotNet Core [jjazure-web-dotnetcore-windows](src-web-windows/README.md)
-Web project running on Docker (Windows based) in Azure WebApp for Containers (Visual Studio and Visual Studio Core).
+Web project running on Docker (Windows based) in Azure WebApp for Containers and Azure Kubernetes Service (AKS) with Visual Studio and Visual Studio Core.
 
 ### Project ApiApp dotNet Core [jjazure-webapi-dotnetcore](src-webapi/README.md)
 WebApi project running on Docker (Linux based) in Azure Kubernetes Service(AKS) with Visual Studio.
@@ -268,23 +268,55 @@ You have to update kubectl to latest version with command *az aks install-cli*. 
 TODO: use service endpoint to access sql server
 https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview
 
-### Development productivity
-TODO: Use DevSpaces and Remote Development with VS Code
+### Development productivity DevSpaces
+
+Use DevSpaces and Remote Development with VS Code
 https://docs.microsoft.com/en-us/azure/dev-spaces/
+
+Warning: You cannot deploy to cluster with Windows nodes (first enabled on cluster with linux node only, than add windows node). But still you will get error because sometimes will try azds deploy linux image to windows node.
+
+```
+az aks use-dev-spaces -g jjmicroservices-rg -n $aksname --space dev --yes
+azds show-context
+azds space list
+```
+
+Note: Command azds is automatically generating traefic ingress and pushing host to values helm file. Ingress template is changed to apply rule with and without host.
 
 ### Add Windows nodes in AKS cluster
 You can combine Linux and Windows node pools
 https://docs.microsoft.com/en-us/azure/aks/windows-container-cli
 
-Required minimal cluster version is 1.14.0. Cluster must be created with windows-admin-username and windows-admin-password properties.
+Required minimal cluster version is 1.13.5. Cluster must be created with windows-admin-username and windows-admin-password properties.
 
 ```bash
-az aks nodepool add --resource-group jjmicroservices-rg --cluster-name $aksname --os-type Windows --name npwin --node-count 1 --kubernetes-version 1.14.0
+az aks nodepool add --resource-group jjmicroservices-rg --cluster-name $aksname --os-type Windows --name npwin --node-count 1 --kubernetes-version 1.13.5
 ```
+Warning: Adding this Windows nodes will destroy some services/deployments which not supports Windows OS images. To avoid this issues we will use taints and nodeSelector
 
 Add to your manifest nodeSelector which node to use (or use taint):
+
+```yaml
       nodeSelector:
         "beta.kubernetes.io/os": windows
+```
+
+Taint this node to prevent placement of new deployments (allow deployment with tolerations)
+
+```
+kubectl taint nodes aksnpwin000000 os=windows:NoSchedule
+```
+
+and add toleration to Windows image service:
+
+```yaml
+tolerations:
+  - key: "os"
+    operator: "Equal"
+    value: "windows"
+    effect: "NoSchedule"
+```
+
 
 ### Setup security
 Best practices

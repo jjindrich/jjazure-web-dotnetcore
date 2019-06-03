@@ -60,6 +60,10 @@ resources: {}
 nodeSelector:
   "beta.kubernetes.io/os": windows
 
-tolerations: []
+tolerations:
+  - key: "os"
+    operator: "Equal"
+    value: "windows"
+    effect: "NoSchedule"
 
 affinity: {}
