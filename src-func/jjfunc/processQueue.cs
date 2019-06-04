@@ -5,12 +5,15 @@ using Microsoft.Extensions.Logging;
 
 namespace jjfunc
 {
+    [StorageAccount("QueueStorageAccount")]
     public static class processQueue
     {
         [FunctionName("processQueue")]
-        public static void Run([QueueTrigger("orders", Connection = "")]string myQueueItem, ILogger log)
+        [return: Queue("processed")]
+        public static string Run([QueueTrigger("orders", Connection = "QueueStorageAccount")]string myQueueItem, ILogger log)
         {
-            log.LogInformation($"C# Queue trigger function processed: {myQueueItem}");
+            log.LogInformation($"JJ trigger function processed: {myQueueItem}");
+            return myQueueItem;
         }
     }
 }

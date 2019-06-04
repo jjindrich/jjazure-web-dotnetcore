@@ -1,5 +1,6 @@
 # jjazure-func
-Azure Function project running in Azure Managed Kubernetes (AKS)
+Azure Function project running in Azure Managed Kubernetes (AKS). 
+This function will process messages from Azure Storage Queue - taking message from orders queue and inserting into processed queue.
 
 https://docs.microsoft.com/en-us/azure/azure-functions/functions-create-function-linux-custom-image
 
@@ -28,6 +29,12 @@ For dotNetCore use this images
 
 ```
 docker build jjfunc -t jjfunc
+```
+
+Try to run locally and watch process
+
+```
+docker run -it -e QueueStorageAccount='DefaultEndpointsProtocol=https;AccountName=jjfunctionastorage;AccountKey=KEY' jjfunc
 ```
 
 ## Push Docker image to Azure Container Repository

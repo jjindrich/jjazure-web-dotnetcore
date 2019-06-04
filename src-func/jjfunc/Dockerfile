@@ -9,4 +9,6 @@ FROM mcr.microsoft.com/azure-functions/dotnet:2.0
 ENV AzureWebJobsScriptRoot=/home/site/wwwroot \
     AzureFunctionsJobHost__Logging__Console__IsEnabled=true
 
+ENV QueueStorageAccount=DefaultEndpointsProtocol=https;AccountName=<STORAGE>;AccountKey=<KEY>
+
 COPY --from=installer-env ["/home/site/wwwroot", "/home/site/wwwroot"]
