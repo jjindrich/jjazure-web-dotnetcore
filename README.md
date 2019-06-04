@@ -12,6 +12,9 @@ Web project running on Docker (Windows based) in Azure WebApp for Containers and
 ### Project ApiApp dotNet Core [jjazure-webapi-dotnetcore](src-webapi/README.md)
 WebApi project running on Docker (Linux based) in Azure Kubernetes Service(AKS) with Visual Studio.
 
+### Project Function dotNet Core [jjazure-func-dotnetcore](src-func/README.md)
+Azure Functions running on Docker (Linux based) in Azure Kubernetes Service(AKS) with Visual Studio.
+
 ## Prepare Azure Kubernetes Service(AKS) with best practices
 
 Link to best practices https://docs.microsoft.com/en-us/azure/aks/best-practices

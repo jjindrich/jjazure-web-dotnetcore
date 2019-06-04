@@ -51,10 +51,15 @@ docker push jjcontainers.azurecr.io/jjfunc
 Added Helm Chart to project
 
 ```
-helm create
+cd jjfunc
+helm create jjfunc-charts
 ```
 
 Deploy from command line
+
+!!! Replace connection strings in values.yaml file !!!
+
 ```bash
-helm install --name jjfunc jjfunc/charts/jjfunc --set-string image.repository=jjcontainers.azurecr.io/jjfunc --set-string image.tag=latest
+helm install --name jjfunc jjfunc-charts --set-string image.repository=jjcontainers.azurecr.io/jjfunc --set-string image.tag=latest
+kubectl describe pods jjfunc
 ```
