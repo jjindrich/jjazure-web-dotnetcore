@@ -261,15 +261,20 @@ kubectl describe pod jjwebapicore
 
 kubectl describe pod nginx-ingress-controller --namespace ingress-basic
 kubectl describe pod nginx-ingress-internal-controller --namespace ingress-basic-internal
+
+kubectl logs jjwebcorewindows-655c49d67d-bfmfj
 ```
 
 **Kubectl troubleshooting on Windows**
 
 You have to update kubectl to latest version with command *az aks install-cli*. But sometimes is update is not applied because you have multiple copies of kubectl on computer. Docker for Windows is installing own copy and setting up PATH. Please check your installations *for %i in (kubectl.exe) do @echo. %~$PATH:i*
 
-### Connect to PaaS services like SQL server
-TODO: use service endpoint to access sql server
+### Connect to PaaS services like Azure Storage Queue, Azure SQL
+
+You can use service endpoint security feature - allow access platform services from AKS only
 https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview
+
+I'm using in Function demo access to Azure Queue with Service Endpoint.
 
 ### Development productivity DevSpaces
 
@@ -320,6 +325,19 @@ tolerations:
     effect: "NoSchedule"
 ```
 
+### Running serverless Azure Container Instances (ACI)
+
+It will run ACI on public IP address, not running in AKS network.
+
+https://docs.microsoft.com/en-us/azure/aks/virtual-kubelet
+
+Install Virtual Kubelet to AKS cluster
+
+```
+az aks install-connector --resource-group jjmicroservices-rg --name $aksname --connector-name virtual-kubelet --os-type Both
+kubectl get nodes
+kubectl get pods -o wide
+```
 
 ### Setup security
 Best practices

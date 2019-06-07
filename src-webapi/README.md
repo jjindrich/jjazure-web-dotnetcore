@@ -35,6 +35,18 @@ Now check public IP address for our service http://your_ip/api/values
 kubectl get svc --all-namespaces
 ```
 
+## Configure DevOps
+
+https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/helm-deploy?view=azure-devops#install-command
+
+Configure Azure Pipeline https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/github?view=azure-devops&tabs=yaml
+
+### Build pipeline
+![DevOps CI pipeline](media/devops-ci.png)
+
+### Release pipeline
+
+
 ## Add Application Insights telemetry
 
 Follow this instructions to add Application insights - https://github.com/Microsoft/ApplicationInsights-aspnetcore/wiki/Getting-Started-with-Application-Insights-for-ASP.NET-Core#option-2-environment-variable
