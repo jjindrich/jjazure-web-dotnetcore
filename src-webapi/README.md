@@ -41,6 +41,9 @@ https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/helm-deploy
 
 Configure Azure Pipeline https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/github?view=azure-devops&tabs=yaml
 
+[![Build status](https://dev.azure.com/jjdevteamproject/jjazure-web-dotnetcore/_apis/build/status/jjwebapicore%20-%20CI)](https://dev.azure.com/jjdevteamproject/jjazure-web-dotnetcore/_build/latest?definitionId=33)
+![Release badge](https://vsrm.dev.azure.com/jjdevteamproject/_apis/public/Release/badge/4ca1b946-0456-4ea2-8527-7fe1a8a17b8b/3/3)
+
 ### Build pipeline
 ![DevOps CI pipeline](media/devops-ci.png)
 
