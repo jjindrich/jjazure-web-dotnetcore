@@ -176,7 +176,7 @@ helm init --service-account tiller
 
 Problems with Tiller for Helm
 - run helm init tiller --upgrade
-- reinstal https://helm.sh/docs/using_helm/#deleting-or-reinstalling-tiller
+- reinstall https://helm.sh/docs/using_helm/#deleting-or-reinstalling-tiller
 
 #### 6. Setup permissions to Azure Container Registry
 

@@ -44,8 +44,64 @@ Configure Azure Pipeline https://docs.microsoft.com/en-us/azure/devops/pipelines
 ### Build pipeline
 ![DevOps CI pipeline](media/devops-ci.png)
 
+```yaml
+pool:
+  name: Hosted Ubuntu 1604
+steps:
+- task: Docker@0
+  displayName: 'Build an image'
+  inputs:
+    azureSubscription: 'subscription'
+    azureContainerRegistry: '{"loginServer":"jjcontainers.azurecr.io", "id" : "/subscriptions/XXXXXXXXXXXXXXXXXX/resourceGroups/TEST/providers/Microsoft.ContainerRegistry/registries/jjcontainers"}'
+    dockerFile: 'src-webapi/jjwebapicore/Dockerfile'
+    defaultContext: False
+    context: 'src-webapi'
+    imageName: 'jjwebapicore:$(Build.BuildNumber)'
+
+- task: Docker@0
+  displayName: 'Push an image'
+  inputs:
+    azureSubscription: 'subscription'
+    azureContainerRegistry: '{"loginServer":"jjcontainers.azurecr.io", "id" : "/subscriptions/XXXXXXXXXXXXXXXXXX/resourceGroups/TEST/providers/Microsoft.ContainerRegistry/registries/jjcontainers"}'
+    action: 'Push an image'
+    imageName: 'jjwebapicore:$(Build.BuildNumber)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish HELM chart to drop'
+  inputs:
+    PathtoPublish: 'src-webapi/jjwebapicore/charts'
+```
+
 ### Release pipeline
 
+**Authentication to AKS**
+Use Kubernetes Service Connection type Kubeconfig. The reason is RBAC enabled cluster. Is not supported to authenticate to AAD. You have to use admin account.
+
+How to get kubeconfig
+
+```
+az aks get-credentials -n $aksname -g jjmicroservices-rg --admin
+cat ~/.kube/config
+```
+
+![DevOps CD pipeline](media/devops-cd.png)
+
+```yaml
+steps:
+- task: HelmDeploy@0
+  displayName: 'helm upgrade'
+  inputs:
+    connectionType: 'Kubernetes Service Connection'
+    kubernetesServiceConnection: 'jjaks-admin'
+    namespace: default
+    command: upgrade
+    chartType: FilePath
+    chartPath: '$(System.DefaultWorkingDirectory)/_source/drop/jjwebapicore'
+    releaseName: jjwebapicore
+    overrideValues: 'image.repository=jjcontainers.azurecr.io/jjwebapicore,image.tag=$(build.buildNumber)'
+    valueFile: '$(System.DefaultWorkingDirectory)/_source/drop/jjwebapicore/values.yaml'
+    waitForExecution: false
+```
 
 ## Add Application Insights telemetry
 
