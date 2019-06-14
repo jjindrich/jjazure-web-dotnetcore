@@ -368,8 +368,8 @@ https://docs.microsoft.com/en-us/azure/aks/node-updates-kured
 Enable monitoring
 https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-enable-existing-clusters#enable-from-azure-monitor-in-the-portal
 
-View live logs
-https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-live-logs#configure-aks-with-azure-active-directory
+View live logs - configure AAD and permissions
+https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-live-logs
 
 Azure Monitor for containers
 https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-overview
