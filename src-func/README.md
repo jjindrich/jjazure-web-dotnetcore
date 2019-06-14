@@ -74,8 +74,22 @@ kubectl describe pods jjfunc
 
 ## Run Function on AKS using Keda
 
-Keda (Kubernetes Event Driven Autoscale) is project how to autoscale Function pods in Kubernetes. It contains Keda (non-http scale to zero) and Osiris (http scale to zero).
+Keda (ubernetes-based Event Driven Autoscaling) is project how to autoscale Function pods in Kubernetes. It contains Keda (non-http scale to zero) and Osiris (http scale to zero).
+
+https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda
+
+Install Keda to AKS
 
 ```
 func kubernetes install
 ```
+
+Deploy Function to cluster
+```
+func kubernetes deploy --name jjfunc --registry jjcontainers.azurecr.io
+kubectl get pods
+```
+
+You will not see any jjfunc pod because will be automatically scaled up when new message arrive in queue. Add new message in queue and check pods (automatic auto scaling).
+
+![Keda scaling Function](media/keda.png)
