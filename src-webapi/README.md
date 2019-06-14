@@ -35,6 +35,18 @@ Now check public IP address for our service http://your_ip/api/values
 kubectl get svc --all-namespaces
 ```
 
+## Add Application Insights telemetry
+
+Follow this instructions to add Application insights - https://github.com/Microsoft/ApplicationInsights-aspnetcore/wiki/Getting-Started-with-Application-Insights-for-ASP.NET-Core#option-2-environment-variable
+
+- change application code to use Application Insights (using environment variable APPINSIGHTS_INSTRUMENTATIONKEY)
+
+- added secret to values.yaml key and value of APPINSIGHTS_INSTRUMENTATIONKEY.
+
+After new deployment you will get this report - e.g. Performance
+
+![Application Insights](media/appinsights.png)
+
 ## Configure DevOps
 
 https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/helm-deploy?view=azure-devops#install-command
@@ -106,14 +118,29 @@ steps:
     waitForExecution: false
 ```
 
-## Add Application Insights telemetry
+## Development on AKS with Azure Dev Spaces
 
-Follow this instructions to add Application insights - https://github.com/Microsoft/ApplicationInsights-aspnetcore/wiki/Getting-Started-with-Application-Insights-for-ASP.NET-Core#option-2-environment-variable
+Check Azure Dev Spaces are installed on your cluster correctly.
 
-- change application code to use Application Insights (using environment variable APPINSIGHTS_INSTRUMENTATIONKEY)
+```
+azds show-context
+azds space list
+```
 
-- added secret to values.yaml key and value of APPINSIGHTS_INSTRUMENTATIONKEY.
+### Azure Dev Spaces with Visual Studio Code
 
-After new deployment you will get this report - e.g. Performance
+Azure Dev Spaces allows you to develop and debug your application in context of Kubernetes cluster, meaning to be able access other services running in cluster.
 
-![Application Insights](media/appinsights.png)
+To run application, open folder jjwebapicode in Visual Studio Code and just hit F5 to debug.
+
+You will get url running your application in AKS in azds space, like http://jjwebapicore.82pfxdkqm6.weu.azds.io/api/values
+
+![Azure DevSpaces VS Code](media/azds-vscode.png)
+
+### Azure Dev Spaces with Visual Studio 2019
+
+To run application, open solution jjwebapicode in Visual Studio with profile Azure Dev Spaces and just hit F5 to debug.
+
+You will get url running your application in AKS in azds space, like http://jjwebapicore.82pfxdkqm6.weu.azds.io/api/values
+
+![Azure DevSpaces VS Code](media/azds-vs.png)

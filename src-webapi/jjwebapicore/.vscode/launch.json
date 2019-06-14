@@ -18,7 +18,7 @@
                 "quoteArgs": false
             },
             "cwd": "/src",
-            "program": "/src/bin/Debug/netcoreapp2.1/jjwebapicore.dll",
+            "program": "/src/jjwebapicore/bin/Debug/netcoreapp2.1/jjwebapicore.dll",
             "sourceFileMap": {
                 "/src": "${workspaceFolder}/.."
             }
