@@ -47,6 +47,18 @@ After new deployment you will get this report - e.g. Performance
 
 ![Application Insights](media/appinsights.png)
 
+## Add Entity Framework for SQL server connection
+
+Follow this instructions to add EF Core https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db?tabs=visual-studio
+
+OR
+
+Use Visual Studio 2019 to add New scaffolder Item API controller
+
+![Add scaffolded item](media/vs-sql.png)
+
+Next create InitialCreate script and create database https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db?tabs=visual-studio#create-the-database
+
 ## Configure DevOps
 
 https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/helm-deploy?view=azure-devops#install-command
