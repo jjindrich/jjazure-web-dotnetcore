@@ -18,6 +18,7 @@ namespace jjwebapicore.Controllers
         public ContactsController(ContactsContext context)
         {
             _context = context;
+            _context.Database.EnsureCreated();
         }
 
         // GET: api/Contacts

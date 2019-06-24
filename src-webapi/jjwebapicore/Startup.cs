@@ -29,8 +29,14 @@ namespace jjwebapicore
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            // load connection string from ENV or from appsettings.json
+            string connStr = Environment.GetEnvironmentVariable("ConnectionStrings_ContactsContext");
+            connStr = connStr.Replace("SQL_PASSWORD", Environment.GetEnvironmentVariable("ConnectionStrings_SQL_PASSWORD"));
+            if (string.IsNullOrEmpty(connStr))
+                connStr = Configuration.GetConnectionString("ContactsContext");
+
             services.AddDbContext<ContactsContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("ContactsContext")));
+                    options.UseSqlServer(connStr));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
