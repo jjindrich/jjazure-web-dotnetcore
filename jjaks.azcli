@@ -1,0 +1,55 @@
+!!! ADD VARIABLES !!!
+
+az extension update --name aks-preview
+
+tenantId=$(az account show --query tenantId -o tsv)
+vnetid=$(az network vnet subnet list --resource-group vnet-central-rg --vnet-name jjvnet-central --query [].id --output tsv | grep dmz-aks)
+
+workspaceId=$(az resource show -n jjdev-analytics -g jjdevmanagement --resource-type microsoft.operationalinsights/workspaces --query id --output tsv)
+
+az aks create \
+    --resource-group jjmicroservices-rg \
+    --name $aksname \
+    --node-vm-size Standard_B2s \
+    --node-count 1 \
+    --min-count 1 \
+    --max-count 3 \
+    --enable-vmss \
+    --enable-cluster-autoscaler \
+    --enable-addons monitoring \
+    --workspace-resource-id $workspaceId \
+    --generate-ssh-keys \
+    --windows-admin-username aksadmin \
+    --windows-admin-password $winpassword \
+    --service-principal $serverApplicationId \
+    --client-secret $serverApplicationSecret \
+    --aad-server-app-id $serverApplicationId \
+    --aad-server-app-secret $serverApplicationSecret \
+    --aad-client-app-id $clientApplicationId \
+    --aad-tenant-id $tenantId \
+    --network-plugin azure \
+    --vnet-subnet-id $vnetid \
+    --kubernetes-version 1.13.5 \
+    --node-resource-group jjmicroservices-aks-rg
+
+az aks nodepool add --resource-group jjmicroservices-rg --cluster-name $aksname --os-type Windows --name npwin --node-count 1 --kubernetes-version 1.13.5
+
+az aks get-credentials --resource-group jjmicroservices-rg --name $aksname --admin
+kubectl taint nodes aksnpwin000000 os=windows:NoSchedule
+
+kubectl apply -f aks/rbac-aad-admin.yaml
+kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
+kubectl apply -f aks/helm-account.yaml
+helm init --service-account tiller
+
+kubectl create namespace ingress-basic
+helm install stable/nginx-ingress --name nginx-ingress --namespace ingress-basic --set controller.replicaCount=2 --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux
+kubectl create namespace ingress-basic-internal
+helm install stable/nginx-ingress --name nginx-ingress-internal --namespace ingress-basic-internal --set controller.replicaCount=2 -f aks/internal-ingress.yaml --set controller.ingressClass=nginx-internal
+
+kubectl get pods --all-namespaces
+
+az aks install-connector --resource-group jjmicroservices-rg --name $aksname --connector-name virtual-kubelet --os-type Both
+az aks use-dev-spaces -g jjmicroservices-rg -n $aksname --space dev --yes
+
+kubectl get pods --all-namespaces
