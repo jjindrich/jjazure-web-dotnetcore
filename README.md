@@ -3,7 +3,7 @@ Azure dotNet Core web and api running on Azure Managed Kubernetes (AKS).
 
 ## Projects
 
-### Project WebApp dotNet Core [jjazure-web-dotnetcore](src-web/README.md)
+### Project WebApp dotNet Core [jjazure-web-dotnetcore](src-webui/README.md)
 Web project running on Docker (Linux based) in Azure Container Instances(ACI) and Azure Kubernetes Service (AKS) with Visual Studio and Visual Studio Core.
 
 ### Project WebApp dotNet Core [jjazure-web-dotnetcore-windows](src-web-windows/README.md)
