@@ -1,4 +1,5 @@
 !!! ADD VARIABLES !!!
+aksname=$(az keyvault secret show --vault-name jjakskv --name aksname -o tsv --query value)
 
 az extension update --name aks-preview
 
