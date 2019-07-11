@@ -193,7 +193,6 @@ Links:
 - custom resource group https://docs.microsoft.com/en-us/azure/aks/faq#can-i-provide-my-own-name-for-the-aks-infrastructure-resource-group
 - custom vnet https://docs.microsoft.com/en-us/azure/aks/configure-azure-cni
 - connect to AAD and assign AAD admin https://docs.microsoft.com/en-us/azure/aks/azure-ad-integration-cli
-- upgrade AKS pool https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools#upgrade-a-node-pool
 - enable Dashboard https://docs.microsoft.com/en-us/azure/aks/kubernetes-dashboard#for-rbac-enabled-clusters
 - install Helm https://docs.microsoft.com/cs-cz/azure/aks/kubernetes-helm
 - Grant access to ACR https://docs.microsoft.com/en-us/azure/container-registry/container-registry-auth-aks
@@ -268,6 +267,17 @@ kubectl logs jjwebcorewindows-655c49d67d-bfmfj
 **Kubectl troubleshooting on Windows**
 
 You have to update kubectl to latest version with command *az aks install-cli*. But sometimes is update is not applied because you have multiple copies of kubectl on computer. Docker for Windows is installing own copy and setting up PATH. Please check your installations *for %i in (kubectl.exe) do @echo. %~$PATH:i*
+
+**Upgrade AKS cluster**
+
+Upgrade AKS pool https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-pools#upgrade-a-node-pool
+
+```
+az aks get-versions --location westeurope --output table
+az aks nodepool list --resource-group jjmicroservices-rg --cluster-name $aksname -o table
+az aks nodepool upgrade --resource-group jjmicroservices-rg --cluster-name $aksname --name nodepool1 --kubernetes-version 1.13.5 --no-wait
+az aks nodepool upgrade --resource-group jjmicroservices-rg --cluster-name $aksname --name npwin --kubernetes-version 1.13.5 --no-wait
+```
 
 ### Connect to PaaS services like Azure Storage Queue, Azure SQL
 
