@@ -59,6 +59,12 @@ Use Visual Studio 2019 to add New scaffolder Item API controller
 
 Next create InitialCreate script and create database https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db?tabs=visual-studio#create-the-database
 
+### Use AKS Pod Identity to authenticate to Azure SQL
+
+Enable on AKS cluster Pod Identity https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-identity#use-pod-identities
+
+Change code to setup SQL connection https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/tutorial-windows-vm-access-sql#get-an-access-token-using-the-vms-system-assigned-managed-identity-and-use-it-to-call-azure-sql
+
 ## Configure DevOps
 
 https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/helm-deploy?view=azure-devops#install-command
