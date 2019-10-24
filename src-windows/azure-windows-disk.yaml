@@ -1,0 +1,29 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: winserver
+spec:
+  containers:
+  - name: winserver
+    image: jjcontainers.azurecr.io/winserver
+    resources:
+      requests:
+        cpu: 1
+        memory: 1024M
+      limits:
+        cpu: 1
+        memory: 1024M
+    volumeMounts:
+    - mountPath: "E:"
+      name: volume
+  volumes:
+    - name: volume
+      persistentVolumeClaim:
+        claimName: azure-managed-disk
+  nodeSelector:
+    "beta.kubernetes.io/os": windows
+  tolerations:
+    - key: "os"
+      operator: "Equal"
+      value: "windows"
+      effect: "NoSchedule"     

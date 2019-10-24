@@ -275,8 +275,8 @@ Upgrade AKS pool https://docs.microsoft.com/en-us/azure/aks/use-multiple-node-po
 ```
 az aks get-versions --location westeurope --output table
 az aks nodepool list --resource-group jjmicroservices-rg --cluster-name $aksname -o table
-az aks nodepool upgrade --resource-group jjmicroservices-rg --cluster-name $aksname --name nodepool1 --kubernetes-version 1.13.5 --no-wait
-az aks nodepool upgrade --resource-group jjmicroservices-rg --cluster-name $aksname --name npwin --kubernetes-version 1.13.5 --no-wait
+az aks nodepool upgrade --resource-group jjmicroservices-rg --cluster-name $aksname --name nodepool1 --kubernetes-version 1.14.7 --no-wait
+az aks nodepool upgrade --resource-group jjmicroservices-rg --cluster-name $aksname --name npwin --kubernetes-version 1.14.7 --no-wait
 ```
 
 ### Connect to PaaS services like Azure Storage Queue, Azure SQL
