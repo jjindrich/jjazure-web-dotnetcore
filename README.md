@@ -91,12 +91,14 @@ az extension add --name aks-preview
 az extension update --name aks-preview
 ```
 
+Script creates AKS cluster in Availability Zones for HA deployments. Because of it creates Azure LoadBalancer type Standard.
+
 ```bash
 az group create --name jjmicroservices-rg --location WestEurope
 
 winpassword=P@ssw0rd1234
 tenantId=$(az account show --query tenantId -o tsv)
-vnetid=$(az network vnet subnet list --resource-group vnet-central-rg --vnet-name jjvnet-central --query [].id --output tsv | grep dmz-aks)
+vnetid=$(az network vnet subnet list --resource-group vnet-central-rg --vnet-name jjvnet-central --query "[?name=='dmz-aks'].id" --output tsv)
 
 workspaceId=$(az resource show -n jjdev-analytics -g jjdevmanagement --resource-type microsoft.operationalinsights/workspaces --query id --output tsv)
 
@@ -107,13 +109,11 @@ az aks create \
     --node-count 1 \
     --min-count 1 \
     --max-count 3 \
-    --enable-vmss \
     --enable-cluster-autoscaler \
+    --zones 1 2 3 \
     --enable-addons monitoring \
     --workspace-resource-id $workspaceId \
     --generate-ssh-keys \
-    --windows-admin-username aksadmin \
-    --windows-admin-password $winpassword \
     --service-principal $serverApplicationId \
     --client-secret $serverApplicationSecret \
     --aad-server-app-id $serverApplicationId \
@@ -122,7 +122,8 @@ az aks create \
     --aad-tenant-id $tenantId \
     --network-plugin azure \
     --vnet-subnet-id $vnetid \
-    --kubernetes-version 1.13.5 \
+    --windows-admin-username aksadmin \
+    --windows-admin-password $winpassword \
     --node-resource-group jjmicroservices-aks-rg
 
 az aks install-cli
@@ -205,6 +206,8 @@ I'm using NGINX ingress controller for my demos
 
 #### NGINX ingress controller
 How to configure https://docs.microsoft.com/en-us/azure/aks/ingress-basic
+
+It creates Azure LoadBalancer Standard if AKS is deployed in Availability Zones.
 
 **NGINX ingress (public load balancer)**
 
@@ -308,7 +311,8 @@ https://docs.microsoft.com/en-us/azure/aks/windows-container-cli
 Required minimal cluster version is 1.13.5. Cluster must be created with windows-admin-username and windows-admin-password properties.
 
 ```bash
-az aks nodepool add --resource-group jjmicroservices-rg --cluster-name $aksname --os-type Windows --name npwin --node-count 1 --kubernetes-version 1.13.5
+az aks nodepool add --resource-group jjmicroservices-rg --cluster-name $aksname --os-type Windows --name npwin --node-count 1 --zones 1 2 3
+kubectl taint nodes aksnpwin000000 os=windows:NoSchedule
 ```
 Warning: Adding this Windows nodes will destroy some services/deployments which not supports Windows OS images. To avoid this issues we will use taints and nodeSelector
 
