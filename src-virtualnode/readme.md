@@ -22,6 +22,12 @@ You can deploy with internal ip
 kubectl apply -f virtual-node-internal.yaml
 ```
 
+You can deploy with ingress
+
+```bash
+kubectl apply -f virtual-node-ingress.yaml
+```
+
 ## Test
 
 Service is deployed on external load balancer.
