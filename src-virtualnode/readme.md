@@ -10,8 +10,16 @@ There are some limitations
 
 ## Deploy
 
+You can deploy with public ip
+
 ```bash
 kubectl apply -f virtual-node.yaml
+```
+
+You can deploy with internal ip
+
+```bash
+kubectl apply -f virtual-node-internal.yaml
 ```
 
 ## Test
