@@ -6,7 +6,7 @@ aksname=$(az keyvault secret show --vault-name jjakskv --name aksname -o tsv --q
 winpassword=$(az keyvault secret show --vault-name jjakskv --name akswinpassword -o tsv --query value)
 
 tenantId=$(az account show --query tenantId -o tsv)
-vnetid=$(az network vnet subnet list --resource-group vnet-central-rg --vnet-name jjvnet-central --query "[?name=='dmz-aks'].id" --output tsv)
+vnetsubnetid=$(az network vnet subnet list --resource-group vnet-central-rg --vnet-name jjvnet-central --query "[?name=='dmz-aks'].id" --output tsv)
 workspaceId=$(az resource show -n jjdev-analytics -g jjdevmanagement --resource-type microsoft.operationalinsights/workspaces --query id --output tsv)
 
 az extension update --name aks-preview
@@ -30,12 +30,21 @@ az aks create \
     --aad-client-app-id $clientApplicationId \
     --aad-tenant-id $tenantId \
     --network-plugin azure \
-    --vnet-subnet-id $vnetid \
+    --vnet-subnet-id $vnetsubnetid \
     --windows-admin-username aksadmin \
     --windows-admin-password $winpassword \
     --node-resource-group jjmicroservices-aks-rg
 
 az aks get-credentials --resource-group jjmicroservices-rg --name $aksname --admin
+
+vnetid=$(az network vnet show --resource-group vnet-central-rg --name jjvnet-central --query id -o tsv)
+az role assignment create --assignee $serverApplicationId --scope $vnetid --role Contributor
+az aks enable-addons \
+    --resource-group jjmicroservices-rg \
+    --name $aksname \
+    --addons virtual-node \
+    --subnet-name dmz-aci
+kubectl get pods --all-namespaces
 
 az aks nodepool add --resource-group jjmicroservices-rg --cluster-name $aksname --os-type Windows --name npwin --node-vm-size Standard_B2ms --node-count 1 --zones 1 2 3
 kubectl taint nodes aksnpwin000000 os=windows:NoSchedule
@@ -52,7 +61,6 @@ helm install stable/nginx-ingress --name nginx-ingress-internal --namespace ingr
 
 kubectl get pods --all-namespaces
 
-az aks install-connector --resource-group jjmicroservices-rg --name $aksname --connector-name virtual-kubelet --os-type Both
 az aks use-dev-spaces -g jjmicroservices-rg -n $aksname --space dev --yes
 
 kubectl get pods --all-namespaces

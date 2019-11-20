@@ -98,7 +98,7 @@ az group create --name jjmicroservices-rg --location WestEurope
 
 winpassword=P@ssw0rd1234
 tenantId=$(az account show --query tenantId -o tsv)
-vnetid=$(az network vnet subnet list --resource-group vnet-central-rg --vnet-name jjvnet-central --query "[?name=='dmz-aks'].id" --output tsv)
+vnetsubnetid=$(az network vnet subnet list --resource-group vnet-central-rg --vnet-name jjvnet-central --query "[?name=='dmz-aks'].id" --output tsv)
 
 workspaceId=$(az resource show -n jjdev-analytics -g jjdevmanagement --resource-type microsoft.operationalinsights/workspaces --query id --output tsv)
 
@@ -121,7 +121,7 @@ az aks create \
     --aad-client-app-id $clientApplicationId \
     --aad-tenant-id $tenantId \
     --network-plugin azure \
-    --vnet-subnet-id $vnetid \
+    --vnet-subnet-id $vnetsubnetid \
     --windows-admin-username aksadmin \
     --windows-admin-password $winpassword \
     --node-resource-group jjmicroservices-aks-rg
@@ -341,14 +341,22 @@ tolerations:
 
 ### Running serverless Azure Container Instances (ACI)
 
-It will run ACI on public IP address, not running in AKS network.
+Install Virtual nodes to AKS cluster. It cannot be combined with Windows nodepools. Check [limitations](https://docs.microsoft.com/en-us/azure/aks/virtual-nodes-cli#known-limitations). Vnet peering not supported, check [ACI limitations](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-vnet#preview-limitations).
 
 https://docs.microsoft.com/en-us/azure/aks/virtual-kubelet
+https://docs.microsoft.com/en-us/azure/aks/virtual-nodes-cli#enable-virtual-nodes-addon
 
-Install Virtual Kubelet to AKS cluster
 
 ```
-az aks install-connector --resource-group jjmicroservices-rg --name $aksname --connector-name virtual-kubelet --os-type Both
+vnetid=$(az network vnet show --resource-group vnet-central-rg --name jjvnet-central --query id -o tsv)
+az role assignment create --assignee $serverApplicationId --scope $vnetid --role Contributor
+
+az aks enable-addons \
+    --resource-group jjmicroservices-rg \
+    --name $aksname \
+    --addons virtual-node \
+    --subnet-name dmz-aci
+    
 kubectl get nodes
 kubectl get pods -o wide
 ```
