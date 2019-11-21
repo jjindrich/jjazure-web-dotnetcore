@@ -41,6 +41,8 @@ apt-get update && apt-get install -y curl
 curl -L http://IPaddress
 ```
 
+Service published with Ingress, check this url http://IPaddress/aci
+
 ## Clean-up
 
 ```bash

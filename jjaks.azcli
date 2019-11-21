@@ -46,7 +46,16 @@ az aks enable-addons \
     --subnet-name dmz-aci
 kubectl get pods --all-namespaces
 
-az aks nodepool add --resource-group jjmicroservices-rg --cluster-name $aksname --os-type Windows --name npwin --node-vm-size Standard_B2ms --node-count 1 --zones 1 2 3
+az aks nodepool add \
+    --resource-group jjmicroservices-rg \
+    --cluster-name $aksname \
+    --os-type Windows \
+    --name npwin \
+    --node-vm-size Standard_B2ms \
+    --node-taints os=windows:NoSchedule \
+    --node-count 1 \
+    --zones 1 2 3
+# lze nahradit az aks nodepool add --node-taints
 kubectl taint nodes aksnpwin000000 os=windows:NoSchedule
 
 kubectl apply -f aks/rbac-aad-admin.yaml

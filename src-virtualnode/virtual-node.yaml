@@ -16,7 +16,9 @@ spec:
       - name: aci-helloworld
         image: microsoft/aci-helloworld
         ports:
-        - containerPort: 80
+          - name: http
+            containerPort: 80
+            protocol: TCP
       nodeSelector:
         kubernetes.io/role: agent
         beta.kubernetes.io/os: linux

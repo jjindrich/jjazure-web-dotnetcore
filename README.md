@@ -311,8 +311,15 @@ https://docs.microsoft.com/en-us/azure/aks/windows-container-cli
 Required minimal cluster version is 1.13.5. Cluster must be created with windows-admin-username and windows-admin-password properties.
 
 ```bash
-az aks nodepool add --resource-group jjmicroservices-rg --cluster-name $aksname --os-type Windows --name npwin --node-count 1 --zones 1 2 3
-kubectl taint nodes aksnpwin000000 os=windows:NoSchedule
+az aks nodepool add \
+    --resource-group jjmicroservices-rg \
+    --cluster-name $aksname \
+    --os-type Windows \
+    --name npwin \
+    --node-vm-size Standard_B2ms \
+    --node-taints os=windows:NoSchedule \
+    --node-count 1 \
+    --zones 1 2 3
 ```
 Warning: Adding this Windows nodes will destroy some services/deployments which not supports Windows OS images. To avoid this issues we will use taints and nodeSelector
 
