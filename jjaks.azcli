@@ -59,6 +59,7 @@ az aks nodepool add \
 kubectl taint nodes aksnpwin000000 os=windows:NoSchedule
 
 kubectl apply -f aks/rbac-aad-admin.yaml
+kubectl apply -f aks/rbac-log-reader.yaml
 kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
 kubectl apply -f aks/helm-account.yaml
 helm init --service-account tiller
