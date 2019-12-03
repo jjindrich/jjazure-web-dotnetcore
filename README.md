@@ -368,6 +368,15 @@ kubectl get nodes
 kubectl get pods -o wide
 ```
 
+### Configure custom DNS server
+
+AKS is using internal CoreDNS server, is not reflecting DNS configuration on Azure Virtual Network DNS settings. Check [this](https://docs.microsoft.com/en-us/azure/aks/coredns-custom#custom-forward-server).
+
+```
+kubectl apply -f corednsms.yaml
+kubectl delete pod --namespace kube-system --selector k8s-app=kube-dns
+```
+
 ### Setup security
 Best practices
 https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-network#control-traffic-flow-with-network-policies

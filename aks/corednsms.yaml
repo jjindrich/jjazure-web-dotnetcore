@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns-custom
+  namespace: kube-system
+data:
+  test.server: | # you may select any name here, but it must end with the .server file extension
+    jjdev.local:53 {
+        forward jjdevv2addc.jjdev.local 10.3.250.10
+    }
+    jjdev.lan:53 {
+        forward jjdevv2addc.jjdev.lan 10.3.250.10
+    }
