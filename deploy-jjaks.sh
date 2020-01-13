@@ -35,7 +35,7 @@ az aks create \
     --windows-admin-password $winpassword \
     --node-resource-group jjmicroservices-aks-rg
 
-az aks get-credentials --resource-group jjmicroservices-rg --name $aksname --admin
+az aks get-credentials --resource-group jjmicroservices-rg --name $aksname --admin --overwrite-existing
 
 vnetid=$(az network vnet show --resource-group JJDevV2-Infra --name JJDevV2Network --query id -o tsv)
 az role assignment create --assignee $serverApplicationId --scope $vnetid --role Contributor
