@@ -42,7 +42,7 @@ linkerd check
 linkerd dashboard
 ```
 
-![Linkerd Dashboard](../media/linkerd-dashboard.png)
+![Linkerd Dashboard](media/linkerd-dashboard.png)
 
 ## Run Books sample with Linkerd 
 
