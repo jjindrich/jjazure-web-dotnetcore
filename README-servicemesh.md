@@ -44,6 +44,19 @@ linkerd dashboard
 
 ![Linkerd Dashboard](media/linkerd-dashboard.png)
 
-## Run Books sample with Linkerd 
+## Deploy Linkerd to my jjweb
 
-https://linkerd.io/2/tasks/books/
+Deploy website to AKS as described in projects.
+
+Next inject Linkerd into deployment in Default namespace.
+Is not supported on Windows nodes.
+
+```bash
+kubectl get -n default deploy -o yaml \
+  | linkerd inject - \
+  | kubectl apply -f -
+
+linkerd dashboard
+```
+
+![Linkerd Dashboard](media/linkerd-jjweb.png)
