@@ -125,4 +125,18 @@ kubectl label namespace default istio-injection=enabled
 
 Now you have to change ingress to Istio.
 
-or you can use this [sample](https://docs.microsoft.com/en-us/azure/aks/servicemesh-istio-scenario-routing)
+```bash
+kubectl apply -f aks/istio.jjwebcore.yaml
+```
+
+Generate client web requests to website and check dashboards
+
+```bash
+istioctl dashboard grafana
+istioctl dashboard kiali
+while true; do curl -s "http://51.136.74.4/Home/Test"; echo; sleep 0.2; done
+```
+
+![Grafana Istio Dashboard](media/istio-grafana.png)
+
+![Kiali Istio Dashboard](media/istio-kiali.png)
