@@ -377,6 +377,10 @@ kubectl apply -f corednsms.yaml
 kubectl delete pod --namespace kube-system --selector k8s-app=kube-dns
 ```
 
+### Setup Service Mesh
+
+Follow this on [different options how to run Service Mesh](README-servicemesh.md)
+
 ### Setup security
 Best practices
 https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-network#control-traffic-flow-with-network-policies
@@ -396,9 +400,6 @@ https://docs.microsoft.com/en-us/azure/aks/api-server-authorized-ip-ranges
 Limit egress traffic - use Azure Firewall
 https://docs.microsoft.com/en-us/azure/aks/limit-egress-traffic
 
-Install Istio for advanced routing and networking features
-https://docs.microsoft.com/en-us/azure/aks/istio-install
-
 Manage node security updates
 https://docs.microsoft.com/en-us/azure/aks/node-updates-kured
 
@@ -413,6 +414,3 @@ https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights
 
 Azure Monitor for containers
 https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-overview
-
-Service Mesh application monitoring (requires Istio) for application map
-https://docs.microsoft.com/en-us/azure/azure-monitor/app/kubernetes

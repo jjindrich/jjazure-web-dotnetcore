@@ -140,3 +140,7 @@ while true; do curl -s "http://51.136.74.4/Home/Test"; echo; sleep 0.2; done
 ![Grafana Istio Dashboard](media/istio-grafana.png)
 
 ![Kiali Istio Dashboard](media/istio-kiali.png)
+
+## Service Mesh application monitoring (requires Istio) for application map
+
+https://docs.microsoft.com/en-us/azure/azure-monitor/app/kubernetes
