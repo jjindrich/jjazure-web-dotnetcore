@@ -143,4 +143,29 @@ while true; do curl -s "http://51.136.74.4/Home/Test"; echo; sleep 0.2; done
 
 ## Service Mesh application monitoring (requires Istio) for application map
 
-https://docs.microsoft.com/en-us/azure/azure-monitor/app/kubernetes
+It integrates with Azure Application Insights https://docs.microsoft.com/en-us/azure/azure-monitor/app/kubernetes
+
+Replace with your Azure Application Insights key (loading from KeyVault) and run deployment of this adapter
+
+```bash
+APPIN_KEY=$(az keyvault secret show --vault-name jjakskv --name aksApplicationInsightsKey -o tsv --query value)
+APPIN_VERSION=0.4
+curl -sL "https://github.com/microsoft/Application-Insights-Istio-Adapter/archive/v$APPIN_VERSION.tar.gz" | tar xz
+cd Application-Insights-Istio-Adapter-$APPIN_VERSION/src/kubernetes/
+sed -i 's/00000000-0000-0000-0000-000000000000/'${APPIN_KEY}'/g' application-insights-istio-mixer-adapter-deployment.yaml
+
+kubectl apply -f .
+kubectl get pods -n istio-system -l "app=application-insights-istio-mixer-adapter"
+```
+
+Generate client web requests and check Azure Application Insights monitoring including Live monitoring and Application Map
+
+```bash
+while true; do curl -s "http://51.136.74.4/Home/Test"; echo; sleep 0.2; done
+```
+
+![Application Insights Overview](media/istio-appinsights1.png)
+
+![Application Insights Live](media/istio-appinsights2.png)
+
+![Application Insights Map](media/istio-appinsights3.png)
