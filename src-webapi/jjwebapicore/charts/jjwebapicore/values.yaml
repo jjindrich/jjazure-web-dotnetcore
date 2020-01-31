@@ -48,7 +48,7 @@ secrets:
   # mysecret:
   #   mypassword: password
   APPINSIGHTS:
-    INSTRUMENTATIONKEY: 3ae44d66-ee5d-47bc-b9e5-efb2a601636e
+    INSTRUMENTATIONKEY: 00000000-0000-0000-0000-000000000000                        
   ConnectionStrings:
     SQL_PASSWORD: replaced_by_pipeline
     ContactsContext: Server=tcp:jjaks-sql.database.windows.net,1433;Initial Catalog=Contacts;Persist Security Info=False;User ID=jj;Password=SQL_PASSWORD;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
