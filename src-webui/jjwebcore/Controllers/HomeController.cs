@@ -65,7 +65,7 @@ namespace jjwebcore.Controllers
                 ViewData["ServiceWinUrl"] = serviceUriWin;
                 ViewData["ApiWinResult"] = await CallApi(serviceUriWin);
             }
-            
+
             return View();
         }
 
