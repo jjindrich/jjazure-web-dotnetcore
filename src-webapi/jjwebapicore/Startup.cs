@@ -31,9 +31,10 @@ namespace jjwebapicore
 
             services.AddControllers();
 
+            services.AddSwaggerDocument();
+
             // load connection string from ENV or from appsettings.json
             string connStr = Environment.GetEnvironmentVariable("ConnectionStrings_ContactsContext");
-            connStr = connStr.Replace("SQL_PASSWORD", Environment.GetEnvironmentVariable("ConnectionStrings_SQL_PASSWORD"));
             if (string.IsNullOrEmpty(connStr))
                 connStr = Configuration.GetConnectionString("ContactsContext");
 
@@ -59,6 +60,10 @@ namespace jjwebapicore
             {
                 endpoints.MapControllers();
             });
+
+            // Register the Swagger generator and the Swagger UI middlewares
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
         }
     }
 }
