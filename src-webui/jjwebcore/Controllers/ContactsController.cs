@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using jjwebapicore;
 
 namespace jjwebcore.Controllers
 {
@@ -29,11 +30,12 @@ namespace jjwebcore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(IFormCollection collection)
         {
             try
             {
-                // TODO: Add insert logic here
+                Contact createC = new Contact() { ContactId = Int32.Parse(collection["ContactId"]), FullName = collection["FullName"] };
+                await cl.PostContactAsync(createC);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -46,16 +48,17 @@ namespace jjwebcore.Controllers
         public async Task<ActionResult> Edit(int id)
         {
             var c = await cl.GetContactAsync(id);
-            return View(c.);
+            return View(c);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
             try
             {
-                // TODO: Add update logic here
+                Contact updateC = new Contact() { ContactId = id, FullName = collection["FullName"] };
+                var c = await cl.PutContactAsync(id, updateC);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -65,18 +68,19 @@ namespace jjwebcore.Controllers
             }
         }
 
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            return View();
+            var contact = await cl.GetContactAsync(id);
+            return View(contact);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
             try
             {
-                // TODO: Add delete logic here
+                await cl.DeleteContactAsync(id);
 
                 return RedirectToAction(nameof(Index));
             }

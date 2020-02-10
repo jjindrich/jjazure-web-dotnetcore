@@ -18,25 +18,19 @@ namespace jjwebapicore.Controllers
         public ContactsController(ContactsContext context)
         {
             _context = context;
-            _context.Database.EnsureCreated();
         }
 
         // GET: api/Contacts
         [HttpGet]
-        public IEnumerable<Contact> GetContact()
+        public async Task<ActionResult<IEnumerable<Contact>>> GetContact()
         {
-            return _context.Contact;
+            return await _context.Contact.ToListAsync();
         }
 
         // GET: api/Contacts/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetContact([FromRoute] int id)
+        public async Task<ActionResult<Contact>> GetContact(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var contact = await _context.Contact.FindAsync(id);
 
             if (contact == null)
@@ -44,18 +38,15 @@ namespace jjwebapicore.Controllers
                 return NotFound();
             }
 
-            return Ok(contact);
+            return contact;
         }
 
         // PUT: api/Contacts/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutContact([FromRoute] int id, [FromBody] Contact contact)
+        public async Task<IActionResult> PutContact(int id, Contact contact)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             if (id != contact.ContactId)
             {
                 return BadRequest();
@@ -83,14 +74,11 @@ namespace jjwebapicore.Controllers
         }
 
         // POST: api/Contacts
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<IActionResult> PostContact([FromBody] Contact contact)
+        public async Task<ActionResult<Contact>> PostContact(Contact contact)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             _context.Contact.Add(contact);
             await _context.SaveChangesAsync();
 
@@ -99,13 +87,8 @@ namespace jjwebapicore.Controllers
 
         // DELETE: api/Contacts/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteContact([FromRoute] int id)
+        public async Task<ActionResult<Contact>> DeleteContact(int id)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var contact = await _context.Contact.FindAsync(id);
             if (contact == null)
             {
@@ -115,7 +98,7 @@ namespace jjwebapicore.Controllers
             _context.Contact.Remove(contact);
             await _context.SaveChangesAsync();
 
-            return Ok(contact);
+            return contact;
         }
 
         private bool ContactExists(int id)
