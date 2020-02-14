@@ -120,7 +120,7 @@ cat ~/.kube/config
 Create variables in pipeline
 
 - Application Insights
-- SQL Connection string
+- SQL Connection string - you have to escape comma in connection string to \, e.g. Server=tcp:jjaks-sql.database.windows.net\,1433;Initial...
 
 ![DevOps CD pipeline variables](media/devops-cd-variables.png)
 
