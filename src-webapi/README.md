@@ -117,9 +117,25 @@ az aks get-credentials -n $aksname -g jjmicroservices-rg --admin
 cat ~/.kube/config
 ```
 
+Create variables in pipeline
+
+- Application Insights
+- SQL Connection string
+
+![DevOps CD pipeline variables](media/devops-cd-variables.png)
+
+Create pipeline tasks with Ubuntu agent
+
+- install helm
+- helm init
+- helm upgrade
+
 ![DevOps CD pipeline](media/devops-cd.png)
 
 ```yaml
+#Your build pipeline references a secret variable named ‘appinsights’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it secret. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references a secret variable named ‘dbconnection’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it secret. See https://go.microsoft.com/fwlink/?linkid=865972
+
 steps:
 - task: HelmDeploy@0
   displayName: 'helm upgrade'
@@ -131,7 +147,7 @@ steps:
     chartType: FilePath
     chartPath: '$(System.DefaultWorkingDirectory)/_source/drop/jjwebapicore'
     releaseName: jjwebapicore
-    overrideValues: 'image.repository=jjcontainers.azurecr.io/jjwebapicore,image.tag=$(build.buildNumber)'
+    overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebapicore,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appinsights),secrets.ConnectionStrings.ContactsContext="$(dbconnection)"'
     valueFile: '$(System.DefaultWorkingDirectory)/_source/drop/jjwebapicore/values.yaml'
     waitForExecution: false
 ```
