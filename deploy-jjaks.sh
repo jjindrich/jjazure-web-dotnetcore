@@ -1,3 +1,4 @@
+# fix \r issue -> dos2unix deploy-jjaks.sh
 # load variables from keyvault jjakskv
 serverApplicationId=$(az keyvault secret show --vault-name jjakskv --name aksserverApplicationId -o tsv --query value)
 serverApplicationSecret=$(az keyvault secret show --vault-name jjakskv --name aksserverApplicationSecret -o tsv --query value)

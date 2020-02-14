@@ -51,6 +51,8 @@ secrets:
     URL: http://jjwebapicore.default.svc.cluster.local/api/values
   SERVICEWINAPI:
     URL: http://jjwebcorewindows.default.svc.cluster.local/api/values
+  SERVICEAPIROOT:
+    URL: http://jjwebapicore.default.svc.cluster.local
   APPINSIGHTS:
     INSTRUMENTATIONKEY: 00000000-0000-0000-0000-000000000000
 resources: {}

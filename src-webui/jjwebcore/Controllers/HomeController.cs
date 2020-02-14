@@ -36,9 +36,6 @@ namespace jjwebcore.Controllers
         {
             ViewData["Message"] = "Test API page.";
 
-            jjwebapicore.ContactsClient cl = new jjwebapicore.ContactsClient();
-            var ret = await cl.GetContactAllAsync();
-
             var host = Dns.GetHostName();            
             ViewData["Host"] = host;
 

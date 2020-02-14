@@ -12,6 +12,13 @@ namespace jjwebcore.Controllers
     {
         private jjwebapicore.ContactsClient cl = new jjwebapicore.ContactsClient();
 
+        private ContactsController()
+        {
+            Uri serviceUri = new Uri(Environment.GetEnvironmentVariable("SERVICEAPIROOT_URL"));
+
+            cl.BaseUrl = serviceUri.ToString();
+        }
+
         public async Task<IActionResult> Index()
         {
             var contacts = await cl.GetContactAllAsync();
