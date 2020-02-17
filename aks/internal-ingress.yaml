@@ -1,6 +1,6 @@
 controller:
   service:
-    loadBalancerIP: 10.3.4.250
+    loadBalancerIP: 10.4.2.250
     annotations:
       service.beta.kubernetes.io/azure-load-balancer-internal: "true"
       kubernetes.io/ingress.class: nginx-internal

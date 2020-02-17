@@ -7,7 +7,7 @@ aksname=$(az keyvault secret show --vault-name jjakskv --name aksname -o tsv --q
 winpassword=$(az keyvault secret show --vault-name jjakskv --name akswinpassword -o tsv --query value)
 
 tenantId=$(az account show --query tenantId -o tsv)
-vnetsubnetid=$(az network vnet subnet list --resource-group JJDevV2-Infra --vnet-name JJDevV2Network --query "[?name=='DmzAks'].id" --output tsv)
+vnetsubnetid=$(az network vnet subnet list --resource-group JJDevV2-Infra --vnet-name JJDevV2NetworkApp --query "[?name=='DmzAks'].id" --output tsv)
 workspaceId=$(az resource show -n jjdev-analytics -g jjdevmanagement --resource-type microsoft.operationalinsights/workspaces --query id --output tsv)
 
 az extension update --name aks-preview
@@ -38,7 +38,7 @@ az aks create \
 
 az aks get-credentials --resource-group jjmicroservices-rg --name $aksname --admin --overwrite-existing
 
-vnetid=$(az network vnet show --resource-group JJDevV2-Infra --name JJDevV2Network --query id -o tsv)
+vnetid=$(az network vnet show --resource-group JJDevV2-Infra --name JJDevV2NetworkApp --query id -o tsv)
 az role assignment create --assignee $serverApplicationId --scope $vnetid --role Contributor
 az aks enable-addons \
     --resource-group jjmicroservices-rg \
