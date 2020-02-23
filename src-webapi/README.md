@@ -59,6 +59,10 @@ Use Visual Studio 2019 to add New scaffolder Item API controller
 
 Next create InitialCreate script and create database https://docs.microsoft.com/en-us/ef/core/get-started/aspnetcore/new-db?tabs=visual-studio#create-the-database
 
+### Enable retry policy
+
+Use EnableRetryOnFailure for Sql connection, check this [link](https://docs.microsoft.com/en-us/azure/architecture/best-practices/retry-service-specific#sql-database-using-entity-framework-core)
+
 ### Use AKS Pod Identity to authenticate to Azure SQL
 
 Enable on AKS cluster Pod Identity https://docs.microsoft.com/en-us/azure/aks/operator-best-practices-identity#use-pod-identities

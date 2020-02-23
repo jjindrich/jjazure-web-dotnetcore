@@ -35,6 +35,7 @@ az aks create \
     --windows-admin-username aksadmin \
     --windows-admin-password $winpassword \
     --node-resource-group jjmicroservices-aks-rg
+# with limited vnet subnet size use: --network-plugin kubenet 
 
 az aks get-credentials --resource-group jjmicroservices-rg --name $aksname --admin --overwrite-existing
 
