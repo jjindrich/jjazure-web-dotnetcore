@@ -414,3 +414,7 @@ https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights
 
 Azure Monitor for containers
 https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights-overview
+
+### Deploy with Terraform
+
+Check this my repository https://github.com/jjindrich/jjazure-terraform/tree/master/src-jjaks
