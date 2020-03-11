@@ -5,4 +5,4 @@ controller:
       service.beta.kubernetes.io/azure-load-balancer-internal: "true"
       kubernetes.io/ingress.class: nginx-internal
     nodeSelector:
-      "beta.kubernetes.io/os": linux
+      "kubernetes.io/os": linux

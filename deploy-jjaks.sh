@@ -73,7 +73,7 @@ kubectl apply -f aks/corednsms.yaml
 kubectl delete pod --namespace kube-system --selector k8s-app=kube-dns
 
 kubectl create namespace ingress-basic
-helm install stable/nginx-ingress --name nginx-ingress --namespace ingress-basic --set controller.replicaCount=2 --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux
+helm install stable/nginx-ingress --name nginx-ingress --namespace ingress-basic --set controller.replicaCount=2 --set controller.nodeSelector."kubernetes\.io/os"=linux
 kubectl create namespace ingress-basic-internal
 helm install stable/nginx-ingress --name nginx-ingress-internal --namespace ingress-basic-internal --set controller.replicaCount=2 -f aks/internal-ingress.yaml --set controller.ingressClass=nginx-internal
 

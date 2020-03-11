@@ -60,7 +60,7 @@ resources: {}
   #  cpu: 100m
   #  memory: 128Mi
 nodeSelector:
-  "beta.kubernetes.io/os": windows
+  "kubernetes.io/os": windows
 
 tolerations:
   - key: "os"
