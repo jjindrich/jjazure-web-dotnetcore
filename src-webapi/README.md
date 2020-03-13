@@ -136,9 +136,11 @@ Create pipeline tasks with Ubuntu agent
 
 ![DevOps CD pipeline](media/devops-cd.png)
 
+**Note: HELM 3 update - remove taks helm init and check install lastest helm version**
+
 ```yaml
-#Your build pipeline references a secret variable named ‘appinsights’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it secret. See https://go.microsoft.com/fwlink/?linkid=865972
-#Your build pipeline references a secret variable named ‘dbconnection’. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it secret. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references a secret variable named 'appinsights'. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it secret. See https://go.microsoft.com/fwlink/?linkid=865972
+#Your build pipeline references a secret variable named 'dbconnection'. Create or edit the build pipeline for this YAML file, define the variable on the Variables tab, and then select the option to make it secret. See https://go.microsoft.com/fwlink/?linkid=865972
 
 steps:
 - task: HelmDeploy@0

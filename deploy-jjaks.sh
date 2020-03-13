@@ -66,8 +66,10 @@ az aks nodepool add \
 kubectl apply -f aks/rbac-aad-admin.yaml
 kubectl apply -f aks/rbac-log-reader.yaml
 kubectl create clusterrolebinding kubernetes-dashboard --clusterrole=cluster-admin --serviceaccount=kube-system:kubernetes-dashboard
-kubectl apply -f aks/helm-account.yaml
-helm init --service-account tiller
+
+# removed because HELM3
+#kubectl apply -f aks/helm-account.yaml
+#helm init --service-account tiller
 
 kubectl apply -f aks/corednsms.yaml
 kubectl delete pod --namespace kube-system --selector k8s-app=kube-dns
