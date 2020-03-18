@@ -184,3 +184,9 @@ To run application, open solution jjwebapicode in Visual Studio with profile Azu
 You will get url running your application in AKS in azds space, like http://jjwebapicore.82pfxdkqm6.weu.azds.io/api/values
 
 ![Azure DevSpaces VS Code](media/azds-vs.png)
+
+## Configure Unit tests and integrate with Azure DevOps
+
+Add unit tests for Code Coverage - [link](https://docs.microsoft.com/en-us/visualstudio/test/create-a-unit-test-project?view=vs-2019)
+Configure pipeline - [link](https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/dotnet-core?view=azure-devops)
+
