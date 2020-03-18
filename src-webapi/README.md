@@ -188,5 +188,8 @@ You will get url running your application in AKS in azds space, like http://jjwe
 ## Configure Unit tests and integrate with Azure DevOps
 
 Add unit tests for Code Coverage - [link](https://docs.microsoft.com/en-us/visualstudio/test/create-a-unit-test-project?view=vs-2019)
-Configure pipeline - [link](https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/dotnet-core?view=azure-devops)
+
+Configure pipeline 
+- https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/dotnet-core?view=azure-devops
+- https://dvoituron.com/2019/03/08/azure-devops-and-the-code-coverage/
 
