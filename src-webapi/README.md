@@ -187,9 +187,16 @@ You will get url running your application in AKS in azds space, like http://jjwe
 
 ## Configure Unit tests and integrate with Azure DevOps
 
-Add unit tests for Code Coverage - [link](https://docs.microsoft.com/en-us/visualstudio/test/create-a-unit-test-project?view=vs-2019)
+Add unit tests for Code Coverage 
 
-Configure Azure DevOps pipeline - [link](https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/dotnet-core?view=azure-devops)
+- https://docs.microsoft.com/en-us/visualstudio/test/create-a-unit-test-project?view=vs-2019
+- https://docs.microsoft.com/en-us/aspnet/web-api/overview/testing-and-debugging/unit-testing-controllers-in-web-api
+- https://docs.microsoft.com/en-us/aspnet/web-api/overview/testing-and-debugging/mocking-entity-framework-when-unit-testing-aspnet-web-api-2
+- https://dotnetthoughts.net/how-to-mock-dbcontext-for-unit-testing/
+
+Configure Azure DevOps pipeline
+
+- https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/dotnet-core?view=azure-devops
 
 ![Azure DevOps dotnet test](media/devops-ci-testtask.png)
 
