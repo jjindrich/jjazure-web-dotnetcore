@@ -23,7 +23,8 @@ namespace jjwebapicore.Controllers
         {
             return "value";
         }
-
+        
+        /*
         // POST api/values
         [HttpPost]
         public void Post([FromBody] string value)
@@ -41,5 +42,6 @@ namespace jjwebapicore.Controllers
         public void Delete(int id)
         {
         }
+        */
     }
 }
