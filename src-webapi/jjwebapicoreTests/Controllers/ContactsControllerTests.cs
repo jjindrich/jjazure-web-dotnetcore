@@ -72,5 +72,33 @@ namespace jjwebapicore.Controllers.Tests
             Assert.AreEqual(1, content.ContactId);
             Assert.AreEqual("fullname", content.FullName);
         }
+
+        [TestMethod()]
+        public async Task PostContactTest()
+        {
+            _context = await GetDatabaseContext();
+            _controller = new ContactsController(_context);
+
+            Contact newContact = new Contact() { ContactId = 100, FullName = "new contact" };
+            var result = _controller.PostContact(newContact).Result;
+            Assert.IsNotNull(result);
+        }
+
+        [TestMethod()]
+        public async Task PutContactTest()
+        {
+            _context = await GetDatabaseContext();
+            _controller = new ContactsController(_context);
+
+            var result = _controller.GetContact(1).Result;
+            Assert.IsNotNull(result);
+            Contact updateContact = result.Value;
+            Assert.IsNotNull(updateContact);
+
+            updateContact.FullName += "updated";
+
+            var result2 = _controller.PutContact(1, updateContact).Result;
+            Assert.IsNotNull(result2);
+        }
     }
 }
