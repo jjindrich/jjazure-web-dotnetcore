@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using jjwebapicore.Models;
+using System.Diagnostics.CodeAnalysis;
 
 namespace jjwebapicore.Migrations
 {
+    [ExcludeFromCodeCoverage]
     [DbContext(typeof(ContactsContext))]
     partial class ContactsContextModelSnapshot : ModelSnapshot
     {

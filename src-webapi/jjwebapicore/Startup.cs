@@ -12,9 +12,11 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using jjwebapicore.Models;
+using System.Diagnostics.CodeAnalysis;
 
 namespace jjwebapicore
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)
