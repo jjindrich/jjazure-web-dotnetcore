@@ -59,7 +59,7 @@ namespace jjwebapicore.Controllers.Tests
         }
 
         [TestMethod()]
-        public async Task GetContactTestById()
+        public async Task GetContactByIdTest()
         {
             _context = await GetDatabaseContext();
             _controller = new ContactsController(_context);
@@ -71,6 +71,16 @@ namespace jjwebapicore.Controllers.Tests
             Assert.IsInstanceOfType(content, typeof(Contact));
             Assert.AreEqual(1, content.ContactId);
             Assert.AreEqual("fullname", content.FullName);
+        }
+
+        [TestMethod()]
+        public async Task GetContactByIdNotFoundTest()
+        {
+            _context = await GetDatabaseContext();
+            _controller = new ContactsController(_context);
+
+            var result = _controller.GetContact(100).Result;
+            Assert.IsNull(result.Value);
         }
 
         [TestMethod()]
@@ -97,6 +107,11 @@ namespace jjwebapicore.Controllers.Tests
 
             updateContact.FullName += "updated";
 
+            // try to update another contact
+            var result1 = _controller.PutContact(2, updateContact).Result;
+            Assert.IsNotNull(result1);
+
+            // update contact
             var result2 = _controller.PutContact(1, updateContact).Result;
             Assert.IsNotNull(result2);
         }

@@ -85,6 +85,7 @@ namespace jjwebapicore.Controllers
             return CreatedAtAction("GetContact", new { id = contact.ContactId }, contact);
         }
 
+        /*
         // DELETE: api/Contacts/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Contact>> DeleteContact(int id)
@@ -100,6 +101,7 @@ namespace jjwebapicore.Controllers
 
             return contact;
         }
+        */
 
         private bool ContactExists(int id)
         {
