@@ -16,6 +16,16 @@ stages:
   - job: A2
     steps:
     - bash: echo "A2"
+  - deployment: DeployWeb
+    displayName: deploy Web
+    pool:
+      vmImage: 'Ubuntu-latest'
+    environment: 'env1'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - script: echo Hello world
 - stage: B
   jobs:
   - job: B1
