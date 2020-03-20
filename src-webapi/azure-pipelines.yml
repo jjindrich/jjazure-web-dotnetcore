@@ -26,9 +26,29 @@ stages:
         projects: 'src-webapi/jjwebapicore/**/*.csproj'
         arguments: '--configuration Release'
         workingDirectory: 'src-webapi/jjwebapicore'
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet test and code coverage'
+      inputs:
+        command: test
+        projects: '**/*Tests/*.csproj'
+        arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+        workingDirectory: 'src-webapi/jjwebapicore'
+    - task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
+      displayName: ReportGenerator
+      inputs:
+        reports: '**/coverage.cobertura.xml'
+        sourcedirs: 'src-webapi/jjwebapicoreTests'
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish code coverage from **/coverage.cobertura.xml'
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '**/coverage.cobertura.xml'
+        pathToSources: 'src-webapi/jjwebapicore'
+        reportDirectory: CoverageReport
+
   - job: Publish
     steps:
-    - bash: echo test
+      - bash: ACR
 
 - stage: DeployTEST
   displayName: Deploy to TEST
