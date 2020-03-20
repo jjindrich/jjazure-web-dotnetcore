@@ -1,3 +1,5 @@
+name: jjazure-web-dotnetcore - new CI
+
 trigger:
 - master
 
