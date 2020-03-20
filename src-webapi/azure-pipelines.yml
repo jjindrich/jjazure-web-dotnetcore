@@ -1,7 +1,12 @@
-name: jjazure-web-dotnetcore - new CI
+name: jjwebapicore
 
 trigger:
-- master
+  branches:
+    include:
+    - '*'
+  paths:
+    include:
+    -  src-webapi/*
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -10,29 +15,37 @@ variables:
   buildConfiguration: 'Release'
 
 stages:
-- stage: A
+- stage: Build
   jobs:
-  - job: A1
+  - job: CompileAndCheck
+    displayName: Compile and check code
+    steps:      
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build'
+      inputs:
+        projects: 'src-webapi/jjwebapicore/**/*.csproj'
+        arguments: '--configuration Release'
+        workingDirectory: 'src-webapi/jjwebapicore'
+  - job: Publish
     steps:
-    - bash: echo "A1"
-  - job: A2
-    steps:
-    - bash: echo "A2"
+    - bash: echo test
+
+- stage: Deploy to TEST
+  jobs:
   - deployment: DeployWeb
     displayName: deploy Web
     pool:
       vmImage: 'Ubuntu-latest'
-    environment: 'env1'
+    environment: 'TEST'
     strategy:
       runOnce:
         deploy:
           steps:
           - script: echo Hello world
-- stage: B
-  jobs:
   - job: B1
     steps:
     - bash: echo "B1"
+      displayName: B1 popis
   - job: B2
     steps:
     - bash: echo "B2"
