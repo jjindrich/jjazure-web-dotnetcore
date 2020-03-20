@@ -75,20 +75,23 @@ stages:
 - stage: DeployTEST
   displayName: Deploy to TEST
   jobs:
-  - deployment: DeployWeb
-    displayName: deploy Web
-    pool:
-      vmImage: 'Ubuntu-latest'
-    environment: 'TEST'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - script: echo Hello world
-  - job: B1
+  - job: DeployTESTAKS
+    displayName: Deploy to AKS
     steps:
-    - bash: echo "B1"
-      displayName: B1 popis
-  - job: B2
-    steps:
-    - bash: echo "B2"
+    - task: HelmInstaller@0
+      displayName: 'Install Helm 2.14.0'
+      inputs:
+        helmVersion: 2.14.0
+    - task: HelmDeploy@0
+      displayName: 'helm upgrade'
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: 'jjaks-admin'
+        namespace: default
+        command: upgrade
+        chartType: FilePath
+        chartPath: '$(System.DefaultWorkingDirectory)/_source/drop/jjwebapicore'
+        releaseName: jjwebapicore
+        overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebapicore,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appinsights),secrets.ConnectionStrings.ContactsContext="$(dbconnection)"'
+        valueFile: '$(System.DefaultWorkingDirectory)/_source/drop/jjwebapicore/values.yaml'
+        waitForExecution: false
