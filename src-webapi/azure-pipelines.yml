@@ -13,6 +13,8 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  subscription: 'JJ Microsoft Azure Internal Consumption (82fb79bf-ee69-4a57-a76c-26153e544afe)'
+  acr: '{"loginServer":"jjakscontainers.azurecr.io", "id" : "/subscriptions/82fb79bf-ee69-4a57-a76c-26153e544afe/resourceGroups/jjmicroservices-rg/providers/Microsoft.ContainerRegistry/registries/jjakscontainers"}'
 
 stages:
 - stage: Build
@@ -47,8 +49,28 @@ stages:
         reportDirectory: CoverageReport
 
   - job: Publish
+    displayName: Publish to ACR
     steps:
-      - bash: ACR
+    - task: Docker@0
+      displayName: 'Build an image'
+      inputs:
+        azureSubscription: $(subscription)
+        azureContainerRegistry: $(acr)
+        dockerFile: 'src-webapi/jjwebapicore/Dockerfile'
+        defaultContext: False
+        context: 'src-webapi'
+        imageName: 'jjwebapicore:$(Build.BuildNumber)'
+    - task: Docker@0
+      displayName: 'Push an image'
+      inputs:
+        azureSubscription: $(subscription)
+        azureContainerRegistry: $(acr)
+        action: 'Push an image'
+        imageName: 'jjwebapicore:$(Build.BuildNumber)'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish HELM charts to drop'
+      inputs:
+        PathtoPublish: 'src-webapi/jjwebapicore/charts'
 
 - stage: DeployTEST
   displayName: Deploy to TEST
