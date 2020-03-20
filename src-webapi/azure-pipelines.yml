@@ -30,7 +30,8 @@ stages:
     steps:
     - bash: echo test
 
-- stage: Deploy to TEST
+- stage: DeployTEST
+  displayName: Deploy to TEST
   jobs:
   - deployment: DeployWeb
     displayName: deploy Web
