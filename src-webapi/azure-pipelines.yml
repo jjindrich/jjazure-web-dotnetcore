@@ -1,0 +1,101 @@
+name: $(date:yyyyMMdd)$(rev:.r)
+
+trigger:
+  branches:
+    include:
+    - '*'
+  paths:
+    include:
+    -  src-webapi/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  subscription: 'JJ Microsoft Azure Internal Consumption (82fb79bf-ee69-4a57-a76c-26153e544afe)'
+  acr: '{"loginServer":"jjakscontainers.azurecr.io", "id" : "/subscriptions/82fb79bf-ee69-4a57-a76c-26153e544afe/resourceGroups/jjmicroservices-rg/providers/Microsoft.ContainerRegistry/registries/jjakscontainers"}'
+
+stages:
+- stage: Build
+  jobs:
+  - job: CompileAndCheck
+    displayName: Compile and check code
+    steps:      
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build'
+      inputs:
+        projects: 'src-webapi/jjwebapicore/**/*.csproj'
+        arguments: '--configuration Release'
+        workingDirectory: 'src-webapi/jjwebapicore'
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet test and code coverage'
+      inputs:
+        command: test
+        projects: '**/*Tests/*.csproj'
+        arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura'
+        workingDirectory: 'src-webapi/jjwebapicore'
+    - task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
+      displayName: ReportGenerator
+      inputs:
+        reports: '**/coverage.cobertura.xml'
+        sourcedirs: 'src-webapi/jjwebapicoreTests'
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish code coverage from **/coverage.cobertura.xml'
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '**/coverage.cobertura.xml'
+        pathToSources: 'src-webapi/jjwebapicore'
+        reportDirectory: CoverageReport
+
+  - job: Publish
+    displayName: Publish to ACR
+    steps:
+    - task: Docker@0
+      displayName: 'Build an image'
+      inputs:
+        azureSubscription: $(subscription)
+        azureContainerRegistry: $(acr)
+        dockerFile: 'src-webapi/jjwebapicore/Dockerfile'
+        defaultContext: False
+        context: 'src-webapi'
+        imageName: 'jjwebapicore:$(Build.BuildNumber)'
+    - task: Docker@0
+      displayName: 'Push an image'
+      inputs:
+        azureSubscription: $(subscription)
+        azureContainerRegistry: $(acr)
+        action: 'Push an image'
+        imageName: 'jjwebapicore:$(Build.BuildNumber)'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish HELM charts to drop'
+      inputs:
+        PathtoPublish: 'src-webapi/jjwebapicore/charts'
+
+- stage: DeployTEST
+  displayName: Deploy to TEST
+  jobs:
+  - job: DeployTESTAKS
+    displayName: Deploy to AKS
+    steps:
+    - task: HelmInstaller@0
+      displayName: 'Install Helm 2.14.0'
+      inputs:
+        helmVersion: 2.14.0
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifact: drop
+        path: $(Pipeline.Workspace)/drop
+    - task: HelmDeploy@0
+      displayName: 'helm upgrade'
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: 'jjaks-admin'
+        namespace: default
+        command: upgrade
+        chartType: FilePath
+        chartPath: '$(Pipeline.Workspace)/drop/jjwebapicore'
+        releaseName: jjwebapicore
+        overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebapicore,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appinsights),secrets.ConnectionStrings.ContactsContext="$(dbconnection)"'
+        valueFile: '$(Pipeline.Workspace)/drop/jjwebapicore/values.yaml'
+        waitForExecution: false
