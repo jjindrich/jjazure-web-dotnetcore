@@ -85,6 +85,7 @@ stages:
     - task: DownloadPipelineArtifact@2
       inputs:
         artifact: drop
+        path: $(Pipeline.Workspace)/drop
     - task: HelmDeploy@0
       displayName: 'helm upgrade'
       inputs:
