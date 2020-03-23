@@ -1,4 +1,4 @@
-name: jjwebapicore
+name: $(date:yyyyMMdd)$(rev:.r)
 
 trigger:
   branches:
