@@ -50,6 +50,7 @@ stages:
 
   - job: Publish
     displayName: Publish to ACR
+    dependsOn: CompileAndCheck
     steps:
     - task: Docker@0
       displayName: 'Build an image'

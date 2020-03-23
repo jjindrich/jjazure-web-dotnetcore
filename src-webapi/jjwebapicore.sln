@@ -7,10 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "jjwebapicore", "jjwebapicor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AB673F4C-973E-4024-8BB0-761AB41A0A70}"
 	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "jjwebapicoreTests", "jjwebapicoreTests\jjwebapicoreTests.csproj", "{5C1DB202-D6ED-400C-B7E8-8D0C04D367F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "jjwebapicoreTests", "jjwebapicoreTests\jjwebapicoreTests.csproj", "{5C1DB202-D6ED-400C-B7E8-8D0C04D367F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

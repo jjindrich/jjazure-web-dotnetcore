@@ -13,8 +13,8 @@ namespace jjwebapicore.Migrations
                 name: "Contact",
                 columns: table => new
                 {
-                    ContactId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ContactId = table.Column<int>(nullable: false),
+                        //.Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     FullName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
