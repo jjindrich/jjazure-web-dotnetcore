@@ -7,7 +7,6 @@ namespace jjwebapicore.Migrations
     [ExcludeFromCodeCoverage]
     public partial class InitialCreate : Migration
     {
-        /*
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -29,6 +28,5 @@ namespace jjwebapicore.Migrations
             migrationBuilder.DropTable(
                 name: "Contact");
         }
-        */
     }
 }
