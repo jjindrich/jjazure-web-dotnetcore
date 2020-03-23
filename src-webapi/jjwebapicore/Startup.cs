@@ -52,6 +52,12 @@ namespace jjwebapicore
                 app.UseDeveloperExceptionPage();
             }
 
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<ContactsContext> ();
+                context.Database.EnsureCreated();
+            }
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

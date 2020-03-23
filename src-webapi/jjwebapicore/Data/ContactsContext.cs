@@ -14,5 +14,10 @@ namespace jjwebapicore.Models
         }
 
         public DbSet<jjwebapicore.Models.Contact> Contact { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Contact>().ToTable("Contact");
+        }
     }
 }
