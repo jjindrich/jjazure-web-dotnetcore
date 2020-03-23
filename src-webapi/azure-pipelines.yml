@@ -79,10 +79,6 @@ stages:
   - job: DeployTESTAKS
     displayName: Deploy to AKS
     steps:
-    - task: HelmInstaller@0
-      displayName: 'Install Helm 2.14.0'
-      inputs:
-        helmVersion: 2.14.0
     - task: DownloadPipelineArtifact@2
       inputs:
         artifact: drop
