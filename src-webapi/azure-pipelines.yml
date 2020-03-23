@@ -80,9 +80,9 @@ stages:
     displayName: Deploy to AKS
     steps:
     - task: HelmInstaller@0
-      displayName: 'Install Helm 2.14.0'
+      displayName: 'Install Helm lastes'
       inputs:
-        helmVersion: 2.14.0
+        helmVersionToInstall: 'latest'
     - task: DownloadPipelineArtifact@2
       inputs:
         artifact: drop
