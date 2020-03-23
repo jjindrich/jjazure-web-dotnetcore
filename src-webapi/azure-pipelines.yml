@@ -82,6 +82,9 @@ stages:
       displayName: 'Install Helm 2.14.0'
       inputs:
         helmVersion: 2.14.0
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifact: drop
     - task: HelmDeploy@0
       displayName: 'helm upgrade'
       inputs:
@@ -90,8 +93,8 @@ stages:
         namespace: default
         command: upgrade
         chartType: FilePath
-        chartPath: '$(System.DefaultWorkingDirectory)/drop/jjwebapicore'
+        chartPath: '$(Pipeline.Workspace)/drop/jjwebapicore'
         releaseName: jjwebapicore
         overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebapicore,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appinsights),secrets.ConnectionStrings.ContactsContext="$(dbconnection)"'
-        valueFile: '$(System.DefaultWorkingDirectory)/drop/jjwebapicore/values.yaml'
+        valueFile: '$(Pipeline.Workspace)/drop/jjwebapicore/values.yaml'
         waitForExecution: false
