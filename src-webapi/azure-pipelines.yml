@@ -90,8 +90,8 @@ stages:
         namespace: default
         command: upgrade
         chartType: FilePath
-        chartPath: '$(System.DefaultWorkingDirectory)/_source/drop/jjwebapicore'
+        chartPath: '$(System.DefaultWorkingDirectory)/drop/jjwebapicore'
         releaseName: jjwebapicore
         overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebapicore,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appinsights),secrets.ConnectionStrings.ContactsContext="$(dbconnection)"'
-        valueFile: '$(System.DefaultWorkingDirectory)/_source/drop/jjwebapicore/values.yaml'
+        valueFile: '$(System.DefaultWorkingDirectory)/drop/jjwebapicore/values.yaml'
         waitForExecution: false
