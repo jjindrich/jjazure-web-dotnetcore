@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using jjwebapicore.Models;
 using System.Diagnostics.CodeAnalysis;
+using Prometheus;
 
 namespace jjwebapicore
 {
@@ -62,6 +63,10 @@ namespace jjwebapicore
 
             app.UseRouting();
 
+            // Prometheus server metrics
+            app.UseMetricServer();
+            app.UseHttpMetrics();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -72,6 +77,7 @@ namespace jjwebapicore
             // Register the Swagger generator and the Swagger UI middlewares
             app.UseOpenApi();
             app.UseSwaggerUi3();
+
         }
     }
 }
