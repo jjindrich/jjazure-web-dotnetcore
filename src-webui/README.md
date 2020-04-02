@@ -85,3 +85,12 @@ Test page is calling REST API jjwebapicore service and printing result.
 
 Local debugging is using reference to service from environment variables defined in Visual Studio project
 ![Visual Studio debug](media/vsdebug.png)
+
+## Integrate with Azure EventGrid topic
+
+Azure EventGrid Topic is event messaging service. It can consume source data (pushed by source) and push it as REST to some destionation.
+Our destination will be api /webhook on jjwebcore website.
+
+How to create webhook receiver
+- https://docs.microsoft.com/en-us/azure/event-grid/receive-events
+- https://galdin.dev/blog/creating-an-azure-eventgrid-webhook-in-asp-net-core/
