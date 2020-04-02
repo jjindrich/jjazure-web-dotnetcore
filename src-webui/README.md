@@ -94,3 +94,7 @@ Our destination will be api /webhook on jjwebcore website.
 How to create webhook receiver
 - https://docs.microsoft.com/en-us/azure/event-grid/receive-events
 - https://galdin.dev/blog/creating-an-azure-eventgrid-webhook-in-asp-net-core/
+
+Configure Azure EventGrid
+- create EventGrid Topic, like jjevents-web
+- create subscription with Endpoint Type Web hook and type url https://your_ip/api/webhook

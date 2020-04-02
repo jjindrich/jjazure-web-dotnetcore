@@ -16,25 +16,33 @@ namespace jjwebcore.Controllers
     [ApiController]
     public class WebhookController : ControllerBase
     {
-        [HttpPost]
-        public IActionResult ProcessEventGridWebhook([FromBody]EventGridEvent[] ev, [FromServices]ILogger<WebhookController> logger)
+        [HttpGet]
+        public string Get()
         {
-            var evt = ev.FirstOrDefault();
-            if (evt == null) return BadRequest();
+            return "Hello from /api/webhook controller !";
+        }
 
-            if (evt.EventType == EventTypes.MediaJobStateChangeEvent)
+        [HttpPost]
+        public IActionResult ProcessEventGridWebhook([FromBody]EventGridEvent[] events, [FromServices]ILogger<WebhookController> logger)
+        {
+            if (events == null) return BadRequest();
+
+            foreach(EventGridEvent ev in events)
             {
-                var data = (evt.Data as JObject).ToObject<MediaJobStateChangeEventData>();
-                logger.LogInformation(JsonConvert.SerializeObject(data, Formatting.Indented));
+                // Respond with a SubscriptionValidationResponse to complete the EventGrid subscription
+                if (ev.EventType == EventTypes.EventGridSubscriptionValidationEvent)
+                {
+                    var eventValidationData = JsonConvert.DeserializeObject<SubscriptionValidationEventData>(ev.Data.ToString());
+                    var response = new SubscriptionValidationResponse(eventValidationData.ValidationCode);
+                    return Ok(response);
+                }
             }
 
-            // Respond with a SubscriptionValidationResponse to complete the EventGrid subscription
-            if (evt.EventType == EventTypes.EventGridSubscriptionValidationEvent)
-            {
-                var data = (evt.Data as JObject).ToObject<SubscriptionValidationEventData>();
-                var response = new SubscriptionValidationResponse(data.ValidationCode);
-                return Ok(response);
-            }
+            //if (evt.EventType == EventTypes.MediaJobStateChangeEvent)
+            //{
+            //    var data = (evt.Data as JObject).ToObject<MediaJobStateChangeEventData>();
+            //    logger.LogInformation(JsonConvert.SerializeObject(data, Formatting.Indented));
+            //}
 
             return BadRequest();
         }
