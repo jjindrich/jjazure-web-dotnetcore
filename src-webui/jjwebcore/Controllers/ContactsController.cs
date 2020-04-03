@@ -106,7 +106,7 @@ namespace jjwebcore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateWebhook([FromBody]EventGridEvent[] events, [FromServices]ILogger<WebhookController> logger)
+        public async Task<ActionResult> CreateWebhook([FromBody]EventGridEvent[] events, [FromServices]ILogger<WebhookController> logger)
         {
             if (events == null) return BadRequest();
 
@@ -124,6 +124,7 @@ namespace jjwebcore.Controllers
                 {
                     Contact createC = JsonConvert.DeserializeObject<Contact>(ev.Data.ToString());                    
                     await cl.PostContactAsync(createC);
+                    return Ok();
                 }
             }
             return BadRequest();

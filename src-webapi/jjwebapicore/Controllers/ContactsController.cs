@@ -81,8 +81,11 @@ namespace jjwebapicore.Controllers
         {
             _context.Contact.Add(contact);
             await _context.SaveChangesAsync();
+            
+            var res = CreatedAtAction("GetContact", new { id = contact.ContactId }, contact);
+            if (res.StatusCode == 201) res.StatusCode = 200;
 
-            return CreatedAtAction("GetContact", new { id = contact.ContactId }, contact);
+            return res;
         }
 
         // DELETE: api/Contacts/5

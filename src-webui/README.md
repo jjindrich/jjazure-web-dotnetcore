@@ -136,3 +136,5 @@ key=$(az eventgrid topic key list --name jjevents-web -g jjmicroservices-rg --qu
 event='[ {"id": "'"$RANDOM"'", "eventType": "JJ.createContract", "subject": "jjwebcore/contracts", "eventTime": "'`date +%Y-%m-%dT%H:%M:%S%z`'", "data":{ "contactId": "'"$RANDOM"'", "fullName": "Auto generated"},"dataVersion": "1.0"} ]'
 curl -X POST -H "aeg-sas-key: $key" -d "$event" $endpoint
 ```
+
+![Azure EventGrid](media/eventgrid.png)
