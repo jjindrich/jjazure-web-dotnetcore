@@ -248,6 +248,37 @@ Install AppGw ingress https://github.com/Azure/application-gateway-kubernetes-in
 
 How to use https://github.com/Azure/application-gateway-kubernetes-ingress/blob/master/docs/tutorial.md#expose-services-over-http
 
+#### Public Let's encrypt certificate for NGINX ingress controller
+
+NGINX ingress controller is providing HTTPS Fake certificate by default. Cannot be used by other Azure services because is not trusted.
+
+Following this steps https://github.com/tkubica12/kubernetes-demo/blob/master/docs/ingress.md#autoenroll-lets-encrypt-certificates-with-cert-manager
+
+Install [Certificate manager](https://cert-manager.io/docs/) as certificate management controller for Kubernetes.
+
+#### Public certificate Azure Front Door for AKS
+
+Azure Front Door is providing frontend routing and WAF filtering. It includes also managed public SSL certificate.
+
+Create Azure Frontdoor service with following paramaters
+
+- frontend domain jjaks.azurefd.net
+- backend pool jjaks - select AKS public ip and configure HTTP with HEAD probe
+- routing rule - HTTPS only and forward to HTTP backend
+
+Wait cca 5mins for global provisioning and check https://jjaks.azurefd.net is running.
+
+If you want to use **custom dns name** use can use Front Door managed certificate
+
+- add frontend domain (add CNAME to DNS/Azure DNS) 
+- enable Custom domain HTTPS with Front Door managed certificate
+- add frontend domain to routing rule for HTTPS -> route to AKS backeng
+- *optionally* configure HTTP to HTTPS redirect - add route HTTP only with redirect to HTTPS
+![Front Door](media/fd.png)
+
+Certificate provisioning takes cca 5mins, check progress on custom domain blade.
+![Certificate managed](media/fd-cert.png)
+
 ### Deployment troubleshooting
 
 Use Dashboard

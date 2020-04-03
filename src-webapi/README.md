@@ -206,9 +206,13 @@ Configure Azure DevOps pipeline
 
 Prometheus is a systems and service monitoring system
 - https://github.com/prometheus/prometheus
-https://github.com/prometheus-net/prometheus-net
+- https://github.com/prometheus-net/prometheus-net
 
 First modify sourcecode base on this [article](https://www.c-sharpcorner.com/article/reporting-metrics-to-prometheus-in-asp-net-core/)
 
 - add app.UseMetricServer() for default metrics
 - add app.UseHttpMetrics() for HTTP requests
+
+How to configure Prometheus in AKS
+
+- https://github.com/tkubica12/kubernetes-demo/blob/master/demo/helm/cluster/templates/azuremonitor-configmap.yaml

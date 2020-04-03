@@ -5,6 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using jjwebapicore;
+using Microsoft.Azure.EventGrid.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.Azure.EventGrid;
+using Newtonsoft.Json;
 
 namespace jjwebcore.Controllers
 {
@@ -101,5 +105,28 @@ namespace jjwebcore.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> CreateWebhook([FromBody]EventGridEvent[] events, [FromServices]ILogger<WebhookController> logger)
+        {
+            if (events == null) return BadRequest();
+
+            foreach(EventGridEvent ev in events)
+            {
+                // Respond with a SubscriptionValidationResponse to complete the EventGrid subscription
+                if (ev.EventType == EventTypes.EventGridSubscriptionValidationEvent)
+                {
+                    var eventValidationData = JsonConvert.DeserializeObject<SubscriptionValidationEventData>(ev.Data.ToString());
+                    var response = new SubscriptionValidationResponse(eventValidationData.ValidationCode);
+                    return Ok(response);
+                }
+                else
+                // process message to create contact
+                {
+                    Contact createC = JsonConvert.DeserializeObject<Contact>(ev.Data.ToString());                    
+                    await cl.PostContactAsync(createC);
+                }
+            }
+            return BadRequest();
+        }
     }
 }

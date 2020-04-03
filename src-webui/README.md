@@ -91,10 +91,48 @@ Local debugging is using reference to service from environment variables defined
 Azure EventGrid Topic is event messaging service. It can consume source data (pushed by source) and push it as REST to some destionation.
 Our destination will be api /webhook on jjwebcore website.
 
-How to create webhook receiver
+How to create WebHook receiver
+
+- https://docs.microsoft.com/en-us/azure/event-grid/security-authentication
 - https://docs.microsoft.com/en-us/azure/event-grid/receive-events
 - https://galdin.dev/blog/creating-an-azure-eventgrid-webhook-in-asp-net-core/
 
+*Warning: Selfsigned certifite cannot be used.*
+
 Configure Azure EventGrid
+
 - create EventGrid Topic, like jjevents-web
-- create subscription with Endpoint Type Web hook and type url https://your_ip/api/webhook
+- create subscription with Endpoint Type WebHook and type url https://your_ip/api/webhook
+
+Because cannot be used untrusted certificate, deploy Azure Front Door or valid certificate on AKS cluster.
+
+My test endpoint without any processing logic is https://jjaks.jjdev.org/api/webhook
+
+Testing my contacts Azure EventGrid WebHook to create contact
+
+- create webhook subscription to https://jjaks.jjdev.org/contacts/CreateWebhook
+- send message to Event Grid with random ContactId
+
+Sample Azure EventGrid message to create contract
+```json
+[{
+  "id": "2d1781af-3a4c-4d7c-bd0c-e34b19da4e66",
+  "topic": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "subject": "jjwebcore/contracts",
+  "data": {
+    "contactId": "100",
+    "fullName" : "auto generated"
+  },
+  "eventType": "JJ.createContract",
+  "eventTime": "2018-01-25T22:12:19.4556811Z",
+  "metadataVersion": "1",
+  "dataVersion": "1"
+}]
+```
+
+```bash
+endpoint=$(az eventgrid topic show --name jjevents-web -g jjmicroservices-rg --query "endpoint" --output tsv)
+key=$(az eventgrid topic key list --name jjevents-web -g jjmicroservices-rg --query "key1" --output tsv)
+event='[ {"id": "'"$RANDOM"'", "eventType": "JJ.createContract", "subject": "jjwebcore/contracts", "eventTime": "'`date +%Y-%m-%dT%H:%M:%S%z`'", "data":{ "contactId": "'"$RANDOM"'", "fullName": "Auto generated"},"dataVersion": "1.0"} ]'
+curl -X POST -H "aeg-sas-key: $key" -d "$event" $endpoint
+```
