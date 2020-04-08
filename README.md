@@ -449,3 +449,20 @@ https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights
 ### Deploy with Terraform
 
 Check this my repository https://github.com/jjindrich/jjazure-terraform/tree/master/src-jjaks
+
+### Deploy to Azure Container Instances
+
+ACI is serverless deployment.
+
+- supports Linux containers in GA only
+- you can deploy containers into [existing vnet](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-vnet)
+- you cannot use DNS setting on vnet
+- you can deploy [container group](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-container-groups) (available on Linux containers only) to run multiple containers (communication btw containers on localhost).
+
+You can use Azure Front Door for publishing.
+
+```bash
+cd aci
+az group create -n jjaci-rg -l westeurope
+az group deployment create -g jjaci-rg --template-file deploy-aci.json --parameters deploy-aci.params.json
+```

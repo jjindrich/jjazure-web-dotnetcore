@@ -1,0 +1,30 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "containerGroupName": {
+            "value": "jjacigroup"
+        },
+        "imageRegistryLoginServer": {
+            "value": "jjakscontainers.azurecr.io"
+        },
+        "imageRegistryUsername": {
+            "value": "jjakscontainers"
+        },
+        "imageRegistryPassword": {
+            "value": "<acr_password>"
+        },
+        "virtualNetworkResourceGroup": {
+            "value": "JJDevV2-Infra"
+        },
+        "virtualNetworkName": {
+            "value": "JJDevV2NetworkApp"
+        },
+        "virtualNetworkSubnetName": {
+            "value": "DmzAci"
+        },
+        "sqlConnection":{
+            "value": "<sql_connection_string>"
+        }
+    }
+}

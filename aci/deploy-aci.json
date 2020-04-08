@@ -1,0 +1,150 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "containerGroupName": {
+            "type": "string",
+            "defaultValue": "jjacigroup",
+            "metadata": {
+                "description": "Container group name"
+            }
+        },
+        "imageRegistryLoginServer": {
+            "type": "string"
+        },
+        "imageRegistryUsername": {
+            "type": "string"
+        },
+        "imageRegistryPassword": {
+            "type": "string"
+        },
+        "virtualNetworkResourceGroup": {
+            "type": "string"
+        },
+        "virtualNetworkName": {
+            "type": "string"
+        },
+        "virtualNetworkSubnetName": {
+            "type": "string"
+        },
+        "sqlConnection": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "virtualNetworkId": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "networkProfileName": "aci-networkProfile",
+        "interfaceConfigName": "eth0",
+        "interfaceIpConfig": "ipconfigprofile1"
+    },
+    "resources": [
+        {
+            "name": "[variables('networkProfileName')]",
+            "type": "Microsoft.Network/networkProfiles",
+            "apiVersion": "2018-07-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+            ],
+            "properties": {
+                "containerNetworkInterfaceConfigurations": [
+                    {
+                        "name": "[variables('interfaceConfigName')]",
+                        "properties": {
+                            "ipConfigurations": [
+                                {
+                                    "name": "[variables('interfaceIpConfig')]",
+                                    "properties": {
+                                        "subnet": {
+                                            "id": "[concat(variables('virtualNetworkId'), '/subnets/', parameters('virtualNetworkSubnetName'))]"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[parameters('containerGroupName')]",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2018-07-01",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkProfiles', variables('networkProfileName'))]"
+            ],
+            "properties": {
+                "imageRegistryCredentials": [
+                    {
+                        "server": "[parameters('imageRegistryLoginServer')]",
+                        "username": "[parameters('imageRegistryUsername')]",
+                        "password": "[parameters('imageRegistryPassword')]"
+                    }
+                ],
+                "containers": [
+                    {
+                        "name": "jjwebcore",
+                        "properties": {
+                            "image": "jjakscontainers.azurecr.io/jjwebcore:20200403.2",
+                            "ports": [
+                                {
+                                    "port": "80",
+                                    "protocol": "Tcp"
+                                }
+                            ],
+                            "resources": {
+                                "requests": {
+                                    "cpu": "1",
+                                    "memoryInGB": "2"
+                                }
+                            },
+                            "environmentVariables": [
+                                {
+                                    "name": "SERVICEAPI_URL",
+                                    "value": "http://localhost:8080/api/values"
+                                },
+                                {
+                                    "name": "SERVICEAPIROOT_URL",
+                                    "value": "http://localhost:8080"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "jjwebapicore",
+                        "properties": {
+                            "image": "jjakscontainers.azurecr.io/jjwebapicore:20200403.2",
+                            "ports": [
+                                {
+                                    "port": "8080",
+                                    "protocol": "Tcp"
+                                }
+                            ],
+                            "resources": {
+                                "requests": {
+                                    "cpu": "1",
+                                    "memoryInGB": "2"
+                                }
+                            },
+                            "environmentVariables": [
+                                {
+                                    "name": "ASPNETCORE_URLS",
+                                    "value": "http://*:8080"
+                                },
+                                {
+                                    "name": "ConnectionStrings_ContactsContext",
+                                    "value": "[parameters('sqlConnection')]"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "osType": "Linux",
+                "networkProfile": {
+                    "Id": "[resourceId('Microsoft.Network/networkProfiles', variables('networkProfileName'))]"
+                },
+                "restartPolicy": "Always"
+            }
+        }
+    ]
+}
