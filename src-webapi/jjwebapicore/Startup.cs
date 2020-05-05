@@ -43,6 +43,9 @@ namespace jjwebapicore
 
             services.AddDbContext<ContactsContext>(options =>
                     options.UseSqlServer(connStr, options => options.EnableRetryOnFailure()));
+
+            services.AddHealthChecks()
+                .AddDbContextCheck<ContactsContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +75,7 @@ namespace jjwebapicore
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
 
             // Register the Swagger generator and the Swagger UI middlewares
