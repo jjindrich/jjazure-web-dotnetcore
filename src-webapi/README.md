@@ -9,7 +9,7 @@
 Added Kubernetes support from Visual Studio 2017, docker file and helm chart is generated automatically.
 
 Using Visual Studio tools:
-- Visual Studio Kubernetes Tools - https://docs.microsoft.com/en-us/visualstudio/containers/tutorial-kubernetes-tools?view=vs-2017
+- Visual Studio 2017 Kubernetes Tools - https://docs.microsoft.com/en-us/visualstudio/containers/tutorial-kubernetes-tools?view=vs-2017
 - AKS Publishing Tools - https://aka.ms/get-vsk8spublish
 
 ## Deploy to Kubernetes
