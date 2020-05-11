@@ -8,11 +8,19 @@ using jjwebcore.Models;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization.Json;
+using jjwebapicore;
 
 namespace jjwebcore.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IHttpClientFactory _cl;
+
+        public HomeController(IHttpClientFactory httpClientFactory)
+        {
+            _cl = httpClientFactory;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -39,50 +47,27 @@ namespace jjwebcore.Controllers
             var host = Dns.GetHostName();            
             ViewData["Host"] = host;
 
-            Uri serviceUri = null;
-            Uri serviceUriWin = null;
-
             try
             {
-                serviceUri = new Uri(Environment.GetEnvironmentVariable("SERVICEAPI_URL"));
-                serviceUriWin = new Uri(Environment.GetEnvironmentVariable("SERVICEWINAPI_URL"));
+                // call service
+                var client = _cl.CreateClient("jjwebapicore");
+                string result = await client.GetStringAsync("/api/values");
+                ViewData["ServiceUrl"] = client.BaseAddress.ToString();
+                ViewData["ApiResult"] = result;
+
+                // call service windows
+                var clientWin = _cl.CreateClient("jjwebapicore");
+                string resultWin = await clientWin.GetStringAsync("/api/values");
+                ViewData["ServiceWinUrl"] = clientWin.BaseAddress.ToString();
+                ViewData["ApiWinResult"] = resultWin;
+
             }
             catch (Exception ex)
             {
-                ViewData["Message"] = "Error loading Environment variables" + ex.Message;
-            }
-
-            // call service            
-            if (serviceUri != null)
-            {
-                ViewData["ServiceUrl"] = serviceUri;
-                ViewData["ApiResult"] = await CallApi(serviceUri);
-            }
-
-            // call service windows
-            if (serviceUriWin != null)
-            {
-                ViewData["ServiceWinUrl"] = serviceUriWin;
-                ViewData["ApiWinResult"] = await CallApi(serviceUriWin);
+                ViewData["Message"] = "Error calling service: " + ex.Message;
             }
 
             return View();
-        }
-
-        private async Task<string> CallApi(Uri serviceUri)
-        {
-            try
-            {
-                HttpClient client = new HttpClient();
-                var serializer = new DataContractJsonSerializer(typeof(List<string>));
-                var streamTask = client.GetStreamAsync(serviceUri);
-                var res = serializer.ReadObject(await streamTask) as List<string>;
-                return string.Join(";", res);
-            }
-            catch (Exception ex)
-            {
-                return "SERVICE NOT AVAILABLE: " + ex.Message;
-            }
         }
 
         public IActionResult Error()

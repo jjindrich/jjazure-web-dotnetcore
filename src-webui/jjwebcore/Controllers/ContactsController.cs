@@ -9,22 +9,17 @@ using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.EventGrid;
 using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace jjwebcore.Controllers
 {
     public class ContactsController : Controller
-    {
-        private jjwebapicore.ContactsClient cl = new jjwebapicore.ContactsClient();
+    {        
+        private readonly IContactsClient cl;
 
-        public ContactsController() : base()
+        public ContactsController(IContactsClient contactsClient) : base()
         {
-            Uri serviceUri = null;
-            try
-            {
-                serviceUri = new Uri(Environment.GetEnvironmentVariable("SERVICEAPIROOT_URL"));
-                cl.BaseUrl = serviceUri.ToString();
-            }
-            catch { }
+            cl = contactsClient;            
         }
 
         public async Task<IActionResult> Index()
