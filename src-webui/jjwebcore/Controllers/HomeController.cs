@@ -56,7 +56,7 @@ namespace jjwebcore.Controllers
                 ViewData["ApiResult"] = result;
 
                 // call service windows
-                var clientWin = _cl.CreateClient("jjwebapicore");
+                var clientWin = _cl.CreateClient("jjwebwinapicore");
                 string resultWin = await clientWin.GetStringAsync("/api/values");
                 ViewData["ServiceWinUrl"] = clientWin.BaseAddress.ToString();
                 ViewData["ApiWinResult"] = resultWin;
