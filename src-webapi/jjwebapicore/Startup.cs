@@ -79,8 +79,15 @@ namespace jjwebapicore
             });
 
             // Register the Swagger generator and the Swagger UI middlewares
-            app.UseOpenApi();
-            app.UseSwaggerUi3();
+            app.UseOpenApi(c =>
+            {
+                c.Path = "/api/swagger/v1/swagger.json";
+            });
+            app.UseSwaggerUi3(c =>
+            {
+                c.Path = "/api/swagger";
+                c.DocumentPath = "/api/swagger/v1/swagger.json";
+            });
 
         }
     }
