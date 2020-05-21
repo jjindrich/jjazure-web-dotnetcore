@@ -5,7 +5,7 @@
 apiVersion: extensions/v1beta1
 kind: ingress
 metadata:
-  name: {{ $fullName }}
+  name: jjwebcore2
   labels:
     app: {{ template "jjwebcore.name" . }}
     chart: {{ template "jjwebcore.chart" . }}
