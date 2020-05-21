@@ -1,0 +1,49 @@
+{{- if .Values.ingress2.enabled -}}
+{{- $fullName := include "jjwebcore.fullname" . -}}
+{{- $servicePort := .Values.service.port -}}
+{{- $ingress2Path := .Values.ingress2.path -}}
+apiVersion: extensions/v1beta1
+kind: ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app: {{ template "jjwebcore.name" . }}
+    chart: {{ template "jjwebcore.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{- with .Values.ingress2.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+{{- if .Values.ingress2.tls }}
+  tls:
+  {{- range .Values.ingress2.tls }}
+    - hosts:
+      {{- range .hosts }}
+        - {{ . }}
+      {{- end }}
+      secretName: {{ .secretName }}
+  {{- end }}
+{{- end }}
+  rules:
+  # added to handle azds (running with and w/o host)
+  {{- if .Values.ingress2.hosts }}
+  {{- range .Values.ingress2.hosts }}
+    - host: {{ . }}
+      http:
+        paths:
+          - path: {{ $ingress2Path }}
+            backend:
+              serviceName: {{ $fullName }}
+              servicePort: http
+  {{- end }}
+  {{- else }}
+    - http:
+        paths:
+          - path: {{ $ingress2Path }}
+            backend:
+              serviceName: {{ $fullName }}
+              servicePort: http
+  {{- end }}
+{{- end }}
