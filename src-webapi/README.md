@@ -216,3 +216,4 @@ First modify sourcecode base on this [article](https://www.c-sharpcorner.com/art
 How to configure Prometheus in AKS
 
 - https://github.com/tkubica12/kubernetes-demo/blob/master/demo/helm/cluster/templates/azuremonitor-configmap.yaml
+
