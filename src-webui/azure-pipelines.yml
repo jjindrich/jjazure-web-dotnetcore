@@ -38,7 +38,7 @@ stages:
       inputs:
         azureSubscription: $(subscription)
         azureContainerRegistry: $(acr)
-        dockerFile: 'src-webapi/jjwebcore/Dockerfile'
+        dockerFile: 'src-webui/jjwebcore/Dockerfile'
         defaultContext: False
         context: 'src-webui'
         imageName: 'jjwebcore:$(Build.BuildNumber)'
