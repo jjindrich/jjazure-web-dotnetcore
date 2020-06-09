@@ -73,7 +73,7 @@ stages:
         command: upgrade
         chartType: FilePath
         chartPath: '$(Pipeline.Workspace)/drop/jjwebcore'
-        releaseName: jjwebapicore
+        releaseName: jjwebcore
         overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebcore,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appinsights),secrets.ASPNETCORE.ENVIRONMENT=Development'
         valueFile: '$(Pipeline.Workspace)/drop/jjwebcore/values.yaml'
         waitForExecution: false
