@@ -1,0 +1,79 @@
+name: $(date:yyyyMMdd)$(rev:.r)
+
+trigger:
+  branches:
+    include:
+    - '*'
+  paths:
+    include:
+    -  src-web-windows/*
+
+pool:
+  vmImage: 'windows-2019'
+
+variables:
+  buildConfiguration: 'Release'
+  subscription: 'JJ Microsoft Azure Internal Consumption (82fb79bf-ee69-4a57-a76c-26153e544afe)'
+  acr: '{"loginServer":"jjakscontainers.azurecr.io", "id" : "/subscriptions/82fb79bf-ee69-4a57-a76c-26153e544afe/resourceGroups/jjmicroservices-rg/providers/Microsoft.ContainerRegistry/registries/jjakscontainers"}'
+
+stages:
+- stage: Build
+  jobs:
+  - job: CompileAndCheck
+    displayName: Compile and check code
+    steps:      
+    - task: DotNetCoreCLI@2
+      displayName: 'dotnet build'
+      inputs:
+        projects: 'src-web-windows/jjwebcorewindows/**/*.csproj'
+        arguments: '--configuration Release'
+        workingDirectory: 'src-web-windows/jjwebcorewindows'
+
+  - job: Publish
+    displayName: Publish to ACR
+    dependsOn: CompileAndCheck
+    steps:
+    - task: Docker@0
+      displayName: 'Build an image'
+      inputs:
+        azureSubscription: $(subscription)
+        azureContainerRegistry: $(acr)
+        dockerFile: 'src-web-windows/jjwebcorewindows/Dockerfile'
+        defaultContext: False
+        context: 'src-web-windows'
+        imageName: 'jjwebcorewindows:$(Build.BuildNumber)'
+    - task: Docker@0
+      displayName: 'Push an image'
+      inputs:
+        azureSubscription: $(subscription)
+        azureContainerRegistry: $(acr)
+        action: 'Push an image'
+        imageName: 'jjwebcorewindows:$(Build.BuildNumber)'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish HELM charts to drop'
+      inputs:
+        PathtoPublish: 'src-web-windows/jjwebcorewindows/charts'
+
+- stage: DeployTEST
+  displayName: Deploy to TEST
+  jobs:
+  - job: DeployTESTAKS
+    displayName: Deploy to AKS
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifact: drop
+        path: $(Pipeline.Workspace)/drop
+    - task: HelmDeploy@0
+      displayName: 'helm upgrade'
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceConnection: 'jjaks-admin'
+        namespace: default
+        command: upgrade
+        chartType: FilePath
+        chartPath: '$(Pipeline.Workspace)/drop/jjwebcorewindows'
+        releaseName: jjwebcorewindows
+        overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebcorewindows,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appinsights)'
+        valueFile: '$(Pipeline.Workspace)/drop/jjwebcorewindows/values.yaml'
+        waitForExecution: false
