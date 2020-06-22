@@ -26,12 +26,11 @@ namespace jjwebcore
                         var settings = config.Build();
                         config.AddAzureAppConfiguration(options =>
                         {
-                            // load connection string from ENV or from appsettings.json
-                            //string connStr = Environment.GetEnvironmentVariable("ConnectionStrings_AppConfig");
-                            //if (string.IsNullOrEmpty(connStr))
-                            //    connStr = settings["ConnectionStrings:AppConfig"];
-                            //options.Connect(connStr)
-                            options.Connect(settings["ConnectionStrings:AppConfig"])
+                            //load connection string from ENV or from appsettings.json
+                            string connStr = Environment.GetEnvironmentVariable("ConnectionStrings_AppConfig");
+                            if (string.IsNullOrEmpty(connStr))
+                                connStr = settings["ConnectionStrings:AppConfig"];
+                            options.Connect(connStr)
                                 .UseFeatureFlags();
                         });
                     });
