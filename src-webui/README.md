@@ -138,3 +138,18 @@ curl -X POST -H "aeg-sas-key: $key" -d "$event" $endpoint
 ```
 
 ![Azure EventGrid](media/eventgrid.png)
+
+## Manage FeatureFlags with Azure App Configuration service
+
+This implementation will show how to enable/disable Test in menu. Settings is managed by [App Configuration service](https://docs.microsoft.com/en-us/azure/azure-app-configuration/overview)
+
+![Azure App Configuration](media/appconfig.png)
+
+1. Create new App Configuration service jjaksconfig
+2. Create new Feature "AllowTests" and set Off
+3. Add code to use FeatureManagement - https://github.com/microsoft/FeatureManagement-Dotnet
+   - download nuget packages
+   - change StartUp.cs and Program.cs to load App Configuration service - using ConnectionStrings:AppConfig
+   - change controller and menu file to work with FeatureFlag
+   - change Kubernetes values file - using ConnectionStrings__AppConfig (__ because of structure)
+4. Try to set feature On -> Off -> On (it takes cca 1min for refresh)
