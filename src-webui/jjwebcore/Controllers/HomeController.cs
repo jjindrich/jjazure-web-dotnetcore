@@ -31,6 +31,7 @@ namespace jjwebcore.Controllers
             return View();
         }
 
+        [FeatureGate(WebFeatureFlags.AllowAbout)]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";

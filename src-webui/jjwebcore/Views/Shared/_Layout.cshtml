@@ -34,7 +34,9 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    <feature name=@nameof(jjwebcore.Common.WebFeatureFlags.AllowAbout)>
+                        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    </feature>
                     <li><a asp-area="" asp-controller="Contacts" asp-action="Index">Contact list</a></li>
                     <feature name=@nameof(jjwebcore.Common.WebFeatureFlags.AllowTests)>
                         <li><a asp-area="" asp-controller="Home" asp-action="Test">Test</a></li>

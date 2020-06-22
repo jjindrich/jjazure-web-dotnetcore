@@ -7,6 +7,7 @@ namespace jjwebcore.Common
 {
     public enum WebFeatureFlags
     {
-        AllowTests
+        AllowTests,
+        AllowAbout
     }
 }
