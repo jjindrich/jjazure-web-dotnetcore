@@ -1,4 +1,5 @@
 ﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+@addTagHelper *, Microsoft.FeatureManagement.AspNetCore
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,7 +36,9 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Contacts" asp-action="Index">Contact list</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Test">Test</a></li>
+                    <feature name=@nameof(jjwebcore.Common.WebFeatureFlags.AllowTests)>
+                        <li><a asp-area="" asp-controller="Home" asp-action="Test">Test</a></li>
+                    </feature>
                 </ul>
             </div>
         </div>

@@ -9,16 +9,21 @@ using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using jjwebapicore;
+using Microsoft.FeatureManagement;
+using jjwebcore.Common;
+using Microsoft.FeatureManagement.Mvc;
 
 namespace jjwebcore.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IHttpClientFactory _cl;
+        private readonly IFeatureManager _featureManager;
 
-        public HomeController(IHttpClientFactory httpClientFactory)
+        public HomeController(IHttpClientFactory httpClientFactory, IFeatureManagerSnapshot featureManager)
         {
             _cl = httpClientFactory;
+            _featureManager = featureManager;
         }
 
         public IActionResult Index()
@@ -40,6 +45,7 @@ namespace jjwebcore.Controllers
             return View();
         }
 
+        [FeatureGate(WebFeatureFlags.AllowTests)]
         public async Task<IActionResult> Test()
         {
             ViewData["Message"] = "Test API page.";
