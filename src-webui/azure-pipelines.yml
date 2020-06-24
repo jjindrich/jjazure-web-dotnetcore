@@ -62,7 +62,7 @@ stages:
       displayName: Deploy to AKS
       pool:
         vmImage: $(vmImageName)
-      environment: 'jjaks.TEST'
+      environment: 'jjweb-TEST'
       strategy:
         runOnce:
           deploy:
