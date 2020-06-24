@@ -60,8 +60,6 @@ stages:
   jobs:
     - deployment: DeployTESTAKS
       displayName: Deploy to AKS
-      pool:
-        vmImage: $(vmImageName)
       environment: 'jjweb-TEST'
       strategy:
         runOnce:
