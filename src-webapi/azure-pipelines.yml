@@ -75,24 +75,31 @@ stages:
 
 - stage: DeployTEST
   displayName: Deploy to TEST
+  dependsOn: Build
+  variables:
+    - group: jjweb-TEST
   jobs:
-  - job: DeployTESTAKS
-    displayName: Deploy to AKS
-    steps:
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        artifact: drop
-        path: $(Pipeline.Workspace)/drop
-    - task: HelmDeploy@0
-      displayName: 'helm upgrade'
-      inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceConnection: 'jjaks-admin'
-        namespace: default
-        command: upgrade
-        chartType: FilePath
-        chartPath: '$(Pipeline.Workspace)/drop/jjwebapicore'
-        releaseName: jjwebapicore
-        overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebapicore,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appinsights),secrets.ConnectionStrings.ContactsContext="$(dbconnection)"'
-        valueFile: '$(Pipeline.Workspace)/drop/jjwebapicore/values.yaml'
-        waitForExecution: false
+    - deployment: DeployTESTAKS
+      displayName: Deploy to AKS
+      environment: 'jjweb-TEST'
+      strategy:
+        runOnce:
+          deploy:
+            steps:        
+            - task: DownloadPipelineArtifact@2
+              inputs:
+                artifact: drop
+                path: $(Pipeline.Workspace)/drop
+            - task: HelmDeploy@0
+              displayName: 'helm upgrade'
+              inputs:
+                connectionType: 'Kubernetes Service Connection'
+                kubernetesServiceConnection: 'jjaks-admin'
+                namespace: default
+                command: upgrade
+                chartType: FilePath
+                chartPath: '$(Pipeline.Workspace)/drop/jjwebapicore'
+                releaseName: jjwebapicore
+                overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebapicore,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appInsightsKey),secrets.ConnectionStrings.ContactsContext="$(contactsDbConnection)"'
+                valueFile: '$(Pipeline.Workspace)/drop/jjwebapicore/values.yaml'
+                waitForExecution: false
