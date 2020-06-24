@@ -56,24 +56,31 @@ stages:
 
 - stage: DeployTEST
   displayName: Deploy to TEST
+  dependsOn: Build
   jobs:
-  - job: DeployTESTAKS
-    displayName: Deploy to AKS
-    steps:
-    - task: DownloadPipelineArtifact@2
-      inputs:
-        artifact: drop
-        path: $(Pipeline.Workspace)/drop
-    - task: HelmDeploy@0
-      displayName: 'helm upgrade'
-      inputs:
-        connectionType: 'Kubernetes Service Connection'
-        kubernetesServiceConnection: 'jjaks-admin'
-        namespace: default
-        command: upgrade
-        chartType: FilePath
-        chartPath: '$(Pipeline.Workspace)/drop/jjwebcore'
-        releaseName: jjwebcore
-        overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebcore,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appinsights),secrets.ConnectionStrings._AppConfig="$(appconfigconnection)",secrets.ASPNETCORE.ENVIRONMENT=Development'
-        valueFile: '$(Pipeline.Workspace)/drop/jjwebcore/values.yaml'
-        waitForExecution: false
+    - deployment: DeployTESTAKS
+      displayName: Deploy to AKS
+      pool:
+        vmImage: $(vmImageName)
+      environment: 'jjaks.TEST'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: DownloadPipelineArtifact@2
+              inputs:
+                artifact: drop
+                path: $(Pipeline.Workspace)/drop
+            - task: HelmDeploy@0
+              displayName: 'helm upgrade'
+              inputs:
+                connectionType: 'Kubernetes Service Connection'
+                kubernetesServiceConnection: 'jjaks-admin'
+                namespace: default
+                command: upgrade
+                chartType: FilePath
+                chartPath: '$(Pipeline.Workspace)/drop/jjwebcore'
+                releaseName: jjwebcore
+                overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebcore,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appinsights),secrets.ConnectionStrings._AppConfig="$(appconfigconnection)",secrets.ASPNETCORE.ENVIRONMENT=Development'
+                valueFile: '$(Pipeline.Workspace)/drop/jjwebcore/values.yaml'
+                waitForExecution: false
