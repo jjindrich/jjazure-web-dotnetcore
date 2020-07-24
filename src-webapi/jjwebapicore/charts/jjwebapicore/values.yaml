@@ -52,10 +52,12 @@ secrets:
     ContactsContext: copy_sqldatabase_connectionstring
 resources:
   limits:
-   # limit to scaling = 1000m = 1CPU
+   # limit CPU 1000m = 1CPU
+   # limit memory - restart pod if hit
    cpu: 1000m
-   memory: 128Mi
+   memory: 128Mi    
   requests:
+    # for allocation on node and scaling
    cpu: 100m
    memory: 128Mi
 nodeSelector:

@@ -13,6 +13,8 @@ namespace jjwebapicore.Controllers
     [ApiController]
     public class StressController : ControllerBase
     {
+        private int runTimeSecs = 30;
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
@@ -25,13 +27,14 @@ namespace jjwebapicore.Controllers
                 t.Start(cpuUsage);
                 threads.Add(t);
             }
-            return new string[] { string.Format("CPU stress {0}% ",cpuUsage) };
+            return new string[] { string.Format("CPU stress {0}% for {1} seconds ", cpuUsage, runTimeSecs) };
         }
 
-        public static void CPUKill(object cpuUsage)
+        private void CPUKill(object cpuUsage)
         {
             Parallel.For(0, 1, new Action<int>((int i) =>
             {
+                DateTime start = DateTime.Now;
                 Stopwatch watch = new Stopwatch();
                 watch.Start();
                 while (true)
@@ -42,6 +45,9 @@ namespace jjwebapicore.Controllers
                         watch.Reset();
                         watch.Start();
                     }
+                    if ((DateTime.Now - start).Seconds >= runTimeSecs)
+                        break;
+                        
                 }
             }));
 

@@ -226,9 +226,14 @@ Check limits in helm charts.
 Run command to setup autoscale
 
 ```
-kubectl autoscale deployment jjwebapicore --cpu-percent=50 --min=3 --max=10
+kubectl autoscale deployment jjwebapicore --cpu-percent=50 --min=1 --max=10
 ```
 
-Run service to stress CPU - http://10.4.2.250/api/stress
+Run service to stress CPU for 30 seconds - http://10.4.2.250/api/stress
 
 Will be pods added automatically as well as nodes if needed.
+
+```
+kubectl get hpa
+kubectl delete hpa jjwebapicore
+```
