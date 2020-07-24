@@ -52,7 +52,8 @@ secrets:
     ContactsContext: copy_sqldatabase_connectionstring
 resources:
   limits:
-   cpu: 100m
+   # limit to scaling = 1000m = 1CPU
+   cpu: 1000m
    memory: 128Mi
   requests:
    cpu: 100m
