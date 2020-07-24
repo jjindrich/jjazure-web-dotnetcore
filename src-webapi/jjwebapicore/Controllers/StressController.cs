@@ -18,7 +18,6 @@ namespace jjwebapicore.Controllers
         public ActionResult<IEnumerable<string>> Get()
         {
             int cpuUsage = 70;
-            int time = 40000;
             List<Thread> threads = new List<Thread>();
             for (int i = 0; i < Environment.ProcessorCount + 1; i++)
             {
@@ -26,9 +25,7 @@ namespace jjwebapicore.Controllers
                 t.Start(cpuUsage);
                 threads.Add(t);
             }
-            Thread.Sleep(time);
-
-            return new string[] { string.Format("CPU stressed on {1}% for {0}ms.",time,cpuUsage) };
+            return new string[] { string.Format("CPU stress {0}% ",cpuUsage) };
         }
 
         public static void CPUKill(object cpuUsage)
