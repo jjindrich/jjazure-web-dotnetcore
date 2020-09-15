@@ -61,7 +61,14 @@ namespace jjwebcore.Controllers
                 string result = await client.GetStringAsync("/api/values");
                 ViewData["ServiceUrl"] = client.BaseAddress.ToString();
                 ViewData["ApiResult"] = result;
+            }
+            catch (Exception ex)
+            {
+                ViewData["ApiResult"] = "Error calling: " + ex.Message;
+            }
 
+            try
+            {
                 // call service windows
                 var clientWin = _cl.CreateClient("jjwebwinapicore");
                 string resultWin = await clientWin.GetStringAsync("/api/values");
@@ -71,7 +78,7 @@ namespace jjwebcore.Controllers
             }
             catch (Exception ex)
             {
-                ViewData["Message"] = "Error calling service: " + ex.Message;
+                ViewData["ApiWinResult"] = "Error calling: " + ex.Message;
             }
 
             return View();
