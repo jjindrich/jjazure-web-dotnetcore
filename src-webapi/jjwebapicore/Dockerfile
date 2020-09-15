@@ -17,4 +17,5 @@ RUN dotnet publish "jjwebapicore.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ENTRYPOINT ["dotnet", "jjwebapicore.dll"]
