@@ -76,6 +76,7 @@ stages:
 - stage: DeployTEST
   displayName: Deploy to TEST
   dependsOn: Build
+  condition: succeeded('Build')
   variables:
     - group: jjweb-TEST
   jobs:
@@ -86,10 +87,8 @@ stages:
         runOnce:
           deploy:
             steps:        
-            - task: DownloadPipelineArtifact@2
-              inputs:
-                artifact: drop
-                path: $(Pipeline.Workspace)/drop
+            - download: current
+              artifact: drop
             - task: HelmDeploy@0
               displayName: 'helm upgrade'
               inputs:
