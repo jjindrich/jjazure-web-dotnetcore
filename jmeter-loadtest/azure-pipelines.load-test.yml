@@ -12,7 +12,7 @@ variables:
   tfStorageAccountName: 'jjtfstate'
   tfStorageContainerName: 'jmeter'
   tfKey: 'terraform.tfstate'
-  jmeterDirectory: 'jmeter-loadtest/testcase'
+  jmeterDirectory: '$(System.DefaultWorkingDirectory)/jmeter-loadtest/testcase'
   TF_VAR_RESOURCE_GROUP_NAME: 'jmeter-loadtest-rg'
   TF_VAR_JMETER_ACR_NAME: 'jjakscontainers'
   TF_VAR_JMETER_ACR_RESOURCE_GROUP_NAME: 'jjmicroservices-rg'
