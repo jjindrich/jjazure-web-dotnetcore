@@ -116,7 +116,7 @@ steps:
           --source $(terraform output storage_file_share_url) \
           --destination $(jmeterOutDirectory) \
           --source-key $(terraform output storage_account_key) \
-          --recursive
+          --recursive --overwrite
     displayName: 'RESULTS: Get JMeter Artifacts'
 
   - script: |
