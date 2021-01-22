@@ -12,8 +12,10 @@ variables:
   tfStorageAccountName: 'jjtfstate'
   tfStorageContainerName: 'jmeter'
   tfKey: 'terraform.tfstate'
+  jmeterDirectory: 'jmeter-loadtest/testcase'
+  TF_VAR_RESOURCE_GROUP_NAME: 'jmeter-loadtest-rg'
   TF_VAR_JMETER_ACR_NAME: 'jjakscontainers'
-  TF_VAR_JMETER_ACR_RESOURCE_GROUP_NAME: 'jmeter-loadtest'
+  TF_VAR_JMETER_ACR_RESOURCE_GROUP_NAME: 'jjmicroservices-rg'
   TF_VAR_JMETER_DOCKER_IMAGE: 'jjakscontainers.azurecr.io/jmeter'
   TF_VAR_JMETER_JMX_FILE: 'sample.jmx'
   TF_VAR_JMETER_WORKERS_COUNT: 1
@@ -48,4 +50,13 @@ steps:
       backendAzureRmResourceGroupName: $(tfResourceGroupName)
       backendAzureRmStorageAccountName: $(tfStorageAccountName)
       backendAzureRmContainerName: $(tfStorageContainerName)
-      backendAzureRmKey: $(tfKey)    
+      backendAzureRmKey: $(tfKey)
+
+  - script: |
+      azcopy \
+      --source $(JMETER_DIRECTORY_INPUT) \
+      --destination $(terraform output storage_file_share_url) \
+      --dest-key $(terraform output storage_account_key) \
+      --recursive
+    workingDirectory: $(tfDirectory)
+    displayName: 'Copy JMX file'
