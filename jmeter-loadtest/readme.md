@@ -13,3 +13,7 @@ Import this pipeline in Azure DevOps project.
 Check [terraform definition](terraform) and [pipeline](azure-pipelines.load-test.yml)
 
 Import this pipeline in Azure DevOps project.
+
+![DevOps run result](media/result.png)
+
+Additional artifacts are published after the test ends - JMeter Dashboard, logs and others.
