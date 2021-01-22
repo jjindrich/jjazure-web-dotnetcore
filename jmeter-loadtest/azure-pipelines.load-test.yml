@@ -14,7 +14,7 @@ variables:
   tfKey: 'terraform.tfstate'
   jmeterDirectory: '$(System.DefaultWorkingDirectory)/jmeter-loadtest/testcase'
   jmeterOutDirectory: '$(System.DefaultWorkingDirectory)/jmeter-loadtest/results'
-  TF_VAR_RESOURCE_GROUP_NAME: 'jmeter-loadtest-rg'
+  TF_VAR_RESOURCE_GROUP_NAME: 'jjmicroservices-jmeter-rg'
   TF_VAR_JMETER_ACR_NAME: 'jjakscontainers'
   TF_VAR_JMETER_ACR_RESOURCE_GROUP_NAME: 'jjmicroservices-rg'
   TF_VAR_JMETER_DOCKER_IMAGE: 'jjakscontainers.azurecr.io/jmeter'
@@ -116,7 +116,7 @@ steps:
           --source $(terraform output storage_file_share_url) \
           --destination $(jmeterOutDirectory) \
           --source-key $(terraform output storage_account_key) \
-          --recursive --overwrite
+          --recursive
     displayName: 'RESULTS: Get JMeter Artifacts'
 
   - script: |
