@@ -2,8 +2,13 @@
 
 Used this guide https://docs.microsoft.com/en-us/samples/azure-samples/jmeter-aci-terraform/jmeter-aci-terraform/
 
-# Building docker image
+## Building docker image
 
 Check [Dockerfile](docker/Dockerfile) and [pipeline](azure-pipelines.docker.yml)
 
 Import this pipeline in Azure DevOps project.
+
+## Running load test
+
+Check [pipeline](azure-pipelines.load-test.yml)
+

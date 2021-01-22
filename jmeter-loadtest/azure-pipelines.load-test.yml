@@ -1,0 +1,29 @@
+trigger: none
+
+pool:
+  vmImage: 'ubuntu-18.04'
+
+variables:
+  subscription: 'JJ Microsoft Azure Internal Consumption (82fb79bf-ee69-4a57-a76c-26153e544afe)'
+  acrName: 'jjakscontainers'
+  dockerImage: 'jjakscontainers.azurecr.io/jmeter'
+  tfDirectory: 'jmeter-loadtest/terraform'
+
+
+steps:
+
+  - task: TerraformInstaller@0
+    displayName: 'Install Terraform'
+    inputs:
+      terraformVersion: 0.13.2
+  - task: TerraformTaskV1@0
+    displayName: 'Terraform : Terraform init'
+    inputs:
+      workingDirectory: $(tfDirectory)
+      provider: 'azurerm'
+      command: 'init'
+      backendServiceArm: $(subscription)
+
+  - script: terraform apply -target azurerm_storage_share.jmeter_share -auto-approve
+    workingDirectory: $(tfDirectory)
+    displayName: 'Terraform Apply (target=file share)'
