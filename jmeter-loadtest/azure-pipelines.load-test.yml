@@ -10,8 +10,11 @@ variables:
   tfDirectory: 'jmeter-loadtest/terraform'
   tfResourceGroupName: 'jjdevmanagement'
   tfStorageAccountName: 'jjtfstate'
-  tfStorageContainerName: 'jjaks'
+  tfStorageContainerName: 'jmeter'
   tfKey: 'terraform.tfstate'
+  TF_VAR_JMETER_ACR_NAME: 'jjakscontainers'
+  TF_VAR_JMETER_ACR_RESOURCE_GROUP_NAME: 'jmeter-loadtest'
+  TF_VAR_JMETER_DOCKER_IMAGE: 'jjakscontainers.azurecr.io/jmeter'
 
 steps:
 
