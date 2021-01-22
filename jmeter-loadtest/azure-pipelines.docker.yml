@@ -1,0 +1,26 @@
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - jmeter-loadtest/docker/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  subscription: 'JJ Microsoft Azure Internal Consumption (82fb79bf-ee69-4a57-a76c-26153e544afe)'
+  acrName: 'jjakscontainers'
+  dockerImage: 'jjakscontainers.azurecr.io/jmeter'
+
+steps:
+
+- task: AzureCLI@2
+  displayName: 'Build and Push JMeter Docker image'
+  inputs:
+    azureSubscription: $(subscription)
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az acr build -t $(dockerImage) -r $(acrName) -f $(Build.SourcesDirectory)/jmeter-loadtest/docker/Dockerfile $(Build.SourcesDirectory)/jmeter-loadtest/docker
