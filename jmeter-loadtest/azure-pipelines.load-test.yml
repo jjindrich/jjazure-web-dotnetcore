@@ -54,7 +54,7 @@ steps:
 
   - script: |
       azcopy \
-      --source $(JMETER_DIRECTORY_INPUT) \
+      --source $(jmeterDirectory) \
       --destination $(terraform output storage_file_share_url) \
       --dest-key $(terraform output storage_account_key) \
       --recursive
