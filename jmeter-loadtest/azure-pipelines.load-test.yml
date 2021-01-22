@@ -8,7 +8,10 @@ variables:
   acrName: 'jjakscontainers'
   dockerImage: 'jjakscontainers.azurecr.io/jmeter'
   tfDirectory: 'jmeter-loadtest/terraform'
-
+  tfResourceGroupName: 'jjdevmanagement'
+  tfStorageAccountName: 'jjtfstate'
+  tfStorageContainerName: 'jjaks'
+  tfKey: 'terraform.tfstate'
 
 steps:
 
@@ -23,6 +26,10 @@ steps:
       provider: 'azurerm'
       command: 'init'
       backendServiceArm: $(subscription)
+      backendAzureRmResourceGroupName: $(tfResourceGroupName)
+      backendAzureRmStorageAccountName: $(tfStorageAccountName)
+      backendAzureRmContainerName: $(tfStorageContainerName)
+      backendAzureRmKey: $(tfKey)
 
   - script: terraform apply -target azurerm_storage_share.jmeter_share -auto-approve
     workingDirectory: $(tfDirectory)

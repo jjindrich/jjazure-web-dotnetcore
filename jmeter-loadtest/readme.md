@@ -10,5 +10,6 @@ Import this pipeline in Azure DevOps project.
 
 ## Running load test
 
-Check [pipeline](azure-pipelines.load-test.yml)
+Check [terraform definition](terraform) and [pipeline](azure-pipelines.load-test.yml)
 
+Import this pipeline in Azure DevOps project.
