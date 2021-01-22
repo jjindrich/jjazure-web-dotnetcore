@@ -36,6 +36,16 @@ steps:
       backendAzureRmContainerName: $(tfStorageContainerName)
       backendAzureRmKey: $(tfKey)
 
-  - script: terraform apply -target azurerm_storage_share.jmeter_share -auto-approve
-    workingDirectory: $(tfDirectory)
-    displayName: 'Terraform Apply (target=file share)'
+  - task: TerraformTaskV1@0
+    displayName: 'Terraform: azurerm apply (target=file share)'
+    inputs:
+      workingDirectory: $(tfDirectory)
+      provider: 'azurerm'
+      command: apply
+      commandOptions: '-no-color -target azurerm_storage_share.jmeter_share'
+      backendServiceArm: $(subscription)
+      environmentServiceNameAzureRM: $(subscription)
+      backendAzureRmResourceGroupName: $(tfResourceGroupName)
+      backendAzureRmStorageAccountName: $(tfStorageAccountName)
+      backendAzureRmContainerName: $(tfStorageContainerName)
+      backendAzureRmKey: $(tfKey)    
