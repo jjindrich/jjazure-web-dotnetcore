@@ -13,6 +13,7 @@ variables:
   tfStorageContainerName: 'jmeter'
   tfKey: 'terraform.tfstate'
   jmeterDirectory: '$(System.DefaultWorkingDirectory)/jmeter-loadtest/testcase'
+  jmeterOutDirectory: '$(System.DefaultWorkingDirectory)/jmeter-loadtest/results'
   TF_VAR_RESOURCE_GROUP_NAME: 'jmeter-loadtest-rg'
   TF_VAR_JMETER_ACR_NAME: 'jjakscontainers'
   TF_VAR_JMETER_ACR_RESOURCE_GROUP_NAME: 'jjmicroservices-rg'
@@ -60,3 +61,93 @@ steps:
       --recursive
     workingDirectory: $(tfDirectory)
     displayName: 'Copy JMX file'
+
+  - task: TerraformTaskV1@0
+    displayName: 'Terraform: azurerm apply (target=all)'
+    inputs:
+      workingDirectory: $(tfDirectory)
+      provider: 'azurerm'
+      command: apply
+      commandOptions: '-no-color'
+      backendServiceArm: $(subscription)
+      environmentServiceNameAzureRM: $(subscription)
+      backendAzureRmResourceGroupName: $(tfResourceGroupName)
+      backendAzureRmStorageAccountName: $(tfStorageAccountName)
+      backendAzureRmContainerName: $(tfStorageContainerName)
+      backendAzureRmKey: $(tfKey)
+
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: $(subscription)
+      workingDirectory: $(tfDirectory)
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        RG=$(terraform output resource_group_name)
+        NAME=$(terraform output jmeter_controller_name)
+        echo "`date`: Started!"
+        while [ $(az container show -g $RG -n $NAME --query "containers[0].instanceView.currentState.state" -o tsv) == "Running" ]; do
+          echo "`date`: Still Running..."
+          sleep 20
+        done
+        echo "`date`: Finished!"
+    displayName: 'TEST: Wait Test Execution'
+
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: $(subscription)
+      workingDirectory: $(tfDirectory)
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az container logs -g $(terraform output resource_group_name) -n $(terraform output jmeter_controller_name)
+        RESOURCE_GROUP=$(terraform output resource_group_name)
+        echo -n $(terraform output jmeter_workers_names) | xargs -t -d "," -I '{}' -n1 az container logs -g $RESOURCE_GROUP -n {}
+    displayName: 'RESULTS: Collect JMeter Controller and Worker Logs'
+
+  - task: AzureCLI@2
+    inputs:
+      azureSubscription: $(subscription)
+      workingDirectory: $(tfDirectory)
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        azcopy \
+          --source $(terraform output storage_file_share_url) \
+          --destination $(jmeterOutDirectory) \
+          --source-key $(terraform output storage_account_key) \
+          --recursive
+    displayName: 'RESULTS: Get JMeter Artifacts'
+
+  - script: |
+      JMETER_RESULTS=$(jmeterOutDirectory)/$(terraform output jmeter_results_file)
+      JUNIT_RESULTS=$(jmeterOutDirectory)/output.xml
+      python3 ../scripts/jtl_junit_converter.py $JMETER_RESULTS $JUNIT_RESULTS
+    workingDirectory: $(tfDirectory)
+    displayName: 'RESULTS: Convert JMeter Results to JUnit Format'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '$(jmeterOutDirectory)/output.xml'
+      failTaskOnFailedTests: true
+    displayName: 'RESULTS: Publish Load Testing Results'
+
+  - publish: $(jmeterOutDirectory)
+    artifact: JMeterResults
+    condition: succeededOrFailed()
+    displayName: 'RESULTS: Publish Load Test Artifacts'
+
+  - task: TerraformTaskV1@0
+    displayName: 'Terraform: azurerm destroy'
+    inputs:
+      workingDirectory: $(tfDirectory)
+      provider: 'azurerm'
+      command: destroy
+      commandOptions: '-no-color'
+      backendServiceArm: $(subscription)
+      environmentServiceNameAzureRM: $(subscription)
+      backendAzureRmResourceGroupName: $(tfResourceGroupName)
+      backendAzureRmStorageAccountName: $(tfStorageAccountName)
+      backendAzureRmContainerName: $(tfStorageContainerName)
+      backendAzureRmKey: $(tfKey)
