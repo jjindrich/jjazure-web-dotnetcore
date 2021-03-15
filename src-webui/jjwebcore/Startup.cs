@@ -63,8 +63,6 @@ namespace jjwebcore
                 app.UseHsts();
             }
 
-            app.UseAzureAppConfiguration();
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
