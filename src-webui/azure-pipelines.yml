@@ -83,6 +83,6 @@ stages:
                 chartType: FilePath
                 chartPath: '$(Pipeline.Workspace)/drop/jjwebcore'
                 releaseName: jjwebcore
-                overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebcore,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appInsightsKey),secrets.ConnectionStrings._AppConfig="$(appConfig)",secrets.ASPNETCORE.ENVIRONMENT=Development'
+                overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebcore,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appInsightsKey),secrets.ConnectionStrings._AppConfig="$(appConfig)",secrets.APPLICATIONINSIGHTS._CONNECTION_STRING="$(appInsightsConfig)",secrets.ASPNETCORE.ENVIRONMENT=Development'
                 valueFile: '$(Pipeline.Workspace)/drop/jjwebcore/values.yaml'
                 waitForExecution: false

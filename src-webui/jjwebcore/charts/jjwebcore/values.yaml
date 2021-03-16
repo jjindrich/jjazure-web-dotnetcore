@@ -64,8 +64,8 @@ secrets:
     URL: http://jjwebapicore.default.svc.cluster.local
   SERVICEWINAPIROOT:
     URL: http://jjwebcorewindows.default.svc.cluster.local
-  APPINSIGHTS:
-    INSTRUMENTATIONKEY: 00000000-0000-0000-0000-000000000000
+  APPLICATIONINSIGHTS:
+    _CONNECTION_STRING: InstrumentationKey=00000000-0000-0000-0000-000000000000
   ConnectionStrings:
     _AppConfig: copy_AppConfig_connectionstring
 resources: {}
