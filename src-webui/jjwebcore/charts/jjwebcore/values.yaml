@@ -63,7 +63,7 @@ secrets:
   SERVICEAPIROOT:
     URL: http://jjwebapicore.jjapi.svc.cluster.local
   SERVICEWINAPIROOT:
-    URL: http://jjwebcorewindows.api.svc.cluster.local
+    URL: http://jjwebcorewindows.jjapi.svc.cluster.local
   APPLICATIONINSIGHTS:
     CONNECTION_STRING: InstrumentationKey=00000000-0000-0000-0000-000000000000
   ConnectionStrings:
