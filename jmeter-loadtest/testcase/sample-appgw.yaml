@@ -1,0 +1,8 @@
+version: v0.1
+testName: JJAppGwAksTest
+testPlan: jmeter-loadtest/testcase/sample-appgw.jmx
+configurationFiles:
+    - 'jmeter-loadtest/testcase/*.csv'
+description: 'sample-appgw Test Run'
+engineInstances: 1
+engineSize: M
