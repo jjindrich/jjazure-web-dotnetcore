@@ -54,11 +54,10 @@ steps:
       backendAzureRmKey: $(tfKey)
 
   - script: |
-      azcopy \
-      --source $(jmeterDirectory) \
-      --destination $(terraform output storage_file_share_url) \
-      --dest-key $(terraform output storage_account_key) \
-      --recursive
+      an=$(terraform output storage_account_name)
+      end=`date -u -d "30 minutes" '+%Y-%m-%dT%H:%MZ'`
+      sas=$(az storage account generate-sas --account-name $an --services f --permissions acuw --resource-types co --expiry $end -o tsv)
+      azcopy copy "$(jmeterDirectory)" "$(terraform output storage_file_share_url)?$sas" --recursive=true
     workingDirectory: $(tfDirectory)
     displayName: 'Copy JMX file'
 
