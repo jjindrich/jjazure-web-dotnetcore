@@ -116,11 +116,10 @@ steps:
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
-        azcopy \
-          --source $(terraform output storage_file_share_url) \
-          --destination $(jmeterOutDirectory) \
-          --source-key $(terraform output storage_account_key) \
-          --recursive
+        an=$(terraform output storage_account_name)
+        end=`date -u -d "30 minutes" '+%Y-%m-%dT%H:%MZ'`
+        sas=$(az storage account generate-sas --account-name $an --services f --permissions acuw --resource-types co --expiry $end -o tsv)
+        azcopy copy "$(terraform output storage_file_share_url)?$sas"stination "$(jmeterDirectory)" --recursive=true
     displayName: 'RESULTS: Get JMeter Artifacts'
 
   - script: |
