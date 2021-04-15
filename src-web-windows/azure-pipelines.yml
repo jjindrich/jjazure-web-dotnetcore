@@ -83,3 +83,4 @@ stages:
                 overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebcorewindows,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appInsightsKey)'
                 valueFile: '$(Pipeline.Workspace)/drop/jjwebcorewindows/values.yaml'
                 waitForExecution: false
+                arguments: '-n jjapi'

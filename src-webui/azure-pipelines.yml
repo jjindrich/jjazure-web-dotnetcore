@@ -86,3 +86,4 @@ stages:
                 overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebcore,image.tag=$(build.buildNumber),secrets.ConnectionStrings._AppConfig="$(appConfig)",secrets.APPLICATIONINSIGHTS.CONNECTION_STRING="$(appInsightsConfig)",secrets.ASPNETCORE.ENVIRONMENT=Development'
                 valueFile: '$(Pipeline.Workspace)/drop/jjwebcore/values.yaml'
                 waitForExecution: false
+                arguments: '-n jjweb'

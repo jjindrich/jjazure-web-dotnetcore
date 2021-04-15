@@ -61,9 +61,9 @@ secrets:
   # mysecret:
   #   mypassword: password
   SERVICEAPIROOT:
-    URL: http://jjwebapicore.default.svc.cluster.local
+    URL: http://jjwebapicore.jjapi.svc.cluster.local
   SERVICEWINAPIROOT:
-    URL: http://jjwebcorewindows.default.svc.cluster.local
+    URL: http://jjwebcorewindows.jjapi.svc.cluster.local
   APPLICATIONINSIGHTS:
     CONNECTION_STRING: InstrumentationKey=00000000-0000-0000-0000-000000000000
   ConnectionStrings:

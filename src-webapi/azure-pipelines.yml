@@ -102,3 +102,4 @@ stages:
                 overrideValues: 'image.repository=jjakscontainers.azurecr.io/jjwebapicore,image.tag=$(build.buildNumber),secrets.APPINSIGHTS.INSTRUMENTATIONKEY=$(appInsightsKey),secrets.ConnectionStrings.ContactsContext="$(contactsDbConnection)"'
                 valueFile: '$(Pipeline.Workspace)/drop/jjwebapicore/values.yaml'
                 waitForExecution: false
+                arguments: '-n jjapi'
