@@ -123,8 +123,7 @@ steps:
     displayName: 'RESULTS: Get JMeter Artifacts'
 
   - script: |
-      ls -R $(jmeterOutDirectory)
-      JMETER_RESULTS=$(jmeterOutDirectory)/$(terraform output jmeter_results_file)
+      JMETER_RESULTS=$(jmeterOutDirectory)/jmeter/$(terraform output jmeter_results_file)
       JUNIT_RESULTS=$(jmeterOutDirectory)/output.xml
       python3 ../scripts/jtl_junit_converter.py $JMETER_RESULTS $JUNIT_RESULTS
     workingDirectory: $(tfDirectory)
