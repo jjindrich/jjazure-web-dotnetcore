@@ -48,6 +48,8 @@ It creates docker file, push image into Azure Container Registry (using docker l
 func init --docker-only
 docker login jjakscontainers.azurecr.io -u jjakscontainers
 kubectl create namespace jjfunckeda
+func kubernetes install --namespace keda
+
 func kubernetes deploy --name jjfunckeda --registry jjakscontainers.azurecr.io --namespace jjfunckeda
 ```
 
@@ -101,3 +103,19 @@ KEDA doesn't automatically manage HTTP trigger functions pods. But you can instr
 
 https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda#http-trigger-support
 https://keda.sh/docs/2.2/scalers/azure-monitor/
+
+Deploy it
+
+```powershell
+kubectl apply -f scaleobject.yaml
+kubectl get pods -o wide -n jjfunckeda
+```
+
+TODO: not working, submitted GH Issue https://github.com/MicrosoftDocs/azure-docs/issues/74902
+
+Troubleshooting
+
+```powershell
+kubectl get pods -n keda
+kubectl logs keda-68566445b8-wccjm -c keda -n keda
+```
