@@ -60,7 +60,7 @@ serviceaccount/jjfunckeda-function-keys-identity-svc-act created
 role.rbac.authorization.k8s.io/functions-keys-manager-role created
 rolebinding.rbac.authorization.k8s.io/jjfunckeda-function-keys-identity-svc-act-functions-keys-manager-rolebinding created
 service/jjfunckeda-http created
-deployment.apps/jjfunckeda-http created
+deployment.apps/jjfunckeda-httpkubectl created
 Getting loadbalancer ip for the service: jjfunckeda-http
 ```
 
@@ -68,7 +68,31 @@ Now you can check your api is working
 
 ```powershell
 kubectl get services jjfunckeda-http -n jjfunckeda
-http://<your_ip>/api/GetData
+curl http://<your_ip>/api/GetData
+```
+
+# Deploy to AKS virtual nodes using KEDA 
+
+TODO: probably needed to update Deployment manifest to use virtual nodes - checking with product team
+
+There is limitation to access Azure Container Registry with AAD identity, use Kubenetes secret - https://docs.microsoft.com/en-us/azure/aks/virtual-nodes-cli#deploy-a-sample-app
+
+```powershell
+kubectl create secret docker-registry -n jjfunckeda jjakscontainerscred --docker-server=jjakscontainers.azurecr.io --docker-username=jjakscontainers --docker-password=<your-pword>
+```
+
+Deploy it and check node is virtual-node-aci-linux
+
+```powershell
+kubectl apply -f deployment-aksvirtualnodes.yaml
+kubectl get pods -o wide -n jjfunckeda
+```
+
+Now you can check your api is working
+
+```powershell
+kubectl get services jjfunckeda-http -n jjfunckeda
+curl http://<your_ip>/api/GetData
 ```
 
 # Configure autoscaling with KEDA of HTTP trigger

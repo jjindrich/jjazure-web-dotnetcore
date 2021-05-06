@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jjfunckeda-http
+  namespace: jjfunckeda
+  labels:
+    app: jjfunckeda-http
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jjfunckeda-http
+  template:
+    metadata:
+      labels:
+        app: jjfunckeda-http
+    spec:
+      containers:
+      - name: jjfunckeda-http
+        image: jjakscontainers.azurecr.io/jjfunckeda
+        ports:
+        - containerPort: 80
+        env:
+        - name: AzureFunctionsJobHost__functions__0
+          value: GetData
+        - name: AzureWebJobsSecretStorageType
+          value: kubernetes
+        - name: AzureWebJobsKubernetesSecretName
+          value: secrets/func-keys-kube-secret-jjfunckeda
+        envFrom:
+        - secretRef:
+            name: jjfunckeda
+      serviceAccountName: jjfunckeda-function-keys-identity-svc-act
+      imagePullSecrets:
+      - name: jjakscontainerscred
+      nodeSelector:
+        kubernetes.io/role: agent
+        beta.kubernetes.io/os: linux
+        type: virtual-kubelet
+      tolerations:
+      - key: virtual-kubelet.io/provider
+        operator: Exists
+      - key: azure.com/aci
+        effect: NoSchedule
