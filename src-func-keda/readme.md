@@ -76,7 +76,8 @@ curl http://<your_ip>/api/GetData
 
 # Deploy to AKS virtual nodes using KEDA 
 
-TODO: probably needed to update Deployment manifest to use virtual nodes - checking with product team
+It's not possible to use Azure Functions CLI to configure using AKS virtual nodes. We have to create Kubernetes manifests and update manualy.
+Check this sample https://github.com/kedacore/sample-hello-world-azure-functions
 
 There is limitation to access Azure Container Registry with AAD identity, use Kubenetes secret - https://docs.microsoft.com/en-us/azure/aks/virtual-nodes-cli#deploy-a-sample-app
 
