@@ -1,0 +1,40 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: azure-monitor-auth
+  namespace: jjfunckeda
+spec:
+  secretTargetRef:
+    - parameter: activeDirectoryClientId
+      name: azure-monitor-secrets
+      key: activeDirectoryClientId
+    - parameter: activeDirectoryClientPassword
+      name: azure-monitor-secrets
+      key: activeDirectoryClientPassword
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: lb-scaledobject
+  namespace: jjfunckeda
+spec:
+  scaleTargetRef:
+    name: jjfunckeda-http
+  pollingInterval: 15
+  cooldownPeriod:  30
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+  - type: azure-monitor
+    metadata:
+      resourceURI: Microsoft.ContainerService/managedClusters/jjakstest
+      tenantId: <tenant-id>
+      subscriptionId: <subscriptio-id>
+      resourceGroupName: jjakstest-rg
+      metricName: kube_pod_status_ready
+      metricFilter: namespace eq 'jjfunckeda'
+      metricAggregationInterval: "0:1:0"
+      metricAggregationType: Average
+      targetValue: "1"
+    authenticationRef:
+        name: azure-monitor-auth

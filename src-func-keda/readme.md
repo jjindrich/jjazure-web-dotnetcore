@@ -112,6 +112,7 @@ Now you can check your api is working
 
 ```powershell
 kubectl get services jjfunckeda-http -n jjfunckeda
+kubectl get all -n jjfunckeda
 curl http://<your_ip>/api/GetData
 ```
 
@@ -122,10 +123,12 @@ KEDA doesn't automatically manage HTTP trigger functions pods. But you can instr
 https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda#http-trigger-support
 https://keda.sh/docs/2.2/scalers/azure-monitor/
 
-Deploy it
+Create identity to access Azure Monitor data, update Kubernetes ScaledObject manifest [scaledobject](scaledobject.yaml) and deploy it
 
 ```powershell
-kubectl apply -f scaleobject.yaml
+kubectl create secret generic -n jjfunckeda azure-monitor-secrets --from-literal=activeDirectoryClientId=<client-id> --from-literal=activeDirectoryClientPassword=<secret>
+
+kubectl apply -f scaledobject.yaml
 kubectl get pods -o wide -n jjfunckeda
 ```
 
@@ -135,5 +138,7 @@ Troubleshooting
 
 ```powershell
 kubectl get pods -n keda
-kubectl logs keda-68566445b8-wccjm -c keda -n keda
+kubectl logs keda-operator-69c986985-hqlgb -n keda
+kubectl scale --replicas=10 deployment/jjfunckeda-http -n jjfunckeda
+kubectl describe deployment jjfunckeda-http -n jjfunckeda
 ```
