@@ -24,9 +24,9 @@ namespace JJ.Function
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
-            log.LogInformation("GetData executed");
+            log.LogInformation("GetData executed");            
 
-            TestData data = new TestData() {Id = 1, Name = "Test"};
+            TestData data = new TestData() { Id = 1, Name = System.Environment.MachineName };
 
             return new JsonResult(data);
         }
