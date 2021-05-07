@@ -33,7 +33,7 @@ az aks create -n jjakstest -g $rg `
     -x -c 2 -z 1 2 3 `
     --node-vm-size Standard_B2s --enable-cluster-autoscaler --min-count 1 --max-count 3 `
     --network-plugin azure `
-    --attach-acr $(az acr show -n jjakscontainers --query id -o tsv)
+    --attach-acr $(az acr show -n jjakscontainers --query id -o tsv) `
     --vnet-subnet-id $(az network vnet subnet show --vnet-name JJDevV2NetworkApp -g $rgnetwork -n DmzAks --query id -o tsv) `
     --enable-managed-identity `
     --enable-addons azure-policy,monitoring,virtual-node `
@@ -47,6 +47,8 @@ It creates docker file, push image into Azure Container Registry (using docker l
 
 ```powershell
 func init --docker-only
+
+az aks get-credentials --resource-group jjakstest-rg --name jjakstest
 docker login jjakscontainers.azurecr.io -u jjakscontainers
 kubectl create namespace jjfunckeda
 func kubernetes install --namespace keda
@@ -63,8 +65,13 @@ serviceaccount/jjfunckeda-function-keys-identity-svc-act created
 role.rbac.authorization.k8s.io/functions-keys-manager-role created
 rolebinding.rbac.authorization.k8s.io/jjfunckeda-function-keys-identity-svc-act-functions-keys-manager-rolebinding created
 service/jjfunckeda-http created
-deployment.apps/jjfunckeda-httpkubectl created
-Getting loadbalancer ip for the service: jjfunckeda-http
+deployment.apps/jjfunckeda-http created
+Waiting for deployment "jjfunckeda-http" rollout to finish: 0 of 1 updated replicas are available...
+deployment "jjfunckeda-http" successfully rolled out
+        GetData - [httpTrigger]
+        Invoke url: http://<your_ip>/api/getdata
+
+        Master key: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 Now you can check your api is working
@@ -79,7 +86,16 @@ curl http://<your_ip>/api/GetData
 It's not possible to use Azure Functions CLI to configure using AKS virtual nodes. We have to create Kubernetes manifests and update manualy.
 Check this sample https://github.com/kedacore/sample-hello-world-azure-functions
 
+Run this command and update Kubernetes Deployment manifest [deployment-aksvirtualnodes.yaml](deployment-aksvirtualnodes.yaml).
+Other manifests you can use as are generated automatically.
+
+```powershell
+func kubernetes deploy --name jjfunckeda --registry jjakscontainers.azurecr.io --namespace jjfunckeda --dry-run
+```
+
 There is limitation to access Azure Container Registry with AAD identity, use Kubenetes secret - https://docs.microsoft.com/en-us/azure/aks/virtual-nodes-cli#deploy-a-sample-app
+
+Run this command to store ACR secrets and update Kubernetes deployment manifest [deployment-aksvirtualnodes.yaml](deployment-aksvirtualnodes.yaml) with imagePullSecrets.
 
 ```powershell
 kubectl create secret docker-registry -n jjfunckeda jjakscontainerscred --docker-server=jjakscontainers.azurecr.io --docker-username=jjakscontainers --docker-password=<your-pword>

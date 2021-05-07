@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: jjfunckeda-http
-        image: jjakscontainers.azurecr.io/jjfunckeda
+        image: jjakscontainers.azurecr.io/jjfunckeda:latest
         ports:
         - containerPort: 80
         env:
@@ -30,6 +30,24 @@ spec:
         envFrom:
         - secretRef:
             name: jjfunckeda
+        readinessProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 240
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+        startupProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 240
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
       serviceAccountName: jjfunckeda-function-keys-identity-svc-act
       imagePullSecrets:
       - name: jjakscontainerscred
@@ -38,7 +56,4 @@ spec:
         beta.kubernetes.io/os: linux
         type: virtual-kubelet
       tolerations:
-      - key: virtual-kubelet.io/provider
-        operator: Exists
-      - key: azure.com/aci
-        effect: NoSchedule
+      - operator: Exists
