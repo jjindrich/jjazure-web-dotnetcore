@@ -22,12 +22,25 @@ kubectl describe pod winserver
 kubectl get pods
 ```
 
-Test drive E: on container
+Test drive E: on windows container
 
 ```ps
 kubectl logs winserver
 kubectl exec -it winserver -- powershell ls e:
 ```
+
+Test mount on linux container
+
+```ps
+kubectl get pods -o wide
+kubectl exec -it jjlinuxdisk -- sh touch /mnt/azure/jj
+```
+
+Drain node to see what happen with disks and check content
+``ps
+kubectl get pods -o wide
+kubectl drain aks-agentpool-79756367-vmss000079 --ignore-daemonsets --delete-local-data
+``
 
 ## Clean-up
 

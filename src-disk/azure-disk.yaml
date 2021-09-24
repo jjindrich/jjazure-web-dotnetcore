@@ -1,12 +1,13 @@
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
-  name: managed-premium-retain
+  name: managed-premium-zrs
 provisioner: disk.csi.azure.com
-reclaimPolicy: Retain
+reclaimPolicy: Delete
 parameters:
   storageaccounttype: Premium_ZRS
   kind: Managed
+volumeBindingMode: WaitForFirstConsumer
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -15,7 +16,7 @@ metadata:
 spec:
   accessModes:
   - ReadWriteOnce
-  storageClassName: managed-premium-retain
+  storageClassName: managed-premium-zrs
   resources:
     requests:
       storage: 5Gi
