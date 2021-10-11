@@ -28,9 +28,6 @@ stages:
         projects: 'src-webui/jjwebcore/**/*.csproj'
         arguments: '--configuration Release'
         workingDirectory: 'src-webui/jjwebcore'
-    - task: WhiteSource Bolt@20
-      inputs:
-        cwd: 'src-webui/jjwebcore'
 
   - job: Publish
     displayName: Publish to ACR
