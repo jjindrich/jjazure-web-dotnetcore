@@ -21,7 +21,6 @@ namespace jjwebapicore.Controllers
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
-            string codeql = string.Format("CodeQL test {0} { }", "C");
             return "value";
         }
         
