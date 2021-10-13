@@ -18,7 +18,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: src-webui/jjwebcore
+        working-directory: src-webui
 
     steps:
     - name: Checkout
