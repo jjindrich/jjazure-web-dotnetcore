@@ -47,7 +47,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: src-webapi/jjwebapicore
+        working-directory: src-webapi
 
     steps:
     - name: Checkout
@@ -62,5 +62,5 @@ jobs:
         password: ${{ secrets.ACR_PASSWORD }}
 
     - run: |
-        docker build . -t ${{ env.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }}
+        docker build jjwebapicore/. -t ${{ env.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }}
         docker push ${{ env.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }}
