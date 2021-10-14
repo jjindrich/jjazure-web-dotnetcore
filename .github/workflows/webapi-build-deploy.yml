@@ -111,10 +111,15 @@ jobs:
         helmChart: './jjwebapicore/charts'
         overrideFiles: './jjwebapicore/charts/values.yaml'
         overrides: |     
-          image.repository:jjakscontainers.azurecr.io/jjwebapicore
-        helm-version: 'latest' 
+          'image.repository':'jjakscontainers.azurecr.io/jjwebapicore'
+          'image.tag':'${{ github.sha }}'
+        helm-version: 'latest'
       id: bake
 
-    - uses: Azure/k8s-deploy@v1.2
-      with:
-        manifests: ${{ steps.bake.outputs.manifestsBundle }}
+#          secrets.APPINSIGHTS.INSTRUMENTATIONKEY:steps.kv.outputs.appInsightsKey
+#          secrets.ConnectionStrings.ContactsContext:steps.kv.outputs.contactsDbConnection
+ 
+
+#    - uses: Azure/k8s-deploy@v1.2
+#      with:
+#        manifests: ${{ steps.bake.outputs.manifestsBundle }}
