@@ -35,7 +35,7 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
-    # Code coverage
+    # TODO: Code coverage
     # https://github.com/marketplace/actions/code-coverage-summary
 
   publish:
@@ -47,12 +47,14 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: src-webapi
+        working-directory: src-webapi/jjwebapicore
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
 
+    # TODO: login ACR using RBAC 
+    # https://cloudarchitected.com/2021/09/logging-into-acr-in-github-actions/
     - uses: azure/docker-login@v1
       with:
         login-server: ${{ env.ACR_NAME }}.azurecr.io
