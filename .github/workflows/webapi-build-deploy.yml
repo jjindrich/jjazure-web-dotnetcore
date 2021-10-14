@@ -61,6 +61,29 @@ jobs:
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
 
+    # TODO: Generate Build Number
+    # https://github.com/marketplace/actions/build-number-generator
     - run: |
         docker build . -t ${{ env.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }} -f jjwebapicore/Dockerfile
         docker push ${{ env.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }}
+
+  deploy:
+    name: 'Deploy to AKS'
+    runs-on: ubuntu-latest
+    environment: dev    
+    env:
+      ACR_NAME: 'jjakscontainers'
+    defaults:
+      run:
+        shell: bash
+        working-directory: src-webapi
+
+    # AZURE_CREDENTIALS format https://github.com/marketplace/actions/azure-login#configure-deployment-credentials
+    # {"clientId":"XXX","clientSecret":"XXX","subscriptionId":"XXX","tenantId":"XXX"}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
