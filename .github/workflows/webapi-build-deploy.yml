@@ -55,10 +55,10 @@ jobs:
 
     - uses: azure/docker-login@v1
       with:
-        login-server: ${{ ACR_NAME }}.azurecr.io
+        login-server: ${{ env.ACR_NAME }}.azurecr.io
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
 
     - run: |
-        docker build . -t ${{ ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }}
-        docker push ${{ ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }}
+        docker build . -t ${{ env.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }}
+        docker push ${{ env.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }}
