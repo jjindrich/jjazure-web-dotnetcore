@@ -112,9 +112,6 @@ jobs:
         overrideFiles: './jjwebapicore/charts/values.yaml'
         overrides: |     
           image.repository:jjakscontainers.azurecr.io/jjwebapicore
-          image.tag:${{ github.sha }}
-          secrets.APPINSIGHTS.INSTRUMENTATIONKEY:steps.kv.outputs.appInsightsKey
-          secrets.ConnectionStrings.ContactsContext:steps.kv.outputs.contactsDbConnection
         helm-version: 'latest' 
       id: bake
 
