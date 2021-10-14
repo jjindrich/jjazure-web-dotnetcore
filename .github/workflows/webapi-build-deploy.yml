@@ -62,5 +62,5 @@ jobs:
         password: ${{ secrets.ACR_PASSWORD }}
 
     - run: |
-        docker build jjwebapicore/. -t ${{ env.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }}
+        docker build . -t ${{ env.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }} -f jjwebapicore/Dockerfile
         docker push ${{ env.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }}
