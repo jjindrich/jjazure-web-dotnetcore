@@ -94,7 +94,7 @@ jobs:
     - uses: Azure/get-keyvault-secrets@v1
       with: 
         keyvault: ${{ env.AKV_NAME }}
-        secrets: 'contactsDbConnection, appConfig, appInsightsKey, appInsightsConfig'
+        secrets: 'contactsDbConnection, appInsightsKey'
       id: kv
     # https://docs.microsoft.com/en-us/azure/developer/github/github-key-vault
 
@@ -103,3 +103,21 @@ jobs:
         creds: '${{ secrets.AZURE_CREDENTIALS }}'
         cluster-name: ${{ env.AKS_NAME }}
         resource-group: ${{ env.AKS_RG }}
+
+    # https://github.com/Azure/k8s-deploy
+    - uses: azure/k8s-bake@v1
+      with:
+        renderEngine: 'helm'
+        helmChart: './jjwebapicore/charts'
+        overrideFiles: './jjwebapicore/charts/values.yaml'
+        overrides: |     
+          image.repository:jjakscontainers.azurecr.io/jjwebapicore
+          image.tag:${{ github.sha }}
+          secrets.APPINSIGHTS.INSTRUMENTATIONKEY:steps.kv.outputs.appInsightsKey
+          secrets.ConnectionStrings.ContactsContext:steps.kv.outputs.contactsDbConnection
+        helm-version: 'latest' 
+      id: bake
+
+    - uses: Azure/k8s-deploy@v1.2
+      with:
+        manifests: ${{ steps.bake.outputs.manifestsBundle }}
