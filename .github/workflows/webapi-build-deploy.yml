@@ -12,7 +12,26 @@ on:
 # {"clientId":"XXX","clientSecret":"XXX","subscriptionId":"XXX","tenantId":"XXX"}
 
 jobs:
-  build:
+
+   test:
+    name: 'Deploy to AKS'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src-webapi
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - uses: azure/k8s-bake@v1
+      with:
+        renderEngine: 'helm'
+        helmChart: './jjwebapicore/charts/jjwebapicore/'
+        helm-version: 'latest'
+      id: bake-test
+
+   build:
     name: 'Build and Test'
     runs-on: ubuntu-latest
     defaults:
