@@ -7,7 +7,7 @@ jobs:
 
   test:
     name: 'Bake'
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     defaults:
       run:
         working-directory: src-webapi
