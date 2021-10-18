@@ -19,6 +19,9 @@ jobs:
     - run: |
         ls ./jjwebapicore/charts/jjtest
 
+    - uses: azure/setup-helm@v1
+      id: install
+
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
