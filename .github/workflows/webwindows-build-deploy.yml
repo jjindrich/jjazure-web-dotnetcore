@@ -1,0 +1,124 @@
+name: WebWindows dotnet
+
+on:
+  workflow_dispatch:
+    
+#  push:
+#    branches: [ master ]
+#  pull_request:
+#    branches: [ master ]
+
+# AZURE_CREDENTIALS format https://github.com/marketplace/actions/azure-login#configure-deployment-credentials
+# {"clientId":"XXX","clientSecret":"XXX","subscriptionId":"XXX","tenantId":"XXX"}
+
+jobs:
+
+  build:
+    name: 'Build and Test'
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: src-web-windows
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
+
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+
+    # TODO: Code coverage
+    # https://github.com/marketplace/actions/code-coverage-summary
+
+    # TODO: Generate Build Number
+    # https://github.com/marketplace/actions/build-number-generator
+
+  publish:
+    name: 'Publish to ACR'
+    runs-on: ubuntu-latest
+    environment: dev    
+    env:
+      ACR_NAME: 'jjakscontainers'
+    defaults:
+      run:
+        shell: bash
+        working-directory: src-web-windows
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - run: |
+        az acr login --name ${{ env.ACR_NAME }}
+        docker build . -t ${{ env.ACR_NAME }}.azurecr.io/jjwebcorewindows:${{ github.sha }} -f jjwebcorewindows/Dockerfile
+        docker push ${{ env.ACR_NAME }}.azurecr.io/jjwebcorewindows:${{ github.sha }}
+
+  deploy:
+    name: 'Deploy to AKS'
+    runs-on: ubuntu-latest
+    environment: dev    
+    env:
+      ACR_NAME: 'jjakscontainers'
+      AKS_NAME: 'jjaks'
+      AKS_RG: 'jjmicroservices-rg'
+      AKV_NAME: 'jjakskv'
+    defaults:
+      run:
+        shell: bash
+        working-directory: src-web-windows
+    needs: publish
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - uses: Azure/get-keyvault-secrets@v1
+      with: 
+        keyvault: ${{ env.AKV_NAME }}
+        secrets: 'appInsightsKey'
+      id: kv
+
+    - uses: Azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: ${{ env.AKS_NAME }}
+        resource-group: ${{ env.AKS_RG }}
+
+    # !!! not reflecting default working-directory
+    - uses: azure/k8s-bake@v1
+      with:
+        renderEngine: 'helm'
+        helmChart: './src-web-windows/jjwebcorewindows/charts/jjwebcorewindows'
+        overrideFiles: './src-web-windows/jjwebcorewindows/charts/jjwebcorewindows/values.yaml'
+        overrides: |     
+          image.repository:jjakscontainers.azurecr.io/jjwebcorewindows
+          image.tag:${{ github.sha }}
+          secrets.APPINSIGHTS.INSTRUMENTATIONKEY:${{ steps.kv.outputs.appInsightsKey }}
+        helm-version: 'latest'
+        silent: 'false'
+      id: bake
+
+    - uses: Azure/k8s-deploy@v1.2
+      with:
+        manifests: ${{ steps.bake.outputs.manifestsBundle }}
+        namespace: 'jjapi'
