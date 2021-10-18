@@ -7,7 +7,7 @@ jobs:
 
   test:
     name: 'Bake'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     defaults:
       run:
         working-directory: src-webapi
@@ -21,10 +21,6 @@ jobs:
 
     - uses: azure/setup-helm@v1
       id: install
-
-    - run: |
-        helm repo update
-
 
     - uses: azure/k8s-bake@v1
       with:
