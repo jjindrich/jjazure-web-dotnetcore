@@ -16,6 +16,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - run: |
+        ls -la .
+      working-directory: src-webapi/jjwebapicore/charts/jjtest
+
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
