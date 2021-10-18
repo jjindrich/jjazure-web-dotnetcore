@@ -7,7 +7,7 @@ jobs:
 
   test:
     name: 'Bake'
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: src-webapi
@@ -19,12 +19,10 @@ jobs:
     - run: |
         ls ./jjwebapicore/charts/jjtest
 
-    - uses: azure/setup-helm@v1
-      id: install
-
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
-        helmChart: './jjwebapicore/charts/jjtestXXXX/'
+        helmChart: './jjwebapicore/charts/jjtest/'
         helm-version: 'latest'
+        silent: 'false'
       id: bake-test
