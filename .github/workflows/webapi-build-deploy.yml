@@ -104,6 +104,10 @@ jobs:
         cluster-name: ${{ env.AKS_NAME }}
         resource-group: ${{ env.AKS_RG }}
 
+    - run: |
+        ls
+        ls ./jjwebapicore/charts/jjwebapicore/
+
     # https://github.com/Azure/k8s-deploy
     - uses: azure/k8s-bake@v1
       with:
