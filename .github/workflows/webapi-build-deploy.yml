@@ -14,7 +14,7 @@ on:
 jobs:
 
   test:
-    name: 'Deploy to AKS'
+    name: 'Test'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -27,7 +27,7 @@ jobs:
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
-        helmChart: './jjwebapicore/charts/jjwebapicore/'
+        helmChart: './src-webapi/jjwebapicore/charts/jjwebapicore'
         helm-version: 'latest'
       id: bake-test
 
@@ -123,21 +123,17 @@ jobs:
         cluster-name: ${{ env.AKS_NAME }}
         resource-group: ${{ env.AKS_RG }}
 
-    - run: |
-        ls ./jjwebapicore/charts/jjwebapicore/
-        helm template ./jjwebapicore/charts/jjwebapicore/
-
     # https://github.com/Azure/k8s-deploy
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
-        helmChart: './jjwebapicore/charts/jjwebapicore/'
-        # overrideFiles: './jjwebapicore/charts/values.yaml'
-        # overrides: |     
-        #   image.repository:jjakscontainers.azurecr.io/jjwebapicore
-        #   image.tag:${{ github.sha }}
-        #   secrets.APPINSIGHTS.INSTRUMENTATIONKEY:steps.kv.outputs.appInsightsKey
-        #   secrets.ConnectionStrings.ContactsContext:steps.kv.outputs.contactsDbConnection
+        helmChart: './src-webapi/jjwebapicore/charts/jjwebapicore'
+        overrideFiles: './src-webapi/jjwebapicore/charts/jjwebapicore/values.yaml'
+        overrides: |     
+          image.repository:jjakscontainers.azurecr.io/jjwebapicore
+          image.tag:${{ github.sha }}
+          secrets.APPINSIGHTS.INSTRUMENTATIONKEY:steps.kv.outputs.appInsightsKey
+          secrets.ConnectionStrings.ContactsContext:steps.kv.outputs.contactsDbConnection
         helm-version: 'latest'
       id: bake
 
