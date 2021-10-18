@@ -47,7 +47,7 @@ jobs:
 
   publish:
     name: 'Publish to ACR'
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     environment: dev    
     env:
       ACR_NAME: 'jjakscontainers'
@@ -71,7 +71,7 @@ jobs:
 
   deploy:
     name: 'Deploy to AKS'
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     environment: dev    
     env:
       ACR_NAME: 'jjakscontainers'
