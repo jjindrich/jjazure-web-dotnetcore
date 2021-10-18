@@ -13,24 +13,6 @@ on:
 
 jobs:
 
-  test:
-    name: 'Test'
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: src-webapi
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-
-    - uses: azure/k8s-bake@v1
-      with:
-        renderEngine: 'helm'
-        helmChart: './src-webapi/jjwebapicore/charts/jjwebapicore'
-        helm-version: 'latest'
-      id: bake-test
-
   build:
     name: 'Build and Test'
     runs-on: ubuntu-latest
@@ -115,7 +97,6 @@ jobs:
         keyvault: ${{ env.AKV_NAME }}
         secrets: 'contactsDbConnection, appInsightsKey'
       id: kv
-    # https://docs.microsoft.com/en-us/azure/developer/github/github-key-vault
 
     - uses: Azure/aks-set-context@v1
       with:
@@ -123,7 +104,7 @@ jobs:
         cluster-name: ${{ env.AKS_NAME }}
         resource-group: ${{ env.AKS_RG }}
 
-    # https://github.com/Azure/k8s-deploy
+    # !!! not reflecting default working-directory
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
@@ -135,10 +116,9 @@ jobs:
           secrets.APPINSIGHTS.INSTRUMENTATIONKEY:steps.kv.outputs.appInsightsKey
           secrets.ConnectionStrings.ContactsContext:steps.kv.outputs.contactsDbConnection
         helm-version: 'latest'
+        silent: 'false'
       id: bake
 
- 
-
-#    - uses: Azure/k8s-deploy@v1.2
-#      with:
-#        manifests: ${{ steps.bake.outputs.manifestsBundle }}
+    - uses: Azure/k8s-deploy@v1.2
+      with:
+        manifests: ${{ steps.bake.outputs.manifestsBundle }}
