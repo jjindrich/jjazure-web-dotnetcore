@@ -1,4 +1,4 @@
-name: WebUI dotnet
+name: WebUi dotnet
 
 on:
   workflow_dispatch:
@@ -8,13 +8,14 @@ on:
 #  pull_request:
 #    branches: [ master ]
 
+# AZURE_CREDENTIALS format https://github.com/marketplace/actions/azure-login#configure-deployment-credentials
+# {"clientId":"XXX","clientSecret":"XXX","subscriptionId":"XXX","tenantId":"XXX"}
+
 jobs:
+
   build:
     name: 'Build and Test'
     runs-on: ubuntu-latest
-    environment: dev
-#    env:
-#      SUBSCRIPTION_ID: ${{secrets.SUBSCRIPTION_ID}}
     defaults:
       run:
         shell: bash
@@ -37,3 +38,89 @@ jobs:
 
     - name: Test
       run: dotnet test --no-build --verbosity normal
+
+    # TODO: Code coverage
+    # https://github.com/marketplace/actions/code-coverage-summary
+
+    # TODO: Generate Build Number
+    # https://github.com/marketplace/actions/build-number-generator
+
+  publish:
+    name: 'Publish to ACR'
+    runs-on: ubuntu-latest
+    environment: dev    
+    env:
+      ACR_NAME: 'jjakscontainers'
+    defaults:
+      run:
+        shell: bash
+        working-directory: src-webui
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - run: |
+        az acr login --name ${{ env.ACR_NAME }}
+        docker build . -t ${{ env.ACR_NAME }}.azurecr.io/jjwebcore:${{ github.sha }} -f jjwebcore/Dockerfile
+        docker push ${{ env.ACR_NAME }}.azurecr.io/jjwebcore:${{ github.sha }}
+
+  deploy:
+    name: 'Deploy to AKS'
+    runs-on: ubuntu-latest
+    environment: dev    
+    env:
+      ACR_NAME: 'jjakscontainers'
+      AKS_NAME: 'jjaks'
+      AKS_RG: 'jjmicroservices-rg'
+      AKV_NAME: 'jjakskv'
+    defaults:
+      run:
+        shell: bash
+        working-directory: src-webui
+    needs: publish
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - uses: Azure/get-keyvault-secrets@v1
+      with: 
+        keyvault: ${{ env.AKV_NAME }}
+        secrets: 'appConfig, appInsightsConfig'
+      id: kv
+
+    - uses: Azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: ${{ env.AKS_NAME }}
+        resource-group: ${{ env.AKS_RG }}
+
+    # !!! not reflecting default working-directory
+    - uses: azure/k8s-bake@v1
+      with:
+        renderEngine: 'helm'
+        helmChart: './src-webui/jjwebcore/charts/jjwebcore'
+        overrideFiles: './src-webui/jjwebcore/charts/jjwebcore/values.yaml'
+        overrides: |     
+          image.repository:jjakscontainers.azurecr.io/jjwebcore
+          image.tag:${{ github.sha }}
+          secrets.ASPNETCORE.ENVIRONMENT:Development
+          secrets.APPLICATIONINSIGHTS.CONNECTION_STRING:${{ steps.kv.outputs.appInsightsConfig }}
+          secrets.ConnectionStrings._AppConfig:${{ steps.kv.outputs.appConfig }}
+        helm-version: 'latest'
+        silent: 'false'
+      id: bake
+
+    - uses: Azure/k8s-deploy@v1.2
+      with:
+        manifests: ${{ steps.bake.outputs.manifestsBundle }}
+        namespace: 'jjweb'
