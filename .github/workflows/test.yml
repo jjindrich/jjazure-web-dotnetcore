@@ -7,7 +7,7 @@ jobs:
 
   test:
     name: 'Bake'
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: src-webapi
@@ -16,9 +16,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - run: |
+        ls ./jjwebapicore/charts/jjtest
+
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
-        helmChart: './jjwebapicore/charts/jjtest/'
+        helmChart: './jjwebapicore/charts/jjtestXXXX/'
         helm-version: 'latest'
       id: bake-test
