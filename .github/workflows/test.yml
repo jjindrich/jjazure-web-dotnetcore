@@ -19,6 +19,6 @@ jobs:
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
-        helmChart: './jjwebapicore/charts/jjwebapicore/'
+        helmChart: './jjwebapicore/charts/jjtest/'
         helm-version: 'latest'
       id: bake-test
