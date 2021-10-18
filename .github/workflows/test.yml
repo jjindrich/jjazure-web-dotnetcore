@@ -19,7 +19,9 @@ jobs:
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
-        helmChart: 'jjwebapicore/charts/jjtest'
+        helmChart: 'jjtest'
         helm-version: 'latest'
         silent: 'false'
+        working-directory: src-webapi/jjwebapicore/charts
       id: bake-test
+        
