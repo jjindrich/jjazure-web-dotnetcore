@@ -106,12 +106,13 @@ jobs:
 
     - run: |
         ls ./jjwebapicore/charts/jjwebapicore/
+        helm template ./jjwebapicore/charts/jjwebapicore/
 
     # https://github.com/Azure/k8s-deploy
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
-        helmChart: './jjwebapicore/charts/jjwebapicore/templates'
+        helmChart: './jjwebapicore/charts/jjwebapicore/'
         # overrideFiles: './jjwebapicore/charts/values.yaml'
         # overrides: |     
         #   image.repository:jjakscontainers.azurecr.io/jjwebapicore
