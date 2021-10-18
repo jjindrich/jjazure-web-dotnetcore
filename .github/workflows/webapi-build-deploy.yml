@@ -108,7 +108,7 @@ jobs:
     - uses: azure/k8s-bake@v1
       with:
         renderEngine: 'helm'
-        helmChart: './jjwebapicore/charts'
+        helmChart: './jjwebapicore/charts/jjwebapicore'
         # overrideFiles: './jjwebapicore/charts/values.yaml'
         # overrides: |     
         #   image.repository:jjakscontainers.azurecr.io/jjwebapicore
