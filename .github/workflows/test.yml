@@ -1,0 +1,24 @@
+name: Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  test:
+    name: 'Bake'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src-webapi
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - uses: azure/k8s-bake@v1
+      with:
+        renderEngine: 'helm'
+        helmChart: './jjwebapicore/charts/jjwebapicore/'
+        helm-version: 'latest'
+      id: bake-test
