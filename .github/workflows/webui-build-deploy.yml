@@ -3,8 +3,8 @@ name: WebUi dotnet
 on:
   workflow_dispatch:
     
-#  push:
-#    branches: [ master ]
+  push:
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -55,7 +55,8 @@ jobs:
       run:
         shell: bash
         working-directory: src-webui
-
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -83,7 +84,7 @@ jobs:
         shell: bash
         working-directory: src-webui
     needs: publish
-
+    
     steps:
     - name: Checkout
       uses: actions/checkout@v2
