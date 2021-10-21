@@ -1,6 +1,10 @@
 # Using Open Service Mesh (OSM) with Azure Kubernetes Service (AKS)
 
-## Install OSM as AKS addon
+Open Service Mesh (OSM) https://github.com/openservicemesh/osm
+
+## Install OSM into AKS
+
+### Install OSM as AKS addon
 
 Follow this docs https://docs.microsoft.com/en-us/azure/aks/open-service-mesh-deploy-addon-az-cli
 
@@ -11,6 +15,25 @@ kubectl get meshconfig osm-mesh-config -n kube-system -o yaml
 ```
 
 Check Permissive traffic policy mode is set to true (traffic policy enforcement is bypassed).
+
+NOT WORKING: addon is using old OSM version 0.9 which not working correctly
+
+### Install OSM manually
+
+Follow this docs https://docs.microsoft.com/en-us/azure/aks/open-service-mesh-binary
+
+```powershell
+# Specify the OSM version that will be leveraged throughout these instructions
+$OSM_VERSION="v0.11.1"
+[Net.ServicePointManager]::SecurityProtocol = "tls12"
+$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest -URI "https://github.com/openservicemesh/osm/releases/download/$OSM_VERSION/osm-$OSM_VERSION-windows-amd64.zip" -OutFile "osm-$OSM_VERSION.zip"
+Expand-Archive -Path "osm-$OSM_VERSION.zip" -DestinationPath .
+
+osm version
+osm install –set OpenServiceMesh.enablePermissiveTrafficPolicy=true
+kubectl get meshconfig osm-mesh-config -n osm-system -o yaml
+#osm mesh uninstall
+```
 
 ## Enable OMS for existing application
 
@@ -48,12 +71,13 @@ kubectl set serviceaccount deployment/jjwebcorewindows -n jjapi jjapi
 Change Permissive traffic policy mode is set to false
 
 ```bash
-kubectl patch meshconfig osm-mesh-config -n kube-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}' --type=merge
+#kubectl patch meshconfig osm-mesh-config -n kube-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}' --type=merge
+kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}' --type=merge
 ```
 
 NOT WORKING: Now you can see you cannot access api services - getting 404 
 
-ISSUE: not working with Windows containers
+ISSUE: Windows containers not supported
 
 ## Configure with Ingress
 
