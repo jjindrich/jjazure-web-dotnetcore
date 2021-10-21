@@ -2,6 +2,10 @@
 
 Open Service Mesh (OSM) https://github.com/openservicemesh/osm
 
+Key features https://github.com/openservicemesh/osm#features
+
+We will focus on access control primary. There is required to have Kubernetes Service accounts deployed.
+
 ## Install OSM into AKS
 
 ### Install OSM as AKS addon
@@ -90,7 +94,7 @@ kubectl port-forward jjwebcore-76b4dfb478-b8hqm -n jjweb 8080:80
 
 Web published by Ingress is not working because OSM, see bellow ingress configuration
 
-ISSUE: Windows containers not supported
+ISSUE: Windows containers not supported (https://github.com/openservicemesh/osm/projects/3)
 
 ## Configure policy for api
 
@@ -116,6 +120,12 @@ ISSUE: This doc is not valid https://docs.microsoft.com/en-us/azure/aks/open-ser
 
 ## Integrate with Azure Monitor
 
-https://docs.microsoft.com/en-us/azure/aks/open-service-mesh-azure-monitor
+Now is possible to collect Prometheus metrics in Azure Monitor Application Insights - https://docs.microsoft.com/en-us/azure/aks/open-service-mesh-azure-monitor
 
-TODO: enable
+Other observability options https://docs.openservicemesh.io/docs/guides/observability/
+
+## DevOps and Traffic splitting
+
+OSM supports traffic shifting
+
+GitHub Actions support for different deployment stragies https://github.com/Azure/k8s-deploy#action-capabilities
