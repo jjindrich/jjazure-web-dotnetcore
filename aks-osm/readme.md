@@ -6,6 +6,8 @@ Open Service Mesh (OSM) https://github.com/openservicemesh/osm
 
 ### Install OSM as AKS addon
 
+NOT WORKING: addon is using old OSM version 0.9 which not working correctly, don't use it
+
 Follow this docs https://docs.microsoft.com/en-us/azure/aks/open-service-mesh-deploy-addon-az-cli
 
 ```powershell
@@ -15,8 +17,6 @@ kubectl get meshconfig osm-mesh-config -n kube-system -o yaml
 ```
 
 Check Permissive traffic policy mode is set to true (traffic policy enforcement is bypassed).
-
-NOT WORKING: addon is using old OSM version 0.9 which not working correctly
 
 ### Install OSM manually
 
@@ -68,6 +68,12 @@ kubectl set serviceaccount deployment/jjwebapicore -n jjapi jjapi
 kubectl set serviceaccount deployment/jjwebcorewindows -n jjapi jjapi
 ```
 
+Enable egress traffic (to platform services - monitoring, db etc)
+
+```bash
+kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enableEgress":true}}}' --type=merge
+```
+
 Change Permissive traffic policy mode is set to false
 
 ```bash
@@ -75,14 +81,41 @@ Change Permissive traffic policy mode is set to false
 kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}' --type=merge
 ```
 
-NOT WORKING: Now you can see you cannot access api services - getting 404 
+Now you can run port forward and see you cannot access api services (getting 404) because OSM, see bellow policy configuration
+
+```powershell
+kubectl get pods -n jjweb
+kubectl port-forward jjwebcore-76b4dfb478-b8hqm -n jjweb 8080:80
+```
+
+Web published by Ingress is not working because OSM, see bellow ingress configuration
 
 ISSUE: Windows containers not supported
 
+## Configure policy for api
+
+Because OSM blocks communication btw jjweb and jjapi you need to configure policy to allow it.
+
+Prepare policy based on this docs https://docs.microsoft.com/en-us/azure/aks/open-service-mesh-deploy-existing-application#deploy-the-necessary-service-mesh-interface-smi-policies 
+
+```powershell
+kubectl apply -f jjapi-allow.yaml
+```
+
+ISSUE: Windows containers not supported, so you cannot access API windows.
+
 ## Configure with Ingress
 
-Use with Ingress https://docs.microsoft.com/en-us/azure/aks/open-service-mesh-nginx-ingress
+Because Nginx Ingress is outside of servicemesh (namespace is not enabled), we have to allow communication from Ingress service to web backend (jjwebcore). Thanks https://www.tomaskubica.cz/post/2021/kubernetes-prakticky-jak-napojit-ingress-na-open-service-mesh/
+
+```powershell
+kubectl apply -f jjweb-ingress-allow.yaml
+```
+
+ISSUE: This doc is not valid https://docs.microsoft.com/en-us/azure/aks/open-service-mesh-nginx-ingress
 
 ## Integrate with Azure Monitor
 
 https://docs.microsoft.com/en-us/azure/aks/open-service-mesh-azure-monitor
+
+TODO: enable

@@ -1,0 +1,17 @@
+kind: IngressBackend
+apiVersion: policy.openservicemesh.io/v1alpha1
+metadata:
+  name: jjweb-allow
+  namespace: jjweb
+spec:
+  backends:
+  - name: jjwebcore
+    port:
+      number: 80
+      protocol: http
+    tls:
+      skipClientCertValidation: true 
+  sources:
+  - kind: Service
+    namespace: ingress-basic
+    name: nginx-ingress-controller

@@ -1,0 +1,30 @@
+apiVersion: specs.smi-spec.io/v1alpha4
+kind: HTTPRouteGroup
+metadata:
+  name: jjapi-routes
+  namespace: jjapi
+spec:
+  matches:
+  - name: allow-all
+    pathRegex: '.*'
+    methods: ["GET","PUT","POST","DELETE","PATCH"]
+---
+apiVersion: access.smi-spec.io/v1alpha3
+kind: TrafficTarget
+metadata:
+  name: jjapi-allow
+  namespace: jjapi
+spec:
+  destination:
+    kind: ServiceAccount
+    name: jjapi
+    namespace: jjapi
+  rules:
+  - kind: HTTPRouteGroup
+    name: jjapi-routes
+    matches:
+    - allow-all
+  sources:
+  - kind: ServiceAccount
+    name: jjweb
+    namespace: jjweb
