@@ -120,9 +120,24 @@ ISSUE: This doc is not valid https://docs.microsoft.com/en-us/azure/aks/open-ser
 
 ## Integrate with Azure Monitor
 
-Now is possible to collect Prometheus metrics in Azure Monitor Application Insights - https://docs.microsoft.com/en-us/azure/aks/open-service-mesh-azure-monitor
+Now is possible to collect Prometheus metrics in Azure Monitor (Insights Metrics) - https://docs.microsoft.com/en-us/azure/aks/open-service-mesh-azure-monitor
 
-Other observability options https://docs.openservicemesh.io/docs/guides/observability/
+```powershell
+osm metrics enable --namespace jjweb
+osm metrics enable --namespace jjapi
+kubectl apply -f monitor.yaml
+```
+
+Now you can run Log analytics query 
+
+```
+InsightsMetrics
+| where Name contains "envoy"
+| extend t=parse_json(Tags)
+| where t.app == "jjwebcore"
+```
+
+Other observability options, like Tracing https://docs.openservicemesh.io/docs/guides/observability/
 
 ## DevOps and Traffic splitting
 
