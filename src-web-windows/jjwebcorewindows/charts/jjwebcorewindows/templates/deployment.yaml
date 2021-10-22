@@ -23,6 +23,7 @@ spec:
       annotations:
         buildID: "{{ .Values.buildID }}"
     spec:
+      serviceAccountName: {{ template "jjwebcorewindows.serviceAccountName" . }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
