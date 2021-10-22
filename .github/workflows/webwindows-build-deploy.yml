@@ -3,10 +3,10 @@ name: WebWindows dotnet
 on:
   workflow_dispatch:
     
-#  push:
-#    branches: [ master ]
-#  pull_request:
-#    branches: [ master ]
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 # AZURE_CREDENTIALS format https://github.com/marketplace/actions/azure-login#configure-deployment-credentials
 # {"clientId":"XXX","clientSecret":"XXX","subscriptionId":"XXX","tenantId":"XXX"}
@@ -55,7 +55,8 @@ jobs:
       run:
         shell: bash
         working-directory: src-web-windows
-
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    
     steps:
     - name: Checkout
       uses: actions/checkout@v2
