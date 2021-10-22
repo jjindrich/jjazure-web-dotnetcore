@@ -8,7 +8,7 @@ using jjwebapicore;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.EventGrid;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System.Net.Http;
 
 namespace jjwebcore.Controllers
@@ -110,14 +110,14 @@ namespace jjwebcore.Controllers
                 // Respond with a SubscriptionValidationResponse to complete the EventGrid subscription
                 if (ev.EventType == EventTypes.EventGridSubscriptionValidationEvent)
                 {
-                    var eventValidationData = JsonConvert.DeserializeObject<SubscriptionValidationEventData>(ev.Data.ToString());
+                    var eventValidationData = JsonSerializer.Deserialize<SubscriptionValidationEventData>(ev.Data.ToString());
                     var response = new SubscriptionValidationResponse(eventValidationData.ValidationCode);
                     return Ok(response);
                 }
                 else
                 // process message to create contact
                 {
-                    Contact createC = JsonConvert.DeserializeObject<Contact>(ev.Data.ToString());                    
+                    Contact createC = JsonSerializer.Deserialize<Contact>(ev.Data.ToString());                    
                     await cl.PostContactAsync(createC);
                     return Ok();
                 }
