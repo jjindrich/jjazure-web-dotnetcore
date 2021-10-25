@@ -4,9 +4,16 @@ on:
   workflow_dispatch:
     
   push:
-    branches: [ master ]
+    branches: 
+    - master
+    paths:
+    - 'sub-web-windows/**'
+
   pull_request:
-    branches: [ master ]
+    branches: 
+    - master
+    paths:
+    - 'sub-web-windows/**'
 
 # AZURE_CREDENTIALS format https://github.com/marketplace/actions/azure-login#configure-deployment-credentials
 # {"clientId":"XXX","clientSecret":"XXX","subscriptionId":"XXX","tenantId":"XXX"}
