@@ -128,7 +128,7 @@ jobs:
         silent: 'false'
       id: bake
 
-    - uses: Azure/k8s-deploy@v1
+    - uses: Azure/k8s-deploy@v1.4
       with:
         manifests: ${{ steps.bake.outputs.manifestsBundle }}
         namespace: 'jjweb'
