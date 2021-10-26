@@ -136,4 +136,4 @@ jobs:
         traffic-split-method: smi
         action: deploy #deploy is the default; we will later use this to promote/reject
         percentage: 20
-        baseline-and-canary-replicas: 2
+        baseline-and-canary-replicas: 1
