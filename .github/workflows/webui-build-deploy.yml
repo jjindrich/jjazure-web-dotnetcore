@@ -7,13 +7,13 @@ on:
     branches: 
     - master
     paths:
-    - 'sub-webui/**'
+    - 'src-webui/**'
 
   pull_request:
     branches: 
     - master
     paths:
-    - 'sub-webui/**'
+    - 'src-webui/**'
 
 # AZURE_CREDENTIALS format https://github.com/marketplace/actions/azure-login#configure-deployment-credentials
 # {"clientId":"XXX","clientSecret":"XXX","subscriptionId":"XXX","tenantId":"XXX"}

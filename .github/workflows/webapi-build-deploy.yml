@@ -7,13 +7,13 @@ on:
     branches: 
     - master
     paths:
-    - 'sub-webapi/**'
+    - 'src-webapi/**'
 
   pull_request:
     branches: 
     - master
     paths:
-    - 'sub-webapi/**'
+    - 'src-webapi/**'
 
 
 # AZURE_CREDENTIALS format https://github.com/marketplace/actions/azure-login#configure-deployment-credentials
