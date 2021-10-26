@@ -62,7 +62,7 @@ jobs:
       run:
         shell: bash
         working-directory: src-webui
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    if: (github.ref == 'refs/heads/master' && github.event_name == 'push') || (github.event_name == 'workflow_dispatch')
     
     steps:
     - name: Checkout
@@ -132,8 +132,8 @@ jobs:
       with:
         manifests: ${{ steps.bake.outputs.manifestsBundle }}
         namespace: 'jjweb'
-        strategy: canary
-        traffic-split-method: smi
-        action: deploy #deploy is the default; we will later use this to promote/reject
-        percentage: 20
-        baseline-and-canary-replicas: 1
+        # strategy: canary
+        # traffic-split-method: smi
+        # action: deploy #deploy is the default; we will later use this to promote/reject
+        # percentage: 20
+        # baseline-and-canary-replicas: 1
