@@ -10,8 +10,6 @@ We will focus on access control primary. There is required to have Kubernetes Se
 
 ### Install OSM as AKS addon
 
-NOT WORKING: addon is using old OSM version 0.9 which not working correctly, don't use it
-
 Follow this docs https://docs.microsoft.com/en-us/azure/aks/open-service-mesh-deploy-addon-az-cli
 
 ```powershell
@@ -75,14 +73,15 @@ kubectl set serviceaccount deployment/jjwebcorewindows -n jjapi jjapi
 Enable egress traffic (to platform services - monitoring, db etc)
 
 ```bash
-kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enableEgress":true}}}' --type=merge
+kubectl patch meshconfig osm-mesh-config -n kube-system -p '{"spec":{"traffic":{"enableEgress":true}}}' --type=merge
+#kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enableEgress":true}}}' --type=merge
 ```
 
 Change Permissive traffic policy mode is set to false
 
 ```bash
-#kubectl patch meshconfig osm-mesh-config -n kube-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}' --type=merge
-kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}' --type=merge
+kubectl patch meshconfig osm-mesh-config -n kube-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}' --type=merge
+#kubectl patch meshconfig osm-mesh-config -n osm-system -p '{"spec":{"traffic":{"enablePermissiveTrafficPolicyMode":false}}}' --type=merge
 ```
 
 Now you can run port forward and see you cannot access api services (getting 404) because OSM, see bellow policy configuration
