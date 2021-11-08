@@ -169,3 +169,9 @@ while true; do curl -s "http://51.136.74.4/Home/Test"; echo; sleep 0.2; done
 ![Application Insights Live](media/istio-appinsights2.png)
 
 ![Application Insights Map](media/istio-appinsights3.png)
+
+## Deploy Open Service Mesh (OSM)
+
+OSM can be installed as AKS addon
+
+Follow [this setup](aks-osm/readme.md)

@@ -466,3 +466,9 @@ cd aci
 az group create -n jjaci-rg -l westeurope
 az group deployment create -g jjaci-rg --template-file deploy-aci.json --parameters deploy-aci.params.json
 ```
+
+### Deploy to Azure Container Apps
+
+Check this new service https://azure.microsoft.com/en-us/services/container-apps/
+
+Follow this on [deploy to Azure Container Apps](container-apps/readme.md)
