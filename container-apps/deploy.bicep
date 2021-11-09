@@ -1,26 +1,19 @@
-param envName string = 'jjweb-env'
-param location string = 'North Europe'
+// Startup Bicep script to get KeyVautl values
+// Required KeyVault Access Policy: Azure Resource Manager for template deployment
+ 
 
-param logName string = 'jjdev-analytics'
-param logResourceGroupName string = 'jjdevmanagement'
-
-resource log 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
-  name: logName
-  scope: resourceGroup(logResourceGroupName)
+resource kv 'Microsoft.KeyVault/vaults@2021-06-01-preview' existing = {
+  name: 'jjakskv'
 }
 
-resource env 'Microsoft.Web/kubeEnvironments@2021-02-01' = {
-  name: envName
-  location: location
-  properties: {
-    type: 'managed'
-    internalLoadBalancerEnabled: false
-    appLogsConfiguration:{
-      destination:'log-analytics'
-      logAnalyticsConfiguration:{
-        customerId: log.properties.customerId
-        sharedKey: log.listKeys().primarySharedKey
-      }
-    }
+module app 'deploy-app.bicep' = {
+  name: 'jjweb-deployment'
+  params:{
+    imageWeb: 'jjwebcore:eb36aa5bba1bf8504c38260c11a3a52962979e0c'
+    imageApi: 'jjwebapicore:0e45305890f335a1b72203a1b40662d221209e9a'
+    appConfigConnectionString: kv.getSecret('appConfig')
+    appInsightsConnectionString: kv.getSecret('appInsightsConfig')    
+    appInsightsInstrumentationKey: kv.getSecret('appInsightsKey')
+    contactContextConnectionString: kv.getSecret('contactsDbConnection')
   }
 }
