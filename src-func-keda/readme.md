@@ -116,29 +116,63 @@ kubectl get all -n jjfunckeda
 curl http://<your_ip>/api/GetData
 ```
 
-# Configure autoscaling with KEDA of HTTP trigger
+# Configure autoscaling with KEDA with Azure Monitor metrics
 
-KEDA doesn't automatically manage HTTP trigger functions pods. But you can instrument KEDA to setup autoscaling.
+KEDA doesn't automatically manage HTTP trigger functions pods. But you can instrument KEDA to setup autoscaling based on Azure Monitor metric.
 
 https://docs.microsoft.com/en-us/azure/azure-functions/functions-kubernetes-keda#http-trigger-support
 https://keda.sh/docs/2.2/scalers/azure-monitor/
 
-Create identity to access Azure Monitor data, update Kubernetes ScaledObject manifest [scaledobject](scaledobject.yaml) and deploy it
+Create identity to access Azure Monitor data, update Kubernetes ScaledObject manifest [scaledobject-monitor](scaledobject-monitor.yaml) and deploy it
 
 ```powershell
 kubectl create secret generic -n jjfunckeda azure-monitor-secrets --from-literal=activeDirectoryClientId=<client-id> --from-literal=activeDirectoryClientPassword=<secret>
 
-kubectl apply -f scaledobject.yaml
+kubectl apply -f scaledobject-monitor.yaml
 kubectl get pods -o wide -n jjfunckeda
 ```
 
-TODO: not working, submitted GH Issue https://github.com/MicrosoftDocs/azure-docs/issues/74902
+Now test to call service
+
+```powershell
+kubectl get services jjfunckeda-http -n jjfunckeda
+kubectl get all -n jjfunckeda
+curl http://<your_ip>/api/GetData
+```
+
+```powershell
+$i = 0
+while ($i -ne 300) {
+    curl http://<your_ip>/api/GetData
+    $i++
+    #Start-Sleep -Seconds 1
+}
+```
 
 Troubleshooting
 
 ```powershell
 kubectl get pods -n keda
-kubectl logs keda-operator-69c986985-hqlgb -n keda
+kubectl logs keda-operator-69c986985-ddpgr -n keda
 kubectl scale --replicas=10 deployment/jjfunckeda-http -n jjfunckeda
 kubectl describe deployment jjfunckeda-http -n jjfunckeda
 ```
+
+# Configure autoscaling with KEDA with Azure Queue
+
+KEDA doesn't automatically manage HTTP trigger functions pods. But you can instrument KEDA to setup autoscaling based on Azure Storage Queue length.
+
+https://keda.sh/docs/2.2/scalers/azure-storage-queue/
+
+Update Kubernetes ScaledObject manifest [scaledobject-monitor](scaledobject-monitor.yaml) with you Azure Storage Queue and deploy it.
+
+Next create Secret to access queue - update with you connection string
+
+```powershell
+kubectl create secret generic queue-connection-secret -n jjfunckeda --from-literal=connection-string='XXX'
+
+kubectl apply -f scaledobject-queue.yaml
+kubectl get pods -o wide -n jjfunckeda
+```
+
+Now add some messages into queue. Pod will be started automatically.
