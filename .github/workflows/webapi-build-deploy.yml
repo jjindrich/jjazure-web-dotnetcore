@@ -49,6 +49,7 @@ jobs:
 
     # TODO: Code coverage
     # https://github.com/marketplace/actions/code-coverage-summary
+    # add <PackageReference Include="coverlet.collector" Version="1.0.1" />
 
     # TODO: Generate Build Number
     # https://github.com/marketplace/actions/build-number-generator
