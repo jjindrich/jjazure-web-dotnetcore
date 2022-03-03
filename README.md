@@ -450,6 +450,10 @@ https://docs.microsoft.com/en-us/azure/azure-monitor/insights/container-insights
 
 Check this my repository https://github.com/jjindrich/jjazure-terraform/tree/master/src-jjaks
 
+```bash
+for ((i=1;i<=100;i++)); do   curl "http://jjaks.westeurope.cloudapp.azure.com/Home/Test"; sleep 1; done
+```
+
 ### Deploy to Azure Container Instances
 
 ACI is serverless deployment.
