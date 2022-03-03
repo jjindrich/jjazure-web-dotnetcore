@@ -215,7 +215,7 @@ How to use https://docs.microsoft.com/en-us/azure/aks/ingress-basic#create-an-in
 
 ```bash
 kubectl create namespace ingress-basic
-helm install stable/nginx-ingress --name nginx-ingress --namespace ingress-basic --set controller.replicaCount=2 --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux
+helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-basic --set controller.replicaCount=2 --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux
 ```
 
 **NGINX for Internal network (internal load balancer)** 
