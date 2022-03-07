@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jjlinuxfiles
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: jjlinuxfiles
+  template:
+    metadata:
+      labels:
+        app: jjlinuxfiles
+    spec:
+      containers:
+      - name: jjlinuxfiles
+        image: nginx   
+        resources:
+          limits:
+            memory: "128M"
+            cpu: "500m"
+        volumeMounts:
+          - mountPath: "/mnt/azure"
+            name: volume
+      volumes:
+        - name: volume
+          persistentVolumeClaim:
+            claimName: my-azurefile
