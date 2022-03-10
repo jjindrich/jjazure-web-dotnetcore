@@ -2,7 +2,7 @@
 {{- $fullName := include "jjwebcore.fullname" . -}}
 {{- $servicePort := .Values.service.port -}}
 {{- $ingress2Path := .Values.ingress2.path -}}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: jjwebcore2
