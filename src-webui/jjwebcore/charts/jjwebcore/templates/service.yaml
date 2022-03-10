@@ -1,12 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "jjwebcore.fullname" . }}
+  name: {{ include "jjwebcore.fullname" . }}
   labels:
-    app: {{ template "jjwebcore.name" . }}
-    chart: {{ template "jjwebcore.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+    {{- include "jjwebcore.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -15,5 +12,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "jjwebcore.name" . }}
-    release: {{ .Release.Name }}
+    {{- include "jjwebcore.selectorLabels" . | nindent 4 }}

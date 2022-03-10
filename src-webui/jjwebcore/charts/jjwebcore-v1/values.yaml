@@ -1,19 +1,19 @@
 # Default values for jjwebcore.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-
+fullnameOverride: jjwebcore
 replicaCount: 2
-
 image:
   repository: jjwebcore
+  tag: stable
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
-
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: "jjwebcore"
-
+  # Optionally specify an array of imagePullSecrets.
+  # Secrets must be manually created in the namespace.
+  # ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+  #
+  # This uses credentials from secret "myRegistryKeySecretName".
+  # - name: myRegistryKeySecretName
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -22,42 +22,40 @@ serviceAccount:
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
   name: "jjweb"
-
-podAnnotations: {}
-
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
 service:
   type: ClusterIP
   port: 80
 
+probes:
+  enabled: false
+
 ingress:
   enabled: true
-  className: "nginx"
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: jjaks.westeurope.cloudapp.azure.com
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
+    # nginx.ingress.kubernetes.io/rewrite-target: "/"
+  path: /
+  # hosts:
+  #   - 13.69.76.199.xip.io
   tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local
+ingress2:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx-internal
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # nginx.ingress.kubernetes.io/rewrite-target: "/"
+  path: /
+  # hosts:
+  #   - chart-example.local
+  tls: []
+    # - secretName: chart-example-tls
+    #   hosts:
+    #     - chart-example.local
 secrets:
   # Optionally specify a set of secret objects whose values
   # will be injected as environment variables by default.
@@ -78,26 +76,17 @@ secrets:
     CONNECTION_STRING: InstrumentationKey=00000000-0000-0000-0000-000000000000
   ConnectionStrings:
     _AppConfig: copy_AppConfig_connectionstring
-
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
+  #  cpu: 100m
+  #  memory: 128Mi
   # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
+  #  cpu: 100m
+  #  memory: 128Mi
 nodeSelector:
   "kubernetes.io/os": linux
 
