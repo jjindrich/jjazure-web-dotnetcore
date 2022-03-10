@@ -34,6 +34,7 @@ spec:
       http:
         paths:
           - path: {{ $ingress2Path }}
+            pathType: ImplementationSpecific
             backend:
               serviceName: {{ $fullName }}
               servicePort: http
@@ -42,6 +43,7 @@ spec:
     - http:
         paths:
           - path: {{ $ingress2Path }}
+            pathType: ImplementationSpecific
             backend:
               serviceName: {{ $fullName }}
               servicePort: http
