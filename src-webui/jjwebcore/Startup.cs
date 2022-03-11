@@ -53,6 +53,13 @@ namespace jjwebcore
             });
 
             // use Azure B2C
+            services.Configure<ForwardedHeadersOptions>(options =>
+ {
+   options.ForwardedHeaders =
+       ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+   options.KnownNetworks.Clear();
+   options.KnownProxies.Clear();
+ });
             // docs https://docs.microsoft.com/en-us/azure/active-directory-b2c/enable-authentication-web-application?tabs=visual-studio
             services.Configure<CookiePolicyOptions>(options =>
             {
