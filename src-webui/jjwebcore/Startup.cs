@@ -91,6 +91,7 @@ namespace jjwebcore
             app.UseStaticFiles();
 
             // Add the Microsoft Identity Web cookie policy
+            app.UseForwardedHeaders();
             app.UseCookiePolicy();
             app.UseRouting();
             // Add the ASP.NET Core authentication service
