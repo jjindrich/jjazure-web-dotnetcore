@@ -72,22 +72,11 @@ namespace jjwebcore
             //Configuring appsettings section AzureAdB2C, into IOptions
             services.AddOptions();
             services.Configure<OpenIdConnectOptions>(Configuration.GetSection("AzureAdB2C"));
-
-            //services.Configure<ForwardedHeadersOptions>(options =>
-            //{
-            //    options.ForwardedHeaders =
-            //        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            //});
-            services.AddCertificateForwarding(options => options.CertificateHeader = "YOUR_CERTIFICATE_HEADER_NAME");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-6.0
-            //app.UseForwardedHeaders();
-            app.UseCertificateForwarding();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

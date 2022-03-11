@@ -82,6 +82,13 @@ namespace jjwebcore.Controllers
                 ViewData["ApiWinResult"] = "Error calling: " + ex.Message;
             }
 
+            string hcontact = "";
+            foreach (var h in Request.Headers)
+            {
+                hcontact += h.Key + "=" + h.Value + " | ";
+            }
+            ViewData["Headers"] = hcontact;
+
             return View();
         }
 
