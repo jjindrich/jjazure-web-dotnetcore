@@ -12,6 +12,7 @@ using jjwebapicore;
 using Microsoft.FeatureManagement;
 using jjwebcore.Common;
 using Microsoft.FeatureManagement.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace jjwebcore.Controllers
 {
@@ -81,6 +82,12 @@ namespace jjwebcore.Controllers
                 ViewData["ApiWinResult"] = "Error calling: " + ex.Message;
             }
 
+            return View();
+        }
+
+        [Authorize]
+        public IActionResult Claims()
+        {
             return View();
         }
 
