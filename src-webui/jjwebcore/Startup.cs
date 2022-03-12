@@ -72,6 +72,8 @@ namespace jjwebcore
             //Configuring appsettings section AzureAdB2C, into IOptions
             services.AddOptions();
             services.Configure<OpenIdConnectOptions>(Configuration.GetSection("AzureAdB2C"));
+            // nastaveni RedirectUrl rucne https://github.com/AzureAD/microsoft-identity-web/issues/115
+            // TODO: spravne delat pres pouziti Forwarder https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-3.1
               services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, 
                                          options => {
  
@@ -92,13 +94,11 @@ namespace jjwebcore
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseForwardedHeaders();
+                app.UseDeveloperExceptionPage();                
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                app.UseForwardedHeaders();
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
