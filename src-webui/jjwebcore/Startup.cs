@@ -31,12 +31,6 @@ namespace jjwebcore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<ForwardedHeadersOptions>(options =>
-        {
-            options.ForwardedHeaders =
-                ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-        });
-            
             services.AddApplicationInsightsTelemetry();
             
             // Feature flags
@@ -78,6 +72,19 @@ namespace jjwebcore
             //Configuring appsettings section AzureAdB2C, into IOptions
             services.AddOptions();
             services.Configure<OpenIdConnectOptions>(Configuration.GetSection("AzureAdB2C"));
+              services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, 
+                                         options => {
+ 
+     var redirectToIdpHandler = options.Events.OnRedirectToIdentityProvider;
+     options.Events.OnRedirectToIdentityProvider = async context =>
+     {
+      // Call what Microsoft.Identity.Web is doing
+      await redirectToIdpHandler(context);
+
+     // Override the redirect URI to be what you want
+     context.ProtocolMessage.RedirectUri = "https://jjfd.jjdev.org/signin-oidc";
+    };
+   });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
