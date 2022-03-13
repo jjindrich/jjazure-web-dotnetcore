@@ -72,21 +72,17 @@ namespace jjwebcore
             //Configuring appsettings section AzureAdB2C, into IOptions
             services.AddOptions();
             services.Configure<OpenIdConnectOptions>(Configuration.GetSection("AzureAdB2C"));
+            
             // nastaveni RedirectUrl rucne https://github.com/AzureAD/microsoft-identity-web/issues/115
             // TODO: spravne delat pres pouziti Forwarder https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-3.1
-              services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, 
-                                         options => {
- 
-     var redirectToIdpHandler = options.Events.OnRedirectToIdentityProvider;
-     options.Events.OnRedirectToIdentityProvider = async context =>
-     {
-      // Call what Microsoft.Identity.Web is doing
-      await redirectToIdpHandler(context);
-
-     // Override the redirect URI to be what you want
-     context.ProtocolMessage.RedirectUri = "https://jjfd.jjdev.org/signin-oidc";
-    };
-   });
+            services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, 
+                options => {
+                    var redirectToIdpHandler = options.Events.OnRedirectToIdentityProvider;
+                    options.Events.OnRedirectToIdentityProvider = async context => {
+                        await redirectToIdpHandler(context);
+                        context.ProtocolMessage.RedirectUri = "https://jjfd.jjdev.org/signin-oidc";
+                    };
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
