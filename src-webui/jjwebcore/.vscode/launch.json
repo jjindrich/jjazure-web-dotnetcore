@@ -9,7 +9,7 @@
         "type": "coreclr",
         "request": "launch",
         "preLaunchTask": "build",
-        "program": "${workspaceFolder}/bin/Debug/netcoreapp2.0/jjwebcore.dll",
+        "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/jjwebcore.dll",
         "args": [],
         "cwd": "${workspaceFolder}",
         "stopAtEntry": false,
@@ -48,7 +48,7 @@
             "quoteArgs": false
         },
         "cwd": "/src",
-        "program": "/src/jjwebcore/bin/Debug/netcoreapp2.0/jjwebcore.dll",
+        "program": "/src/jjwebcore/bin/Debug/netcoreapp3.1/jjwebcore.dll",
         "sourceFileMap": {
             "/src": "${workspaceFolder}/.."
         }
