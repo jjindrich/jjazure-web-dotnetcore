@@ -47,6 +47,7 @@ namespace jjwebcore.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         [FeatureGate(WebFeatureFlags.AllowTests)]
         public async Task<IActionResult> Test()
         {
