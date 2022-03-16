@@ -72,7 +72,7 @@ namespace jjwebcore
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders =
-                    ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+                    ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto;
             });
 
             //Configuring appsettings section AzureAdB2C, into IOptions
