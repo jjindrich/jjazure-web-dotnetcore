@@ -52,6 +52,12 @@ namespace jjwebcore
                 client.BaseAddress = new Uri(Environment.GetEnvironmentVariable("SERVICEWINAPIROOT_URL"));
             });
 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders =
+                    ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto;
+            });
+
             // use Azure B2C
             // docs https://docs.microsoft.com/en-us/azure/active-directory-b2c/enable-authentication-web-application?tabs=visual-studio
             services.Configure<CookiePolicyOptions>(options =>
@@ -68,12 +74,6 @@ namespace jjwebcore
 
             services.AddControllersWithViews()
                 .AddMicrosoftIdentityUI();
-
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
-                options.ForwardedHeaders =
-                    ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto;
-            });
 
             //Configuring appsettings section AzureAdB2C, into IOptions
             services.AddOptions();
