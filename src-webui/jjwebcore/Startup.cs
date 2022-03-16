@@ -52,6 +52,8 @@ namespace jjwebcore
                 client.BaseAddress = new Uri(Environment.GetEnvironmentVariable("SERVICEWINAPIROOT_URL"));
             });
 
+            // zmena host podle proxy (Frontdoor) kvuli Azure B2C
+            // docs https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-6.0#forwarded-headers-middleware-order
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders =
@@ -77,18 +79,7 @@ namespace jjwebcore
 
             //Configuring appsettings section AzureAdB2C, into IOptions
             services.AddOptions();
-            services.Configure<OpenIdConnectOptions>(Configuration.GetSection("AzureAdB2C"));
-            
-            // nastaveni RedirectUrl rucne https://github.com/AzureAD/microsoft-identity-web/issues/115
-            // TODO: spravne delat pres pouziti Forwarder https://docs.microsoft.com/en-us/aspnet/core/host-and-deploy/proxy-load-balancer?view=aspnetcore-3.1
-            //services.Configure<OpenIdConnectOptions>(OpenIdConnectDefaults.AuthenticationScheme, 
-            //    options => {
-            //        var redirectToIdpHandler = options.Events.OnRedirectToIdentityProvider;
-            //        options.Events.OnRedirectToIdentityProvider = async context => {
-            //            await redirectToIdpHandler(context);
-            //            context.ProtocolMessage.RedirectUri = "https://jjfd.jjdev.org/signin-oidc";
-            //        };
-            //    });
+            services.Configure<OpenIdConnectOptions>(Configuration.GetSection("AzureAdB2C"));            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -97,11 +88,13 @@ namespace jjwebcore
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                // zmena host podle proxy (Frontdoor) kvuli Azure B2C
                 app.UseForwardedHeaders();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                // zmena host podle proxy (Frontdoor) kvuli Azure B2C
                 app.UseForwardedHeaders();
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
