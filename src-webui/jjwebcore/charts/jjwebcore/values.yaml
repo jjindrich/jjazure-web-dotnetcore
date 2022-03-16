@@ -26,6 +26,12 @@ service:
   type: ClusterIP
   port: 80
 
+service2:
+  type: LoadBalancer
+  port: 80
+  annotations:
+    service.beta.kubernetes.io/azure-dns-label-name: jjaks-lb
+
 probes:
   enabled: false
 

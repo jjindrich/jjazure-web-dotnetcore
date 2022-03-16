@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jjwebcore-lb
+  labels:
+    app: {{ template "jjwebcore.name" . }}
+    chart: {{ template "jjwebcore.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+{{- with .Values.service2.annotations }}
+  annotations:
+{{ toYaml . | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.service2.type }}
+  ports:
+    - port: {{ .Values.service2.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "jjwebcore.name" . }}
+    release: {{ .Release.Name }}
