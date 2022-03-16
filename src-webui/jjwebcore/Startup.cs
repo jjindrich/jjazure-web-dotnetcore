@@ -63,40 +63,14 @@ namespace jjwebcore
 
             // use Azure B2C
             // docs https://docs.microsoft.com/en-us/azure/active-directory-b2c/enable-authentication-web-application?tabs=visual-studio
-            //services.Configure<CookiePolicyOptions>(options =>
-            //{
-            //    // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-            //    options.CheckConsentNeeded = context => true;
-            //    options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
-            //    // Handling SameSite cookie according to https://docs.microsoft.com/en-us/aspnet/core/security/samesite?view=aspnetcore-3.1
-            //    options.HandleSameSiteCookieCompatibility();
-            //});
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-                options.OnAppendCookie = cookieContext =>
-                  CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
-                options.OnDeleteCookie = cookieContext =>
-                  CheckSameSite(cookieContext.Context, cookieContext.CookieOptions);
+                options.MinimumSameSitePolicy = SameSiteMode.Lax;
+                // Handling SameSite cookie according to https://docs.microsoft.com/en-us/aspnet/core/security/samesite?view=aspnetcore-3.1
+                options.HandleSameSiteCookieCompatibility();
             });
-
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>
-                {
-                    options.Cookie.SameSite = SameSiteMode.None;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                    options.Cookie.IsEssential = true;
-                });
-
-            services.AddSession(options =>
-            {
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.Cookie.IsEssential = true;
-            });
-
 
             // Configuration to sign-in users with Azure AD B2C
             services.AddMicrosoftIdentityWebAppAuthentication(Configuration, "AzureAdB2C");
@@ -144,18 +118,6 @@ namespace jjwebcore
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapControllers();
             });
-        }
-
-        private void CheckSameSite(HttpContext httpContext, CookieOptions options)
-        {
-            if (options.SameSite == SameSiteMode.None)
-            {
-                var userAgent = httpContext.Request.Headers["User-Agent"].ToString();
-                if (SameSite.BrowserDetection.DisallowsSameSiteNone(userAgent))
-                {
-                    options.SameSite = SameSiteMode.Unspecified;
-                }
-            }
         }
     }
 }
