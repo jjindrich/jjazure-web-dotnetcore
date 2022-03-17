@@ -73,9 +73,10 @@ namespace jjwebcore
             });
 
             // Configuration to sign-in users with Azure AD B2C
-            services.AddMicrosoftIdentityWebAppAuthentication(Configuration, "AzureAdB2C");
-
-            services.AddControllersWithViews()
+            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAdB2C"));
+            services.AddControllersWithViews();
+            services.AddRazorPages()
                 .AddMicrosoftIdentityUI();
 
             //Configuring appsettings section AzureAdB2C, into IOptions
@@ -116,7 +117,7 @@ namespace jjwebcore
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllers();
+                endpoints.MapRazorPages();
             });
         }
     }
