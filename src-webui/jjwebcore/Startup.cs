@@ -82,9 +82,7 @@ namespace jjwebcore
                 options.FallbackPolicy = options.DefaultPolicy;
             });
             services.AddControllersWithViews();
-            services.AddRazorPages(options => {
-                options.Conventions.AllowAnonymousToPage("/");
-            })
+            services.AddRazorPages()
                 .AddMicrosoftIdentityUI();
 
             //Configuring appsettings section AzureAdB2C, into IOptions
