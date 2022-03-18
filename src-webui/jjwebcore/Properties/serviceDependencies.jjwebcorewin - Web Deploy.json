@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "appInsights1": {
+      "ignored": "true",
+      "suggestion": "true",
+      "type": "appInsights",
+      "connectionId": ""
+    },
+    "appConfig1": {
+      "ignored": "true",
+      "suggestion": "true",
+      "type": "appConfig",
+      "connectionId": ""
+    },
+    "identityapp1": {
+      "ignored": "true",
+      "suggestion": "true",
+      "type": "identityapp",
+      "connectionId": ""
+    }
+  }
+}
