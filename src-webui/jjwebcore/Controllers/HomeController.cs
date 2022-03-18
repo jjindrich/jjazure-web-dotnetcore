@@ -27,13 +27,11 @@ namespace jjwebcore.Controllers
             _featureManager = featureManager;
         }
 
-        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();
         }
 
-        [AllowAnonymous]
         [FeatureGate(WebFeatureFlags.AllowAbout)]
         public IActionResult About()
         {
@@ -42,7 +40,6 @@ namespace jjwebcore.Controllers
             return View();
         }
 
-        [AllowAnonymous]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
@@ -50,7 +47,6 @@ namespace jjwebcore.Controllers
             return View();
         }
 
-        [AllowAnonymous]
         [FeatureGate(WebFeatureFlags.AllowTests)]
         public async Task<IActionResult> Test()
         {
@@ -102,7 +98,6 @@ namespace jjwebcore.Controllers
             return View();
         }
 
-        [AllowAnonymous]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

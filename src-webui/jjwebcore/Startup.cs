@@ -63,6 +63,7 @@ namespace jjwebcore
 
             // use Azure B2C
             // docs https://docs.microsoft.com/en-us/azure/active-directory-b2c/enable-authentication-web-application?tabs=visual-studio
+            // docs https://docs.microsoft.com/en-us/aspnet/core/security/authentication/azure-ad-b2c?view=aspnetcore-6.0
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -75,12 +76,7 @@ namespace jjwebcore
             // Configuration to sign-in users with Azure AD B2C
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAdB2C"));
-            services.AddAuthorization(options =>
-            {
-                // By default, all incoming requests will be authorized according to 
-                // the default policy
-                options.FallbackPolicy = options.DefaultPolicy;
-            });
+            services.AddAuthorization();
             services.AddControllersWithViews();
             services.AddRazorPages()
                 .AddMicrosoftIdentityUI();
