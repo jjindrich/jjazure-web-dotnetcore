@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jjwebcore-ssl
+  namespace: jjweb
+  labels:
+    app: jjwebcore
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      proxy_set_header X-Forwarded-Host $http_x_forwarded_host;
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  rules:
+  - host: jjaks.westeurope.cloudapp.azure.com
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: jjwebcore
+            port:
+              name: http
+  tls:
+  - hosts:
+    - jjaks.westeurope.cloudapp.azure.com
+    secretName: jjwebcore-cert

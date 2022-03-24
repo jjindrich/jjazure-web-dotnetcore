@@ -252,9 +252,29 @@ How to use https://github.com/Azure/application-gateway-kubernetes-ingress/blob/
 
 NGINX ingress controller is providing HTTPS Fake certificate by default. Cannot be used by other Azure services because is not trusted.
 
-Following this steps https://github.com/tkubica12/kubernetes-demo/blob/master/docs/ingress.md#autoenroll-lets-encrypt-certificates-with-cert-manager
+Using LetsEncrypt https://cert-manager.io/docs/installation/helm/
 
-Install [Certificate manager](https://cert-manager.io/docs/) as certificate management controller for Kubernetes.
+Azure Docs is not updated to latest version: https://docs.microsoft.com/en-us/azure/application-gateway/ingress-controller-letsencrypt-certificate-application-gateway
+
+
+Installation
+```bash
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.7.1 --set installCRDs=true
+
+kubectl get all -n cert-manager
+```
+
+Now deploy ClusterIssuer to be able issue certificate
+- deploy with Nginx ingress https://cert-manager.io/docs/tutorials/acme/nginx-ingress/
+- docs https://cert-manager.io/docs/configuration/acme/
+- docs https://cert-manager.io/docs/usage/ingress/
+
+```bash
+kubectl apply -f ./aks/cert-manager.yaml
+kubectl apply -f ./aks/cert-manager-ingress.yaml
+```
 
 #### Public certificate Azure Front Door for AKS
 
