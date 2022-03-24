@@ -47,6 +47,9 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
+    # TODO: Code analysis
+    # https://github.com/dotnet/code-analysis
+
     # TODO: Code coverage
     # https://github.com/marketplace/actions/code-coverage-summary
     # add <PackageReference Include="coverlet.collector" Version="1.0.1" />
