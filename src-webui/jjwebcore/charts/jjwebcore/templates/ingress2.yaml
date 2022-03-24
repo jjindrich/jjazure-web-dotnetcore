@@ -5,7 +5,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: jjwebcore2
+  name: jjwebcore-internal
   labels:
     app: {{ template "jjwebcore.name" . }}
     chart: {{ template "jjwebcore.chart" . }}
