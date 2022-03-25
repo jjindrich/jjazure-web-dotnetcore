@@ -40,15 +40,18 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+#    nginx.ingress.kubernetes.io/configuration-snippet: |
+#      proxy_set_header X-Forwarded-Host $http_x_forwarded_host;
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     # kubernetes.io/tls-acme: "true"
     # nginx.ingress.kubernetes.io/rewrite-target: "/"
   path: /
-  # hosts:
-  #   - 13.69.76.199.xip.io
-  tls: []
-    # - secretName: chart-example-tls
-    #   hosts:
-    #     - chart-example.local
+  hosts:
+    - jjaks.westeurope.cloudapp.azure.com
+  tls: 
+    - secretName: jjwebcore-cert
+      hosts:
+        - jjaks.westeurope.cloudapp.azure.com
 ingress2:
   enabled: true
   annotations:
