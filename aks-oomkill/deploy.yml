@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jjoomkill
+spec:
+  selector:
+    matchLabels:
+      app: jjoomkill
+  template:
+    metadata:
+      labels:
+        app: jjoomkill
+    spec:
+      containers:
+      - name: jjoomkill
+        image: jjakscontainers.azurecr.io/jjoomkill:v1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80

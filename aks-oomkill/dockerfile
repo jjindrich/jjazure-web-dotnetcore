@@ -1,0 +1,7 @@
+FROM ubuntu:latest
+
+WORKDIR /
+RUN apt-get update
+RUN apt-get install nginx stressapptest -y
+
+CMD stressapptest -s 60 -M 180 -W -m 8 -C 8
