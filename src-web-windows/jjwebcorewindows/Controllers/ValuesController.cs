@@ -14,7 +14,7 @@ namespace jjwebcorewindows.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "windows1", "windows2", "windows3" };
+            return new string[] { "windows1", "windows2" };
         }
 
         // GET api/values/5
