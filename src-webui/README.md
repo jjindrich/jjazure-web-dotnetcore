@@ -1,5 +1,5 @@
 # jjazure-web-dotnetcore
-Azure Web App and DotNet Core website
+Azure Web App and DotNet Core website (dotnet 6.0)
 
 ## Create new web site for Visual Studio Code
 Use this article create new project - 
