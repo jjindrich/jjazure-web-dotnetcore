@@ -1,5 +1,5 @@
 param envName string = 'jjwebenv'
-param location string = 'North Europe'
+param location string = resourceGroup().location
 
 param imageRegistryName string = 'jjakscontainers'
 param imageWeb string
@@ -16,17 +16,20 @@ param appInsightsInstrumentationKey string
 @secure()
 param contactContextConnectionString string
 
+// Reference existing resources
 resource log 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
   name: logName
   scope: resourceGroup(logResourceGroupName)
 }
+resource acr 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' existing = {
+  name: imageRegistryName
+}
 
-resource env 'Microsoft.Web/kubeEnvironments@2021-02-01' = {
+// Create Container App Environment
+resource env 'Microsoft.App/managedEnvironments@2022-03-01' = {
   name: envName
   location: location
   properties: {
-    type: 'managed'
-    internalLoadBalancerEnabled: false
     appLogsConfiguration: {
       destination: 'log-analytics'
       logAnalyticsConfiguration: {
@@ -37,16 +40,12 @@ resource env 'Microsoft.Web/kubeEnvironments@2021-02-01' = {
   }
 }
 
-resource acr 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' existing = {
-  name: imageRegistryName
-}
-
-resource jjweb 'Microsoft.Web/containerapps@2021-03-01' = {
+// Create Container App: JJWeb
+resource jjweb 'Microsoft.App/containerApps@2022-03-01' = {
   name: '${envName}-jjweb'
   location: location
-  kind: 'containerapps'
   properties: {
-    kubeEnvironmentId: env.id
+    managedEnvironmentId: env.id
     configuration: {
       ingress: {
         external: true
@@ -95,7 +94,7 @@ resource jjweb 'Microsoft.Web/containerapps@2021-03-01' = {
             }
           ]
           resources: {
-            cpu: '.25'
+            cpu: json('.25')
             memory: '.5Gi'
           }
         }
@@ -104,12 +103,12 @@ resource jjweb 'Microsoft.Web/containerapps@2021-03-01' = {
   }
 }
 
-resource jjapi 'Microsoft.Web/containerapps@2021-03-01' = {
+// Create Container App: JJAPI
+resource jjapi 'Microsoft.App/containerApps@2022-03-01' = {
   name: '${envName}-jjapi'
   location: location
-  kind: 'containerapps'
   properties: {
-    kubeEnvironmentId: env.id
+    managedEnvironmentId: env.id
     configuration: {
       ingress: {
         external: false
@@ -150,7 +149,7 @@ resource jjapi 'Microsoft.Web/containerapps@2021-03-01' = {
             }
           ]
           resources: {
-            cpu: '.25'
+            cpu: json('.25')
             memory: '.5Gi'
           }
         }
