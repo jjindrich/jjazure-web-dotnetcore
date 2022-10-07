@@ -1,4 +1,9 @@
 name: WebApi dotnet
+# Requirements: 
+#   Azure User Managed Identity with Federated credentials for GH Actions
+#   Permissions: Contributor scope Resource group
+#   GitHub repository secrets
+#   GitHub environment secrets
 
 on:
   workflow_dispatch:
@@ -15,9 +20,9 @@ on:
     paths:
     - 'src-webapi/**'
 
-
-# AZURE_CREDENTIALS format https://github.com/marketplace/actions/azure-login#configure-deployment-credentials
-# {"clientId":"XXX","clientSecret":"XXX","subscriptionId":"XXX","tenantId":"XXX"}
+permissions:
+      id-token: write
+      contents: read   
 
 jobs:
 
@@ -61,8 +66,6 @@ jobs:
     name: 'Publish to ACR'
     runs-on: ubuntu-latest
     environment: dev    
-    env:
-      ACR_NAME: 'jjakscontainers'
     defaults:
       run:
         shell: bash
@@ -73,24 +76,23 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - uses: Azure/login@v1
+    - name: OIDC Login to Azure Public Cloud (using Azure User Managed Identity)
+      uses: Azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} 
     
-    - run: |
-        az acr login --name ${{ env.ACR_NAME }}
-        docker build . -t ${{ env.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }} -f jjwebapicore/Dockerfile
-        docker push ${{ env.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }}
+    - name: Push image
+      run: |
+        az acr login --name ${{ secrets.ACR_NAME }}
+        docker build . -t ${{ secrets.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }} -f jjwebapicore/Dockerfile
+        docker push ${{ secrets.ACR_NAME }}.azurecr.io/jjwebapicore:${{ github.sha }}
 
   deploy:
     name: 'Deploy to AKS'
     runs-on: ubuntu-latest
     environment: dev    
-    env:
-      ACR_NAME: 'jjakscontainers'
-      AKS_NAME: 'jjaks'
-      AKS_RG: 'jjmicroservices-rg'
-      AKV_NAME: 'jjakskv'
     defaults:
       run:
         shell: bash
@@ -101,30 +103,33 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - uses: Azure/login@v1
+    - name: OIDC Login to Azure Public Cloud (using Azure User Managed Identity)
+      uses: Azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}  
 
     - uses: Azure/get-keyvault-secrets@v1
       with: 
-        keyvault: ${{ env.AKV_NAME }}
+        keyvault: ${{ secrets.AKV_NAME }}
         secrets: 'contactsDbConnection, appInsightsKey'
       id: kv
 
-    - uses: Azure/aks-set-context@v1
+    - uses: Azure/aks-set-context@v3
       with:
-        creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: ${{ env.AKS_NAME }}
-        resource-group: ${{ env.AKS_RG }}
+        cluster-name: ${{ secrets.AKS_NAME }}
+        resource-group: ${{ secrets.AKS_RG }}
+        admin: true
 
     # !!! not reflecting default working-directory
-    - uses: azure/k8s-bake@v1
+    - uses: azure/k8s-bake@v2
       with:
         renderEngine: 'helm'
         helmChart: './src-webapi/jjwebapicore/charts/jjwebapicore'
         overrideFiles: './src-webapi/jjwebapicore/charts/jjwebapicore/values.yaml'
         overrides: |     
-          image.repository:jjakscontainers.azurecr.io/jjwebapicore
+          image.repository:${{ secrets.ACR_NAME }}.azurecr.io/jjwebapicore
           image.tag:${{ github.sha }}
           secrets.APPINSIGHTS.INSTRUMENTATIONKEY:${{ steps.kv.outputs.appInsightsKey }}
           secrets.ConnectionStrings.ContactsContext:${{ steps.kv.outputs.contactsDbConnection }}
@@ -132,7 +137,7 @@ jobs:
         silent: 'false'
       id: bake
 
-    - uses: Azure/k8s-deploy@v1
+    - uses: Azure/k8s-deploy@v4
       with:
         manifests: ${{ steps.bake.outputs.manifestsBundle }}
         namespace: 'jjapi'
