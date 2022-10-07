@@ -1,4 +1,9 @@
 name: WebWindows dotnet
+# Requirements: 
+#   Azure User Managed Identity with Federated credentials for GH Actions
+#   Permissions: Contributor scope Resource group
+#   GitHub repository secrets
+#   GitHub environment secrets
 
 on:
   workflow_dispatch:
@@ -15,8 +20,9 @@ on:
     paths:
     - 'src-web-windows/**'
 
-# AZURE_CREDENTIALS format https://github.com/marketplace/actions/azure-login#configure-deployment-credentials
-# {"clientId":"XXX","clientSecret":"XXX","subscriptionId":"XXX","tenantId":"XXX"}
+permissions:
+      id-token: write
+      contents: read   
 
 jobs:
 
@@ -62,29 +68,28 @@ jobs:
       run:
         shell: bash
         working-directory: src-web-windows
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    if: (github.ref == 'refs/heads/master' && github.event_name == 'push') || (github.event_name == 'workflow_dispatch')
     
     steps:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - uses: Azure/login@v1
+    - name: OIDC Login to Azure Public Cloud (using Azure User Managed Identity)
+      uses: Azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} 
     
-    - run: |
-        az acr login --name ${{ env.ACR_NAME }}
-        az acr build --registry ${{ env.ACR_NAME }} --image ${{ env.ACR_NAME }}.azurecr.io/jjwebcorewindows:${{ github.sha }} --file ./jjwebcorewindows/Dockerfile --platform windows .
+    - name: Push image
+      run: |
+        az acr login --name ${{ secrets.ACR_NAME }}
+        az acr build --registry ${{ secrets.ACR_NAME }} --image ${{ secrets.ACR_NAME }}.azurecr.io/jjwebcorewindows:${{ github.sha }} --file ./jjwebcorewindows/Dockerfile --platform windows .
 
   deploy:
     name: 'Deploy to AKS'
     runs-on: ubuntu-latest
     environment: dev    
-    env:
-      ACR_NAME: 'jjakscontainers'
-      AKS_NAME: 'jjaks'
-      AKS_RG: 'jjmicroservices-rg'
-      AKV_NAME: 'jjakskv'
     defaults:
       run:
         shell: bash
@@ -95,21 +100,24 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - uses: Azure/login@v1
+    - name: OIDC Login to Azure Public Cloud (using Azure User Managed Identity)
+      uses: Azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}  
 
     - uses: Azure/get-keyvault-secrets@v1
       with: 
-        keyvault: ${{ env.AKV_NAME }}
+        keyvault: ${{ secrets.AKV_NAME }}
         secrets: 'appInsightsKey'
       id: kv
 
-    - uses: Azure/aks-set-context@v1
+    - uses: Azure/aks-set-context@v3
       with:
-        creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: ${{ env.AKS_NAME }}
-        resource-group: ${{ env.AKS_RG }}
+        cluster-name: ${{ secrets.AKS_NAME }}
+        resource-group: ${{ secrets.AKS_RG }}
+        admin: true
 
     # !!! not reflecting default working-directory
     - uses: azure/k8s-bake@v1
@@ -118,7 +126,7 @@ jobs:
         helmChart: './src-web-windows/jjwebcorewindows/charts/jjwebcorewindows'
         overrideFiles: './src-web-windows/jjwebcorewindows/charts/jjwebcorewindows/values.yaml'
         overrides: |     
-          image.repository:jjakscontainers.azurecr.io/jjwebcorewindows
+          image.repository:${{ secrets.ACR_NAME }}.azurecr.io/jjwebcorewindows
           image.tag:${{ github.sha }}
           secrets.APPINSIGHTS.INSTRUMENTATIONKEY:${{ steps.kv.outputs.appInsightsKey }}
         helm-version: 'latest'
