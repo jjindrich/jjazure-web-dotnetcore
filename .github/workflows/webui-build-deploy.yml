@@ -133,12 +133,12 @@ jobs:
         silent: 'false'
       id: bake
 
-    # - uses: Azure/k8s-deploy@v1.4
-    #   with:
-    #     manifests: ${{ steps.bake.outputs.manifestsBundle }}
-    #     namespace: 'jjweb'
-    #     # strategy: canary
-    #     # traffic-split-method: smi
-    #     # action: deploy #deploy is the default; we will later use this to promote/reject
-    #     # percentage: 20
-    #     # baseline-and-canary-replicas: 1
+    - uses: Azure/k8s-deploy@v4
+      with:
+        manifests: ${{ steps.bake.outputs.manifestsBundle }}
+        namespace: 'jjweb'
+        # strategy: canary
+        # traffic-split-method: smi
+        # action: deploy #deploy is the default; we will later use this to promote/reject
+        # percentage: 20
+        # baseline-and-canary-replicas: 1
