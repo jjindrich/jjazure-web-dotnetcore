@@ -153,3 +153,5 @@ This implementation will show how to enable/disable Test in menu. Settings is ma
    - change controller and menu file to work with FeatureFlag
    - change Kubernetes values file - using ConnectionStrings__AppConfig (__ because of structure)
 4. Try to set feature On -> Off -> On (it takes cca 1min for refresh)
+
+
