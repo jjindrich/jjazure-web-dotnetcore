@@ -64,6 +64,9 @@ jobs:
     environment: dev    
     env:
       ACR_NAME: 'jjazacr'
+    permissions:
+      id-token: write
+      contents: read 
     defaults:
       run:
         shell: bash
