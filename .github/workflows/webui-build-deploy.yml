@@ -1,4 +1,9 @@
 name: WebUi dotnet
+# Requirements: 
+#   Azure User Managed Identity with Federated credentials for GH Actions
+#   Permissions: Contributor scope Resource group
+#   GitHub repository secrets
+#   GitHub environment secrets
 
 on:
   workflow_dispatch:
@@ -15,8 +20,9 @@ on:
     paths:
     - 'src-webui/**'
 
-# AZURE_CREDENTIALS format https://github.com/marketplace/actions/azure-login#configure-deployment-credentials
-# {"clientId":"XXX","clientSecret":"XXX","subscriptionId":"XXX","tenantId":"XXX"}
+permissions:
+      id-token: write
+      contents: read   
 
 jobs:
 
@@ -57,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev    
     env:
-      ACR_NAME: 'jjakscontainers'
+      ACR_NAME: 'jjazacr'
     defaults:
       run:
         shell: bash
@@ -68,9 +74,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - uses: Azure/login@v1
+    - name: OIDC Login to Azure Public Cloud (using Azure User Managed Identity)
+      uses: Azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}  
     
     - run: |
         az acr login --name ${{ env.ACR_NAME }}
@@ -82,10 +91,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: dev    
     env:
-      ACR_NAME: 'jjakscontainers'
-      AKS_NAME: 'jjaks'
+      ACR_NAME: 'jjazacr'
+      AKS_NAME: 'jjazaks'
       AKS_RG: 'jjmicroservices-rg'
-      AKV_NAME: 'jjakskv'
+      AKV_NAME: 'jjazakskv'
     defaults:
       run:
         shell: bash
@@ -96,44 +105,47 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - uses: Azure/login@v1
+    - name: OIDC Login to Azure Public Cloud (using Azure User Managed Identity)
+      uses: Azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}  
 
-    - uses: Azure/get-keyvault-secrets@v1
-      with: 
-        keyvault: ${{ env.AKV_NAME }}
-        secrets: 'appConfig, appInsightsConfig'
-      id: kv
+    # - uses: Azure/get-keyvault-secrets@v1
+    #   with: 
+    #     keyvault: ${{ env.AKV_NAME }}
+    #     secrets: 'appConfig, appInsightsConfig'
+    #   id: kv
 
-    - uses: Azure/aks-set-context@v1
-      with:
-        creds: '${{ secrets.AZURE_CREDENTIALS }}'
-        cluster-name: ${{ env.AKS_NAME }}
-        resource-group: ${{ env.AKS_RG }}
+    # - uses: Azure/aks-set-context@v1
+    #   with:
+    #     creds: '${{ secrets.AZURE_CREDENTIALS }}'
+    #     cluster-name: ${{ env.AKS_NAME }}
+    #     resource-group: ${{ env.AKS_RG }}
 
     # !!! not reflecting default working-directory
-    - uses: azure/k8s-bake@v1
-      with:
-        renderEngine: 'helm'
-        helmChart: './src-webui/jjwebcore/charts/jjwebcore'
-        overrideFiles: './src-webui/jjwebcore/charts/jjwebcore/values.yaml'
-        overrides: |     
-          image.repository:jjakscontainers.azurecr.io/jjwebcore
-          image.tag:${{ github.sha }}
-          secrets.ASPNETCORE.ENVIRONMENT:Development
-          secrets.APPLICATIONINSIGHTS.CONNECTION_STRING:${{ steps.kv.outputs.appInsightsConfig }}
-          secrets.ConnectionStrings._AppConfig:${{ steps.kv.outputs.appConfig }}
-        helm-version: 'latest'
-        silent: 'false'
-      id: bake
+    # - uses: azure/k8s-bake@v1
+    #   with:
+    #     renderEngine: 'helm'
+    #     helmChart: './src-webui/jjwebcore/charts/jjwebcore'
+    #     overrideFiles: './src-webui/jjwebcore/charts/jjwebcore/values.yaml'
+    #     overrides: |     
+    #       image.repository:jjakscontainers.azurecr.io/jjwebcore
+    #       image.tag:${{ github.sha }}
+    #       secrets.ASPNETCORE.ENVIRONMENT:Development
+    #       secrets.APPLICATIONINSIGHTS.CONNECTION_STRING:${{ steps.kv.outputs.appInsightsConfig }}
+    #       secrets.ConnectionStrings._AppConfig:${{ steps.kv.outputs.appConfig }}
+    #     helm-version: 'latest'
+    #     silent: 'false'
+    #   id: bake
 
-    - uses: Azure/k8s-deploy@v1.4
-      with:
-        manifests: ${{ steps.bake.outputs.manifestsBundle }}
-        namespace: 'jjweb'
-        # strategy: canary
-        # traffic-split-method: smi
-        # action: deploy #deploy is the default; we will later use this to promote/reject
-        # percentage: 20
-        # baseline-and-canary-replicas: 1
+    # - uses: Azure/k8s-deploy@v1.4
+    #   with:
+    #     manifests: ${{ steps.bake.outputs.manifestsBundle }}
+    #     namespace: 'jjweb'
+    #     # strategy: canary
+    #     # traffic-split-method: smi
+    #     # action: deploy #deploy is the default; we will later use this to promote/reject
+    #     # percentage: 20
+    #     # baseline-and-canary-replicas: 1
