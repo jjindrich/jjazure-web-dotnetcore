@@ -70,7 +70,7 @@ jobs:
       run:
         shell: bash
         working-directory: src-webapi
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    if: (github.ref == 'refs/heads/master' && github.event_name == 'push') || (github.event_name == 'workflow_dispatch')
 
     steps:
     - name: Checkout
