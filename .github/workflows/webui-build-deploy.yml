@@ -116,6 +116,7 @@ jobs:
       with:
         cluster-name: ${{ secrets.AKS_NAME }}
         resource-group: ${{ secrets.AKS_RG }}
+        admin: true
 
     # !!! not reflecting default working-directory
     - uses: azure/k8s-bake@v2
