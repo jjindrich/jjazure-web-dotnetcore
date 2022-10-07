@@ -62,11 +62,6 @@ jobs:
     name: 'Publish to ACR'
     runs-on: ubuntu-latest
     environment: dev    
-    env:
-      ACR_NAME: 'jjazacr'
-    permissions:
-      id-token: write
-      contents: read 
     defaults:
       run:
         shell: bash
@@ -83,20 +78,17 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}  
-    
+    - name: Push image
     - run: |
-        az acr login --name ${{ env.ACR_NAME }}
-        docker build . -t ${{ env.ACR_NAME }}.azurecr.io/jjwebcore:${{ github.sha }} -f jjwebcore/Dockerfile
-        docker push ${{ env.ACR_NAME }}.azurecr.io/jjwebcore:${{ github.sha }}
+        az acr login --name ${{ secrets.ACR_NAME }}
+        docker build . -t ${{ secrets.ACR_NAME }}.azurecr.io/jjwebcore:${{ github.sha }} -f jjwebcore/Dockerfile
+        docker push ${{ secrets.ACR_NAME }}.azurecr.io/jjwebcore:${{ github.sha }}
 
   deploy:
     name: 'Deploy to AKS'
     runs-on: ubuntu-latest
     environment: dev    
     env:
-      ACR_NAME: 'jjazacr'
-      AKS_NAME: 'jjazaks'
-      AKS_RG: 'jjmicroservices-rg'
       AKV_NAME: 'jjazakskv'
     defaults:
       run:
@@ -121,11 +113,10 @@ jobs:
     #     secrets: 'appConfig, appInsightsConfig'
     #   id: kv
 
-    # - uses: Azure/aks-set-context@v1
-    #   with:
-    #     creds: '${{ secrets.AZURE_CREDENTIALS }}'
-    #     cluster-name: ${{ env.AKS_NAME }}
-    #     resource-group: ${{ env.AKS_RG }}
+    - uses: Azure/aks-set-context@v3
+      with:
+        cluster-name: ${{ secrets.AKS_NAME }}
+        resource-group: ${{ secrets.AKS_RG }}
 
     # !!! not reflecting default working-directory
     # - uses: azure/k8s-bake@v1
