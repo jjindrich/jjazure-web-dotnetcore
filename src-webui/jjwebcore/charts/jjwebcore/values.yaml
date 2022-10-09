@@ -47,7 +47,7 @@ ingress:
     # nginx.ingress.kubernetes.io/rewrite-target: "/"
   path: /
   hosts:
-    - jjaks.westeurope.cloudapp.azure.com
+    - jjazaks.westeurope.cloudapp.azure.com
   tls: 
     - secretName: jjwebcore-cert
       hosts:
