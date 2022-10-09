@@ -51,7 +51,7 @@ ingress:
   tls: 
     - secretName: jjwebcore-cert
       hosts:
-        - jjaks.westeurope.cloudapp.azure.com
+        - jjazaks.westeurope.cloudapp.azure.com
 ingress2:
   enabled: true
   annotations:
