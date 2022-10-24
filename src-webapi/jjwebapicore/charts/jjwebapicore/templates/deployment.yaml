@@ -23,6 +23,7 @@ spec:
       annotations:
         buildID: "{{ .Values.buildID }}"
         prometheus.io/scrape: "true"
+        prometheus.io/port: "80"
     spec:
       serviceAccountName: {{ template "jjwebapicore.serviceAccountName" . }}
       containers:
