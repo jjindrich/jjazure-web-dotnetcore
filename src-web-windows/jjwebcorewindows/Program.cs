@@ -17,7 +17,7 @@ if (app.Environment.IsDevelopment())
 //app.UseHttpsRedirection();
 
 // https://learn.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-6.0&tabs=visual-studio
-app.MapGet("/values", () =>
+app.MapGet("/api/values", () =>
 {
     return new string[] { "windows1", "windows2", "windows3" };
 })
