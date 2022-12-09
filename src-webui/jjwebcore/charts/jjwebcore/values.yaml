@@ -54,7 +54,7 @@ ingress:
         - jjazaks.westeurope.cloudapp.azure.com
 ingress2:
   enabled: true
-  className: "nginx"
+  className: "nginx-internal"
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     # nginx.ingress.kubernetes.io/rewrite-target: "/"
