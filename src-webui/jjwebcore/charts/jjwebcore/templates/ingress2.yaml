@@ -16,6 +16,9 @@ metadata:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:
+  {{- if and .Values.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ .Values.ingress2.className }}
+  {{- end }}
 {{- if .Values.ingress2.tls }}
   tls:
   {{- range .Values.ingress2.tls }}
