@@ -38,8 +38,7 @@ namespace jjwebcore.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost]        
         public async Task<ActionResult> Create(IFormCollection collection)
         {
             try
@@ -62,7 +61,6 @@ namespace jjwebcore.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, IFormCollection collection)
         {
             try
@@ -85,7 +83,6 @@ namespace jjwebcore.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
             try
