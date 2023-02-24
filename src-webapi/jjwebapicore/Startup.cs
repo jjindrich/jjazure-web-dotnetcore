@@ -14,6 +14,11 @@ using Microsoft.Extensions.Hosting;
 using jjwebapicore.Models;
 using System.Diagnostics.CodeAnalysis;
 using Prometheus;
+using GraphQL;
+using jjwebapicore.GraphQL.Types;
+using GraphQL.MicrosoftDI;
+using GraphQL.Types;
+using jjwebapicore.Services;
 
 namespace jjwebapicore
 {
@@ -46,6 +51,15 @@ namespace jjwebapicore
 
             services.AddHealthChecks()
                 .AddDbContextCheck<ContactsContext>();
+
+            services.AddTransient<IContactService, ContactService>();
+            services.AddSingleton<ISchema, WebSchema>(services => new WebSchema(new SelfActivatingServiceProvider(services)));
+
+            services.AddGraphQL(b => b
+                .AddGraphTypes(typeof(Program).Assembly)
+                .AddSchema<WebSchema>()
+                .AddSystemTextJson()
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,6 +103,8 @@ namespace jjwebapicore
                 c.DocumentPath = "/api/swagger/v1/swagger.json";
             });
 
+            app.UseGraphQL("/graphql");
+            app.UseGraphQLGraphiQL(); // /ui/graphiql
         }
     }
 }
