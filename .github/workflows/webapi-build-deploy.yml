@@ -66,6 +66,7 @@ jobs:
     name: 'Publish to ACR'
     runs-on: ubuntu-latest
     environment: dev    
+    needs: build
     defaults:
       run:
         shell: bash

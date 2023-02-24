@@ -62,6 +62,7 @@ jobs:
     name: 'Publish to ACR'
     runs-on: ubuntu-latest
     environment: dev    
+    needs: build
     env:
       ACR_NAME: 'jjakscontainers'
     defaults:
