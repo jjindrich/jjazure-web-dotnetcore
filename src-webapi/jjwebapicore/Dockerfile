@@ -3,10 +3,6 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-# fix on alpine image - https://www.gitmemory.com/issue/dotnet/SqlClient/220/535820849
-RUN apk add icu-libs
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["jjwebapicore/jjwebapicore.csproj", "jjwebapicore/"]
