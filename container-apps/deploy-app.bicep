@@ -1,12 +1,12 @@
-param envName string = 'jjwebenv'
+param envName string = 'jjazca'
 param location string = resourceGroup().location
 
-param imageRegistryName string = 'jjakscontainers'
+param imageRegistryName string = 'jjazacr'
 param imageWeb string
 param imageApi string
 
-param logName string = 'jjdev-analytics'
-param logResourceGroupName string = 'jjdevmanagement'
+param logName string = 'jjazworkspace'
+param logResourceGroupName string = 'jjinfra-rg'
 @secure()
 param appConfigConnectionString string
 @secure()
@@ -26,7 +26,7 @@ resource acr 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' existin
 }
 
 // Create Container App Environment
-resource env 'Microsoft.App/managedEnvironments@2022-03-01' = {
+resource env 'Microsoft.App/managedEnvironments@2022-10-01' = {
   name: envName
   location: location
   properties: {
@@ -35,13 +35,13 @@ resource env 'Microsoft.App/managedEnvironments@2022-03-01' = {
       logAnalyticsConfiguration: {
         customerId: log.properties.customerId
         sharedKey: log.listKeys().primarySharedKey
-      }
+      }      
     }
   }
 }
 
 // Create Container App: JJWeb
-resource jjweb 'Microsoft.App/containerApps@2022-03-01' = {
+resource jjweb 'Microsoft.App/containerApps@2022-10-01' = {
   name: '${envName}-jjweb'
   location: location
   properties: {
@@ -104,7 +104,7 @@ resource jjweb 'Microsoft.App/containerApps@2022-03-01' = {
 }
 
 // Create Container App: JJAPI
-resource jjapi 'Microsoft.App/containerApps@2022-03-01' = {
+resource jjapi 'Microsoft.App/containerApps@2022-10-01' = {
   name: '${envName}-jjapi'
   location: location
   properties: {
