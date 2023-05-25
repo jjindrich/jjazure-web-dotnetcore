@@ -1,4 +1,4 @@
-param envName string = 'jjazca'
+param envName string = 'jjazaca'
 param location string = resourceGroup().location
 
 param imageRegistryName string = 'jjazacr'
@@ -25,6 +25,22 @@ resource acr 'Microsoft.ContainerRegistry/registries@2021-06-01-preview' existin
   name: imageRegistryName
 }
 
+// Create managed identity to access ACR and assign role
+resource acrIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
+  name: '${envName}-acr-identity'
+  location: location
+}
+var acrPullRole = resourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d')
+resource acrRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(resourceGroup().id, acrIdentity.id, acrPullRole)
+  scope: acr
+  properties: {
+    principalId: acrIdentity.properties.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: acrPullRole
+  }
+}
+
 // Create Container App Environment
 resource env 'Microsoft.App/managedEnvironments@2022-10-01' = {
   name: envName
@@ -44,6 +60,12 @@ resource env 'Microsoft.App/managedEnvironments@2022-10-01' = {
 resource jjweb 'Microsoft.App/containerApps@2022-10-01' = {
   name: '${envName}-jjweb'
   location: location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${acrIdentity.id}': {}
+    }
+  }
   properties: {
     managedEnvironmentId: env.id
     configuration: {
@@ -52,17 +74,11 @@ resource jjweb 'Microsoft.App/containerApps@2022-10-01' = {
         targetPort: 80
         transport: 'auto'
       }
-      secrets: [
-        {
-          name: 'registry-pwd'
-          value: acr.listCredentials().passwords[0].value
-        }
-      ]
+      secrets: []
       registries: [
         {
           server: acr.properties.loginServer
-          username: acr.listCredentials().username
-          passwordSecretRef: 'registry-pwd'
+          identity: acrIdentity.id
         }
       ]
     }
@@ -107,6 +123,12 @@ resource jjweb 'Microsoft.App/containerApps@2022-10-01' = {
 resource jjapi 'Microsoft.App/containerApps@2022-10-01' = {
   name: '${envName}-jjapi'
   location: location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${acrIdentity.id}': {}
+    }
+  }
   properties: {
     managedEnvironmentId: env.id
     configuration: {
@@ -115,17 +137,11 @@ resource jjapi 'Microsoft.App/containerApps@2022-10-01' = {
         targetPort: 80
         transport: 'auto'
       }
-      secrets: [
-        {
-          name: 'registry-pwd'
-          value: acr.listCredentials().passwords[0].value
-        }
-      ]
+      secrets: []
       registries: [
         {
           server: acr.properties.loginServer
-          username: acr.listCredentials().username
-          passwordSecretRef: 'registry-pwd'
+          identity: acrIdentity.id
         }
       ]
     }
