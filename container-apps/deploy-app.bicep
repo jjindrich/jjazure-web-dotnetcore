@@ -42,7 +42,7 @@ resource acrRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
 }
 
 // Create Container App Environment
-resource env 'Microsoft.App/managedEnvironments@2022-10-01' = {
+resource env 'Microsoft.App/managedEnvironments@2022-11-01-preview' = {
   name: envName
   location: location
   properties: {
@@ -51,13 +51,23 @@ resource env 'Microsoft.App/managedEnvironments@2022-10-01' = {
       logAnalyticsConfiguration: {
         customerId: log.properties.customerId
         sharedKey: log.listKeys().primarySharedKey
-      }      
+      }
     }
+    workloadProfiles: [
+      {
+        name: 'wp-d4'
+        workloadProfileType: 'D4'
+        minimumCount: 3
+        maximumCount: 5
+      }
+    ]
+    // requires InfrastructureSubnetId
+    //zoneRedundant: true    
   }
 }
 
 // Create Container App: JJWeb
-resource jjweb 'Microsoft.App/containerApps@2022-10-01' = {
+resource jjweb 'Microsoft.App/containerApps@2022-11-01-preview' = {
   name: '${envName}-jjweb'
   location: location
   identity: {
@@ -67,7 +77,9 @@ resource jjweb 'Microsoft.App/containerApps@2022-10-01' = {
     }
   }
   properties: {
-    managedEnvironmentId: env.id
+    environmentId: env.id
+    // if not specified, will use Consumption workload profile
+    //workloadProfileName: 'wp-d4'
     configuration: {
       ingress: {
         external: true
@@ -120,7 +132,7 @@ resource jjweb 'Microsoft.App/containerApps@2022-10-01' = {
 }
 
 // Create Container App: JJAPI
-resource jjapi 'Microsoft.App/containerApps@2022-10-01' = {
+resource jjapi 'Microsoft.App/containerApps@2022-11-01-preview' = {
   name: '${envName}-jjapi'
   location: location
   identity: {
@@ -130,7 +142,7 @@ resource jjapi 'Microsoft.App/containerApps@2022-10-01' = {
     }
   }
   properties: {
-    managedEnvironmentId: env.id
+    environmentId: env.id
     configuration: {
       ingress: {
         external: false
