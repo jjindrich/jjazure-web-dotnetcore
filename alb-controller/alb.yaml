@@ -1,0 +1,8 @@
+apiVersion: alb.networking.azure.io/v1
+kind: ApplicationLoadBalancer
+metadata:
+  name: alb-test
+  namespace: alb-test-infra
+spec:
+  associations:
+  - ALB_SUBNET_ID
