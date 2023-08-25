@@ -27,7 +27,7 @@ az identity create --resource-group $RESOURCE_GROUP --name $IDENTITY_RESOURCE_NA
 $principalId="$(az identity show -g $RESOURCE_GROUP -n $IDENTITY_RESOURCE_NAME --query principalId -otsv)"
 $mcResourceGroup=$(az aks show --resource-group $RESOURCE_GROUP --name $AKS_NAME --query "nodeResourceGroup" -o tsv)
 $mcResourceGroupId=$(az group show --name $mcResourceGroup --query id -otsv)
-az role assignment create --assignee-object-id $principalId --assignee-principal-type ServicePrincipal --scope $mcResourceGroupId --role "acdd72a7-3385-48ef-bd42-f606fba81ae7" # 
+az role assignment create --assignee-object-id $principalId --assignee-principal-type ServicePrincipal --scope $mcResourceGroupId --role "acdd72a7-3385-48ef-bd42-f606fba81ae7"
 
 $AKS_OIDC_ISSUER="$(az aks show -n "$AKS_NAME" -g "$RESOURCE_GROUP" --query "oidcIssuerProfile.issuerUrl" -o tsv)"
 az identity federated-credential create --name "$IDENTITY_RESOURCE_NAME" --identity-name "$IDENTITY_RESOURCE_NAME" --resource-group $RESOURCE_GROUP --issuer "$AKS_OIDC_ISSUER" --subject "system:serviceaccount:azure-alb-system:alb-controller-sa"
@@ -51,7 +51,7 @@ az role assignment create --assignee-object-id $principalId --assignee-principal
 kubectl create namespace alb-test-infra
 
 (Get-Content "alb.yaml") -replace "ALB_SUBNET_ID", $ALB_SUBNET_ID | out-file "alb-deploy.yaml"
-kubectl apply -f alb-deploy.yml
+kubectl apply -f alb-deploy.yaml
 kubectl get applicationloadbalancer alb-test -n alb-test-infra -o yaml
 
 kubectl apply -f ingress.yaml
