@@ -11,6 +11,7 @@ Web project running on Docker (Windows based) in Azure WebApp for Containers and
 
 ### Project ApiApp dotNet Core [jjazure-webapi-dotnetcore](src-webapi/README.md)
 WebApi project running on Docker (Linux based) in Azure Kubernetes Service(AKS) with Visual Studio.
+[![Run Action](https://github-action-button.web.app/buttons/simple.svg?name=webapi-build-deploy&eventType=&type=simple&action=deployment)](https://github-action-button.web.app/repos/jjindrich/jjazure-web-dotnetcore/button?name=webapi-build-deploy&eventType=&type=simple&action=deployment)
 
 ### Project Function dotNet Core [jjazure-func-dotnetcore](src-func/README.md)
 Azure Functions running on Docker (Linux based) in Azure Kubernetes Service(AKS) with Visual Studio.
