@@ -1,4 +1,4 @@
-param envName string = 'jjazaca'
+param envName string = 'jjazacanew'
 param location string = resourceGroup().location
 
 param imageRegistryName string = 'jjazacr'
@@ -41,6 +41,15 @@ resource acrRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   }
 }
 
+// resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' existing = {
+//   name: 'jjazappvnet'
+//   scope: resourceGroup('jjnetwork-rg')
+// }
+// resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' existing = {
+//   parent: vnet
+//   name: 'aca-snet'
+// }
+
 // Create Container App Environment
 resource env 'Microsoft.App/managedEnvironments@2022-11-01-preview' = {
   name: envName
@@ -61,7 +70,9 @@ resource env 'Microsoft.App/managedEnvironments@2022-11-01-preview' = {
         maximumCount: 5
       }
     ]
-    // requires InfrastructureSubnetId
+    // vnetConfiguration: {
+    //   infrastructureSubnetId: subnet.id
+    // }
     //zoneRedundant: true    
   }
 }
