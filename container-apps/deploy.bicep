@@ -9,8 +9,8 @@ module app 'deploy-app.bicep' = {
   name: 'jjweb-deployment'
   params:{
     location: location
-    imageWeb: 'jjwebcore:335f8aa8faeac5cd09e5d61a18c510f995975616'
-    imageApi: 'jjwebapicore:122822df55b2d8fc63c2e8195187d4b858a85259'
+    imageWeb: 'jjwebcore:8655cb8f20c29af98e8c1e46d7d3342aa9647b13'
+    imageApi: 'jjwebapicore:8655cb8f20c29af98e8c1e46d7d3342aa9647b13'
     appConfigConnectionString: kv.getSecret('appConfig')
     appInsightsConnectionString: kv.getSecret('appInsightsConfig')    
     appInsightsInstrumentationKey: kv.getSecret('appInsightsKey')
