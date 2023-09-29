@@ -54,8 +54,8 @@ secrets:
   # as the environment variable mysecret_mypassword=password.
   # mysecret:
   #   mypassword: password
-  APPINSIGHTS:
-    INSTRUMENTATIONKEY: 00000000-0000-0000-0000-000000000000                        
+  APPLICATIONINSIGHTS:
+    CONNECTION_STRING: InstrumentationKey=00000000-0000-0000-0000-000000000000                    
   ConnectionStrings:
     ContactsContext: copy_sqldatabase_connectionstring
 resources:

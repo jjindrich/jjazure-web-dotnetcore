@@ -114,7 +114,7 @@ jobs:
     - uses: Azure/get-keyvault-secrets@v1
       with: 
         keyvault: ${{ secrets.AKV_NAME }}
-        secrets: 'contactsDbConnection, appInsightsKey'
+        secrets: 'contactsDbConnection, appInsightsConfig'
       id: kv
 
     - uses: Azure/aks-set-context@v3
@@ -132,7 +132,7 @@ jobs:
         overrides: |     
           image.repository:${{ secrets.ACR_NAME }}.azurecr.io/jjwebapicore
           image.tag:${{ github.sha }}
-          secrets.APPINSIGHTS.INSTRUMENTATIONKEY:${{ steps.kv.outputs.appInsightsKey }}
+          secrets.APPINSIGHTS.INSTRUMENTATIONKEY:${{ steps.kv.outputs.appInsightsConfig }}
           secrets.ConnectionStrings.ContactsContext:${{ steps.kv.outputs.contactsDbConnection }}
         helm-version: 'latest'
         silent: 'false'
