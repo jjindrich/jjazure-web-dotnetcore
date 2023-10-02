@@ -31,6 +31,10 @@ service2:
   port: 80
   annotations:
     service.beta.kubernetes.io/azure-dns-label-name: jjaks-lb
+    service.beta.kubernetes.io/azure-load-balancer-ipv4: 10.4.2.251
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    service.beta.kubernetes.io/azure-pls-create: "true"
+    service.beta.kubernetes.io/azure-pls-name: jjweb-pls
 
 probes:
   enabled: false
