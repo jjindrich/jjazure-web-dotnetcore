@@ -4,11 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.EventGrid;
-using Microsoft.Azure.EventGrid.Models;
+using Azure.Messaging.EventGrid;
+using Azure.Messaging.EventGrid.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Azure.Messaging.EventGrid.SystemEvents;
 
 namespace jjwebcore.Controllers
 {
@@ -29,20 +30,18 @@ namespace jjwebcore.Controllers
 
             foreach(EventGridEvent ev in events)
             {
-                // Respond with a SubscriptionValidationResponse to complete the EventGrid subscription
-                if (ev.EventType == EventTypes.EventGridSubscriptionValidationEvent)
+                if (ev.TryGetSystemEventData(out object systemEvent))
                 {
-                    var eventValidationData = JsonConvert.DeserializeObject<SubscriptionValidationEventData>(ev.Data.ToString());
-                    var response = new SubscriptionValidationResponse(eventValidationData.ValidationCode);
-                    return Ok(response);
+                    switch (systemEvent)
+                    {
+                        case SubscriptionValidationEventData subscriptionValidated:
+                            var response = new SubscriptionValidationResponse();
+                            response.ValidationResponse = subscriptionValidated.ValidationCode;
+                            return Ok(response);
+                            break;
+                    }
                 }
             }
-
-            //if (evt.EventType == EventTypes.MediaJobStateChangeEvent)
-            //{
-            //    var data = (evt.Data as JObject).ToObject<MediaJobStateChangeEventData>();
-            //    logger.LogInformation(JsonConvert.SerializeObject(data, Formatting.Indented));
-            //}
 
             return BadRequest();
         }

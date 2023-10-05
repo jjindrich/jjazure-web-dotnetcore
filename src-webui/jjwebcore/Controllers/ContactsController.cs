@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using jjwebapicore;
-using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Logging;
-using Microsoft.Azure.EventGrid;
+using Azure.Messaging.EventGrid;
+using Azure.Messaging.EventGrid.Models;
 using System.Text.Json;
 using System.Net.Http;
+using Azure.Messaging.EventGrid.SystemEvents;
+using System.Diagnostics.Contracts;
 
 namespace jjwebcore.Controllers
 {
@@ -104,20 +106,22 @@ namespace jjwebcore.Controllers
 
             foreach(EventGridEvent ev in events)
             {
-                // Respond with a SubscriptionValidationResponse to complete the EventGrid subscription
-                if (ev.EventType == EventTypes.EventGridSubscriptionValidationEvent)
+                if (ev.TryGetSystemEventData(out object systemEvent))
                 {
-                    var eventValidationData = JsonSerializer.Deserialize<SubscriptionValidationEventData>(ev.Data.ToString());
-                    var response = new SubscriptionValidationResponse(eventValidationData.ValidationCode);
-                    return Ok(response);
-                }
-                else
-                // process message to create contact
-                {
-                    Contact createC = JsonSerializer.Deserialize<Contact>(ev.Data.ToString());                    
-                    await cl.PostContactAsync(createC);
-                    return Ok();
-                }
+                    switch (systemEvent)
+                    {
+                        case SubscriptionValidationEventData subscriptionValidated:
+                            var response = new SubscriptionValidationResponse();
+                            response.ValidationResponse = subscriptionValidated.ValidationCode;
+                            return Ok(response);
+                            break;
+                        default:
+                            Contact createC = JsonSerializer.Deserialize<Contact>(ev.Data.ToString());
+                            await cl.PostContactAsync(createC);
+                            return Ok();
+                            break;
+                    }
+                }                            
             }
             return BadRequest();
         }
