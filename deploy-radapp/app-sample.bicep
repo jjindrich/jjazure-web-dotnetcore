@@ -31,3 +31,19 @@ resource demo 'Applications.Core/containers@2023-10-01-preview' = {
     }
   }
 }
+
+resource gateway 'Applications.Core/gateways@2023-10-01-preview' = {
+  name: 'gateway'
+  properties: {
+    application: app.id
+    hostname: {
+      prefix: 'jjdemo'
+    }
+    routes: [
+      {
+        path: '/'
+        destination: 'http://${demo.name}:3000'
+      }
+    ]
+  }
+}

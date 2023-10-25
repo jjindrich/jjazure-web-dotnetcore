@@ -11,6 +11,7 @@ Docs
 
 ```powershell
 iwr -useb "https://raw.githubusercontent.com/radius-project/radius/main/deploy/install.ps1" | iex
+$Env:Path = [System.Environment]::GetEnvironmentVariable("Path","User")
 ```
 
 Install Radius into AKS cluster
@@ -31,6 +32,5 @@ rad app list
 
 rad run app.bicep
 
-rad app delete jjapp 
 rad env delete jjenv 
 ```
