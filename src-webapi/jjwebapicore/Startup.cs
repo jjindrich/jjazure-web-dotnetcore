@@ -19,6 +19,7 @@ using jjwebapicore.GraphQL.Types;
 using GraphQL.MicrosoftDI;
 using GraphQL.Types;
 using jjwebapicore.Services;
+using GraphQL.Server.Ui.GraphiQL;
 
 namespace jjwebapicore
 {
@@ -104,7 +105,7 @@ namespace jjwebapicore
             });
 
             app.UseGraphQL("/api/graphql");
-            app.UseGraphQLGraphiQL("/api/ui/graphiql");
+            app.UseGraphQLGraphiQL("/api/ui/graphiql", new GraphiQLOptions() { GraphQLEndPoint = "/api/graphql"});
         }
     }
 }
