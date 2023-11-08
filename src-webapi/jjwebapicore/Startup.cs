@@ -103,8 +103,8 @@ namespace jjwebapicore
                 c.DocumentPath = "/api/swagger/v1/swagger.json";
             });
 
-            app.UseGraphQL("/graphql");
-            app.UseGraphQLGraphiQL(); // /ui/graphiql
+            app.UseGraphQL("/api/graphql");
+            app.UseGraphQLGraphiQL("/api/ui/graphiql");
         }
     }
 }
