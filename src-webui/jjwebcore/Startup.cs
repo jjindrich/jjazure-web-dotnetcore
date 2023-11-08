@@ -18,6 +18,8 @@ using Microsoft.Identity.Web.UI;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
+using Azure.Monitor.OpenTelemetry.AspNetCore;
+
 namespace jjwebcore
 {
     public class Startup
@@ -32,8 +34,9 @@ namespace jjwebcore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplicationInsightsTelemetry();
-            
+            // Add the OpenTelemetry NuGet package to the application's services and configure OpenTelemetry to use Azure Monitor.
+            services.AddOpenTelemetry().UseAzureMonitor();
+
             // Feature flags
             services.AddFeatureManagement();
 

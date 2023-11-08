@@ -1,4 +1,4 @@
-param envName string = 'jjazacanew'
+param envName string = 'jjazaca'
 param location string = resourceGroup().location
 
 param imageRegistryName string = 'jjazacr'
@@ -11,8 +11,6 @@ param logResourceGroupName string = 'jjinfra-rg'
 param appConfigConnectionString string
 @secure()
 param appInsightsConnectionString string
-@secure()
-param appInsightsInstrumentationKey string
 @secure()
 param contactContextConnectionString string
 
@@ -179,8 +177,8 @@ resource jjapi 'Microsoft.App/containerApps@2022-11-01-preview' = {
               value: 'Development'
             }
             {
-              name: 'APPLICATIONINSIGHTS_INSTRUMENTATIONKEY'
-              value: appInsightsInstrumentationKey
+              name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+              value: appInsightsConnectionString
             }
             {
               name: 'ConnectionStrings_ContactsContext'
