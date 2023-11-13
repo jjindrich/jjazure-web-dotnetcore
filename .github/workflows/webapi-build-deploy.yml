@@ -132,6 +132,7 @@ jobs:
         overrides: |     
           image.repository:${{ secrets.ACR_NAME }}.azurecr.io/jjwebapicore
           image.tag:${{ github.sha }}
+          secrets.ASPNETCORE.ENVIRONMENT:Development
           secrets.APPLICATIONINSIGHTS.CONNECTION_STRING:${{ steps.kv.outputs.appInsightsConfig }}
           secrets.ConnectionStrings.ContactsContext:${{ steps.kv.outputs.contactsDbConnection }}
         helm-version: 'latest'

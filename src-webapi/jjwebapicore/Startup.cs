@@ -40,7 +40,10 @@ namespace jjwebapicore
 
             services.AddControllers();
 
-            services.AddSwaggerDocument();
+            services.AddSwaggerDocument(settings =>
+            {
+                settings.Title = "jjwebapi";
+            });
 
             // load connection string from ENV or from appsettings.json
             string connStr = Environment.GetEnvironmentVariable("ConnectionStrings_ContactsContext");
