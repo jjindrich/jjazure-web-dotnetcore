@@ -154,4 +154,13 @@ This implementation will show how to enable/disable Test in menu. Settings is ma
    - change Kubernetes values file - using ConnectionStrings__AppConfig (__ because of structure)
 4. Try to set feature On -> Off -> On (it takes cca 1min for refresh)
 
+## Integrate Azure B2C
 
+Doc
+- register app https://learn.microsoft.com/en-us/azure/active-directory-b2c/tutorial-register-applications#register-a-web-application
+- c# integrate https://learn.microsoft.com/en-us/aspnet/core/security/authentication/azure-ad-b2c?view=aspnetcore-7.0
+
+Steps to configure
+- create Azure B2C tenant - jjazureb2c
+- create application - redirect uri https://localhost:57590/signin-oidc and tokens
+- update appsettings.json - update client id and secret
