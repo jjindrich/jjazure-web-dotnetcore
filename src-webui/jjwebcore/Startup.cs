@@ -76,6 +76,15 @@ namespace jjwebcore
                 options.HandleSameSiteCookieCompatibility();
             });
 
+            services.Configure<CookiePolicyOptions>(
+            options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.Secure = CookieSecurePolicy.Always;
+            });
+
             // Configuration to sign-in users with Azure AD B2C
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAdB2C"));
@@ -114,6 +123,7 @@ namespace jjwebcore
             app.UseCookiePolicy();
             app.UseRouting();
             // Add the ASP.NET Core authentication service
+            app.UseCookiePolicy();
             app.UseAuthentication();
             app.UseAuthorization();
 
