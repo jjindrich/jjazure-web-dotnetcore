@@ -15,7 +15,7 @@ namespace jjwebapicore.GraphQL
     {
         public WebQuery()
         {
-            Name = "NoIdeaWhereThisIsBeingUsed";
+            Name = "jjwebapi";
 
             Field<ListGraphType<ContactType>>(
                 "contacts")

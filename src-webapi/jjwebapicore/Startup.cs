@@ -19,6 +19,7 @@ using jjwebapicore.GraphQL.Types;
 using GraphQL.MicrosoftDI;
 using GraphQL.Types;
 using jjwebapicore.Services;
+using GraphQL.Server.Ui.GraphiQL;
 
 namespace jjwebapicore
 {
@@ -39,7 +40,10 @@ namespace jjwebapicore
 
             services.AddControllers();
 
-            services.AddSwaggerDocument();
+            services.AddSwaggerDocument(settings =>
+            {
+                settings.Title = "jjwebapi";
+            });
 
             // load connection string from ENV or from appsettings.json
             string connStr = Environment.GetEnvironmentVariable("ConnectionStrings_ContactsContext");
@@ -103,8 +107,8 @@ namespace jjwebapicore
                 c.DocumentPath = "/api/swagger/v1/swagger.json";
             });
 
-            app.UseGraphQL("/graphql");
-            app.UseGraphQLGraphiQL(); // /ui/graphiql
+            app.UseGraphQL("/api/graphql");
+            app.UseGraphQLGraphiQL("/api/ui/graphiql", new GraphiQLOptions() { GraphQLEndPoint = "/api/graphql"});
         }
     }
 }
