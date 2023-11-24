@@ -79,17 +79,10 @@ namespace jjwebcore
             // Configuration to sign-in users with Azure AD B2C
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAdB2C"));
-            services.AddAuthorization(options =>
-            {
-                // By default, all incoming requests will be authorized according to 
-                // the default policy
-                options.FallbackPolicy = options.DefaultPolicy;
-            });
+            services.AddAuthorization();
             services.AddAuthorization();
             services.AddControllersWithViews();
-            services.AddRazorPages(options => {
-                options.Conventions.AllowAnonymousToPage("/Index");
-            })
+            services.AddRazorPages()
                 .AddMvcOptions(options => { })
                 .AddMicrosoftIdentityUI();
 
