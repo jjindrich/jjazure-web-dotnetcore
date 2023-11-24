@@ -1,4 +1,12 @@
 ﻿@using System.Security.Principal
+@using Microsoft.Extensions.Options
+@using Microsoft.Identity.Web
+@inject IOptions<MicrosoftIdentityOptions> AzureADB2COptions
+
+@{
+    var options = AzureADB2COptions.Value;
+}
+
 @if (User.Identity.IsAuthenticated)
 {
     <ul class="nav navbar-nav navbar-right">

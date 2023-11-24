@@ -83,7 +83,6 @@ namespace jjwebcore
             services.AddAuthorization();
             services.AddControllersWithViews();
             services.AddRazorPages()
-                .AddMvcOptions(options => { })
                 .AddMicrosoftIdentityUI();
 
             //Configuring appsettings section AzureAdB2C, into IOptions
