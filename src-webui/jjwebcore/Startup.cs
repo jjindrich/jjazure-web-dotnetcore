@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 using Azure.Monitor.OpenTelemetry.AspNetCore;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace jjwebcore
 {
@@ -64,9 +65,11 @@ namespace jjwebcore
                     ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto;
             });
 
+            // share protection across instances
+            services.AddDataProtection()
+                .PersistKeysToAzureBlobStorage("DefaultEndpointsProtocol=https;AccountName=jjwebshare;AccountKey=a3l8nOTVBW9+CPipo/OnD0hUf4FOfEl85hrupDDVqJ4j4NXOGYb5DrsEC1gf7l+Sxv3MWbWwvN32+AStiyNp+A==;EndpointSuffix=core.windows.net", "key", "jjwebcore");
+
             // use Azure B2C
-            // docs https://docs.microsoft.com/en-us/azure/active-directory-b2c/enable-authentication-web-application?tabs=visual-studio
-            // docs https://docs.microsoft.com/en-us/aspnet/core/security/authentication/azure-ad-b2c?view=aspnetcore-6.0
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -74,15 +77,6 @@ namespace jjwebcore
                 options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
                 // Handling SameSite cookie according to https://docs.microsoft.com/en-us/aspnet/core/security/samesite?view=aspnetcore-3.1
                 options.HandleSameSiteCookieCompatibility();
-            });
-
-            services.Configure<CookiePolicyOptions>(
-            options =>
-            {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-                options.Secure = CookieSecurePolicy.Always;
             });
 
             // Configuration to sign-in users with Azure AD B2C
@@ -123,7 +117,6 @@ namespace jjwebcore
             app.UseCookiePolicy();
             app.UseRouting();
             // Add the ASP.NET Core authentication service
-            app.UseCookiePolicy();
             app.UseAuthentication();
             app.UseAuthorization();
 
