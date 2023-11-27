@@ -76,9 +76,9 @@ namespace jjwebcore
                     ForwardedHeaders.XForwardedHost | ForwardedHeaders.XForwardedProto;
             });
 
-            // share protection across instances
+            // share data protection key across instances for cookie encryption
             services.AddDataProtection()
-                .PersistKeysToAzureBlobStorage("DefaultEndpointsProtocol=https;AccountName=jjwebshare;AccountKey=a3l8nOTVBW9+CPipo/OnD0hUf4FOfEl85hrupDDVqJ4j4NXOGYb5DrsEC1gf7l+Sxv3MWbWwvN32+AStiyNp+A==;EndpointSuffix=core.windows.net", "key", "jjwebcore");
+                .PersistKeysToFileSystem(new System.IO.DirectoryInfo("key-dataprotection.xml"));          
 
             // use Azure B2C
             services.Configure<CookiePolicyOptions>(options =>
