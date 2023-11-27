@@ -31,6 +31,7 @@ namespace jjwebcore
                                 .UseFeatureFlags();
                         });
                     });
+                    //webBuilder.ConfigureLogging((hostingContext, logging) => { logging.AddConsole(); });
                     webBuilder.UseStartup<Startup>();
                 });
     }

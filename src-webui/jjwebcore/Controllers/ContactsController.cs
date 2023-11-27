@@ -16,12 +16,14 @@ using System.Diagnostics.Contracts;
 namespace jjwebcore.Controllers
 {
     public class ContactsController : Controller
-    {        
+    {
+        private readonly ILogger _logger;
         private readonly IContactsClient cl;
 
-        public ContactsController(IContactsClient contactsClient) : base()
+        public ContactsController(IContactsClient contactsClient, ILogger<HomeController> logger) : base()
         {
-            cl = contactsClient;            
+            cl = contactsClient;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -45,8 +47,11 @@ namespace jjwebcore.Controllers
         {
             try
             {
-                Contact createC = new Contact() { ContactId = Int32.Parse(collection["ContactId"]), FullName = collection["FullName"] };
+                int contactId = Int32.Parse(collection["ContactId"]);
+                Contact createC = new Contact() { ContactId = contactId, FullName = collection["FullName"] };
                 await cl.PostContactAsync(createC);
+
+                _logger.LogInformation("Contact {contactId} created", contactId);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -70,6 +75,9 @@ namespace jjwebcore.Controllers
                 Contact updateC = new Contact() { ContactId = id, FullName = collection["FullName"] };
                 var c = await cl.PutContactAsync(id, updateC);
 
+                int contactId = id;
+                _logger.LogInformation("Contact {contactId} updated", contactId);
+
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -90,6 +98,9 @@ namespace jjwebcore.Controllers
             try
             {
                 await cl.DeleteContactAsync(id);
+
+                int contactId = id;
+                _logger.LogInformation("Contact {contactId} deleted", contactId);
 
                 return RedirectToAction(nameof(Index));
             }

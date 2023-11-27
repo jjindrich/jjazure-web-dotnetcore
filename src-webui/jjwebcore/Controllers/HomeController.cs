@@ -19,13 +19,15 @@ namespace jjwebcore.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ILogger _logger;
         private readonly IHttpClientFactory _cl;
         private readonly IFeatureManager _featureManager;
 
-        public HomeController(IHttpClientFactory httpClientFactory, IFeatureManagerSnapshot featureManager)
+        public HomeController(IHttpClientFactory httpClientFactory, IFeatureManagerSnapshot featureManager, ILogger<HomeController> logger)
         {
             _cl = httpClientFactory;
             _featureManager = featureManager;
+            _logger = logger;
         }
 
         public IActionResult Index()
@@ -51,6 +53,8 @@ namespace jjwebcore.Controllers
         [FeatureGate(WebFeatureFlags.AllowTests)]
         public async Task<IActionResult> Test()
         {
+            _logger.LogInformation("JJTest started");            
+            
             ViewData["Message"] = "Test API page.";
 
             var host = Dns.GetHostName();            
