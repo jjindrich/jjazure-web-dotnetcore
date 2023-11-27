@@ -53,7 +53,7 @@ namespace jjwebcore.Controllers
         [FeatureGate(WebFeatureFlags.AllowTests)]
         public async Task<IActionResult> Test()
         {
-            _logger.LogInformation("JJTest {DT}", DateTime.Now.ToLongTimeString());
+            _logger.LogInformation("JJTest {0}", DateTime.Now.ToLongTimeString());
 
             ViewData["Message"] = "Test API page.";
 
