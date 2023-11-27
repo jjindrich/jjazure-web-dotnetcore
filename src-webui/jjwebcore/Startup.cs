@@ -78,7 +78,7 @@ namespace jjwebcore
 
             // share data protection key across instances for cookie encryption
             services.AddDataProtection()
-                .PersistKeysToFileSystem(new System.IO.DirectoryInfo("key-dataprotection.xml"));          
+                .PersistKeysToFileSystem(new System.IO.DirectoryInfo("."));          
 
             // use Azure B2C
             services.Configure<CookiePolicyOptions>(options =>

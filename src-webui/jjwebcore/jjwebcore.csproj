@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="key\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
@@ -29,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="key-dataprotection.xml">
+    <None Update="key-56bf6c29-7d63-4bd0-a159-ba3b85870d79.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
