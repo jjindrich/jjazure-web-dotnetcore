@@ -20,6 +20,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 
 using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.DataProtection;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using System.Net;
 
 namespace jjwebcore
 {
@@ -36,6 +40,13 @@ namespace jjwebcore
         public void ConfigureServices(IServiceCollection services)
         {
             // Add the OpenTelemetry NuGet package to the application's services and configure OpenTelemetry to use Azure Monitor.
+            var resourceAttributes = new Dictionary<string, object> {
+                { "service.name", "jjwebcore" },
+                { "service.namespace", "jjweb" },
+                { "service.instance.id", Dns.GetHostName() }};
+            services.ConfigureOpenTelemetryTracerProvider((sp, builder) =>
+                builder.ConfigureResource(resourceBuilder =>
+                resourceBuilder.AddAttributes(resourceAttributes)));
             services.AddOpenTelemetry().UseAzureMonitor();
 
             // Feature flags
