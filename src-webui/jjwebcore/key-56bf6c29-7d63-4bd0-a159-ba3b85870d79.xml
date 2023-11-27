@@ -2,7 +2,7 @@
 <key id="56bf6c29-7d63-4bd0-a159-ba3b85870d79" version="1">
   <creationDate>2023-11-27T15:08:14.2743437Z</creationDate>
   <activationDate>2023-11-27T15:08:14.2526193Z</activationDate>
-  <expirationDate>2024-02-25T15:08:14.2526193Z</expirationDate>
+  <expirationDate>2026-02-25T15:08:14.2526193Z</expirationDate>
   <descriptor deserializerType="Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel.AuthenticatedEncryptorDescriptorDeserializer, Microsoft.AspNetCore.DataProtection, Version=7.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60">
     <descriptor>
       <encryption algorithm="AES_256_CBC" />
