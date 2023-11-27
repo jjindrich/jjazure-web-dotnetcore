@@ -20,6 +20,12 @@ using GraphQL.MicrosoftDI;
 using GraphQL.Types;
 using jjwebapicore.Services;
 using GraphQL.Server.Ui.GraphiQL;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+
+using System.Net;
 
 namespace jjwebapicore
 {
@@ -36,7 +42,15 @@ namespace jjwebapicore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplicationInsightsTelemetry();
+            // Add the OpenTelemetry NuGet package to the application's services and configure OpenTelemetry to use Azure Monitor.
+            var resourceAttributes = new Dictionary<string, object> {
+                { "service.name", "jjwebapicore" },
+                { "service.namespace", "jjapi" },
+                { "service.instance.id", Dns.GetHostName() }};
+            services.ConfigureOpenTelemetryTracerProvider((sp, builder) =>
+                builder.ConfigureResource(resourceBuilder =>
+                resourceBuilder.AddAttributes(resourceAttributes)));
+            services.AddOpenTelemetry().UseAzureMonitor();
 
             services.AddControllers();
 
