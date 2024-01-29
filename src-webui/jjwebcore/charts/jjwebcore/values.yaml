@@ -51,11 +51,11 @@ ingress:
     # nginx.ingress.kubernetes.io/rewrite-target: "/"
   path: /
   hosts:
-    - jjazaks.westeurope.cloudapp.azure.com
+    - jjazgwaks.germanywestcentral.cloudapp.azure.com
   tls: 
     - secretName: jjwebcore-cert
       hosts:
-        - jjazaks.westeurope.cloudapp.azure.com
+        - jjazgwaks.germanywestcentral.cloudapp.azure.com
 ingress2:
   enabled: true
   className: "nginx-internal"
