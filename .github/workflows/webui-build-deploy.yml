@@ -131,9 +131,9 @@ jobs:
           secrets.ASPNETCORE.ENVIRONMENT:Development
           secrets.APPLICATIONINSIGHTS.CONNECTION_STRING:${{ steps.kv.outputs.appInsightsConfig }}
           secrets.ConnectionStrings._AppConfig:${{ steps.kv.outputs.appConfig }}
-          secrets.AzureOpenAI.Deployment:jjconsole
-          secrets.AzureOpenAI.Endpoint:${{ steps.kv.outputs.openaiEndpoint }}
-          secrets.AzureOpenAI.ApiKey:${{ steps.kv.outputs.openaiKey }}
+          secrets.AzureOpenAI._Deployment:jjconsole
+          secrets.AzureOpenAI._Endpoint:${{ steps.kv.outputs.openaiEndpoint }}
+          secrets.AzureOpenAI._ApiKey:${{ steps.kv.outputs.openaiKey }}
         helm-version: 'latest'
         silent: 'false'
       id: bake
