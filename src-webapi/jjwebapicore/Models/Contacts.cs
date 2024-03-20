@@ -12,5 +12,7 @@ namespace jjwebapicore.Models
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ContactId { get; set; }
         public string FullName { get; set; }
-     }
+        public string Keywords { get; set; }
+        public string Description{ get; set; }
+    }
 }

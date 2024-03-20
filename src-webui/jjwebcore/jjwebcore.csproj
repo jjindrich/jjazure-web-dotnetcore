@@ -16,7 +16,10 @@
     <PackageReference Include="Microsoft.FeatureManagement" Version="3.1.0" />
     <PackageReference Include="Microsoft.FeatureManagement.AspNetCore" Version="3.1.0" />
     <PackageReference Include="Microsoft.Identity.Web" Version="2.15.5" />
-    <PackageReference Include="Microsoft.Identity.Web.UI" Version="2.15.5" />    
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="2.15.5" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.6.3" />
+    <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.6.3-alpha" />
+    <PackageReference Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars" Version="1.6.3" />    
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.11" />
   </ItemGroup>
 

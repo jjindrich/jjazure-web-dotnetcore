@@ -24,6 +24,12 @@ using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using System.Net;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.Extensions.Options;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Plugins.Core;
+using jjwebcore.KernelFunctions;
 
 namespace jjwebcore
 {
@@ -101,6 +107,20 @@ namespace jjwebcore
 
             //Configuring appsettings section AzureAdB2C, into IOptions
             services.AddOptions();
+
+            // use AzureOpenAI using SemanticKernel
+            services.AddSingleton<IChatCompletionService>(sp =>
+            {                
+                return new AzureOpenAIChatCompletionService(Configuration["AzureOpenAI:Deployment"], Configuration["AzureOpenAI:Endpoint"], Configuration["AzureOpenAI:ApiKey"]);
+            });
+            // use SemanticKernel functions
+            services.AddSingleton<AgePlugin>();
+            services.AddKeyedTransient<Kernel>("jjwebcore", (sp, key) =>
+            {
+                KernelPluginCollection pluginCollection = new();
+                pluginCollection.AddFromObject(sp.GetRequiredService<AgePlugin>());
+                return new Kernel(sp, pluginCollection);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
