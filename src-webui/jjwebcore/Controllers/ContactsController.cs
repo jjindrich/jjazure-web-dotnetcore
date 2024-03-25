@@ -151,8 +151,10 @@ namespace jjwebcore.Controllers
         {
             if (keywords == null) return "No keywords provided";
 
-            string input = $"I'm going to write short description of person named {fullname}. Use following tags: {keywords} to describe this person. You are recruiter of IT company.";
-            input += "Add information about his age at the end";
+            string input = $"You are recruiter of IT company. \n";
+            input += $"Describe person named {fullname} \n";
+            input += $"Use following tags: {keywords} \n";
+            input += "Add information about his age \n";
             if (additionalPrompt != null) input += additionalPrompt;
 
             OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()

@@ -19,7 +19,14 @@ namespace jjwebcore.KernelFunctions
                )
         {
             // Add logic to get age
-            return "The current age is 30.";
+            if (personName.Contains("Pavel"))
+            {
+                return "The current age is 25.";
+            }
+            else
+            {
+                return "The current age is 30.";
+            }            
         }
     }
 }
