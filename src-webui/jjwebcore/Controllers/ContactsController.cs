@@ -151,16 +151,16 @@ namespace jjwebcore.Controllers
         {
             if (keywords == null) return "No keywords provided";
 
-            string input = $"You are recruiter of IT company. \n";
-            input += $"Describe person named {fullname} \n";
-            input += $"Use following tags: {keywords} \n";
-            input += "Add information about his age \n";
-            if (additionalPrompt != null) input += additionalPrompt;
+            string input = @$"You are recruiter of IT company.
+            Describe person named {fullname}
+            Use following tags: {keywords}            
+            Add information about the person's age. ";
+            if (additionalPrompt != null) input += System.Environment.NewLine + additionalPrompt;
 
             OpenAIPromptExecutionSettings openAIPromptExecutionSettings = new()
             {
                 ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
-            };
+            };            
             ChatMessageContent result = await _chatCompletionService.GetChatMessageContentAsync(input, openAIPromptExecutionSettings, _kernel);
 
             return result.Content;
