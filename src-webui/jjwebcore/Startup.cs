@@ -96,9 +96,13 @@ namespace jjwebcore
                 options.HandleSameSiteCookieCompatibility();
             });
 
-            // Configuration to sign-in users with Azure AD B2C
+            // Configuration to sign-in users with Microsoft Entra ID for Customers
+            // https://learn.microsoft.com/en-us/entra/external-id/customers/tutorial-web-app-dotnet-sign-in-prepare-app
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAdB2C"));
+                .AddMicrosoftIdentityWebApp(Configuration)
+                .EnableTokenAcquisitionToCallDownstreamApi()
+                .AddInMemoryTokenCaches();
+
             services.AddAuthorization();
             services.AddAuthorization();
             services.AddControllersWithViews();
