@@ -1,8 +1,0 @@
-version: v0.1
-testName: JJAksTest
-testPlan: jmeter-loadtest/testcase/sample.jmx
-configurationFiles:
-    - 'jmeter-loadtest/testcase/*.csv'
-description: 'sample Test Run'
-engineInstances: 1
-engineSize: M
