@@ -29,13 +29,13 @@ npx playwright test
 
 Create Playwright Testing workspace in your Azure subscription
 
-https://playwright.microsoft.com/
+Sign in into https://playwright.microsoft.com/ and select workspace
 
 Configure Access token and cloud endpoint
 - PLAYWRIGHT_SERVICE_ACCESS_TOKEN
 - PLAYWRIGHT_SERVICE_URL
  
- And run test in cloud
+And run test in cloud
 
 ```
 npm i --save-dev dotenv

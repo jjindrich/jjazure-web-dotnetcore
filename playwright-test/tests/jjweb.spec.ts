@@ -2,11 +2,13 @@
 import { test, expect } from '@playwright/test';
 
 test('jjweb test', async ({ page }) => {
-  await page.goto('https://jjazaks.westeurope.cloudapp.azure.com/');
+  var urlRoot = 'https://jjazgwaks.germanywestcentral.cloudapp.azure.com';
+
+  await page.goto(urlRoot);
   const title = page.locator('footer');
   await expect(title).toContainText('JJ');
 
-  await page.goto('https://jjazaks.westeurope.cloudapp.azure.com/home/test/');
+  await page.goto(urlRoot + '/home/test/');
   const api = page.locator('.body-content');
   await expect(api).toContainText('value1');
 
